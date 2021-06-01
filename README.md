@@ -2,11 +2,7 @@
 
 "Flutter Steem Wallet App" is a cross-platform mobile wallet for the Steem cryptocurrency. It is written in Dart using [Flutter](https://flutter.dev/).
 
-<br/>
-
 <img src="https://user-images.githubusercontent.com/3969643/120349722-50bc4500-c339-11eb-83b2-f38eec38bdd7.png" width="180"/>
-
-<p><br/></p>
 
 Private keys are stored on the device and never transmitted to the server. Signing and other low-level operations are performed using [steemdart_ecc](https://github.com/anpigon/steemdart_ecc)
 
