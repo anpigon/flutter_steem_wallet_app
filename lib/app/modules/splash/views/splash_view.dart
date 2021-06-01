@@ -3,20 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/splash_controller.dart';
+import '../../../../logger.dart';
 
 class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
+    logger.d('SplashView');
+    logger.d('loading: ${controller.loading.value}');
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('SplashView'),
-        centerTitle: true,
-      ),
       body: Center(
-        child: Text(
-          'SplashView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+        child: Image.asset('assets/images/steem_logo_with_text.png'),
       ),
     );
   }

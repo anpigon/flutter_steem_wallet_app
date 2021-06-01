@@ -1,20 +1,38 @@
 import 'package:get/get.dart';
 
-class SplashController extends GetxController {
-  //TODO: Implement SplashController
+import '../../../routes/app_pages.dart';
+import '../../../services/local_data_service.dart';
+import '../../../../logger.dart';
 
-  final count = 0.obs;
+class SplashController extends GetxController {
+  final loading = true.obs;
+
   @override
   void onInit() {
+    logger.d('SplashController.onInit');
     super.onInit();
   }
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
+    logger.d('SplashController.onReady');
+    final localDataService = Get.find<LocalDataService>();
+    final accounts = await localDataService.getAccounts();
+    logger.d('accounts: ${accounts.length}');
+    if (accounts.isEmpty) {
+      // 초기 화면으로 이동
+      await Get.offNamed(Routes.START);
+    } else {
+      // 홈 화면으로 이동
+      await Get.offNamed(Routes.HOME);
+    }
+    loading.value = false;
     super.onReady();
   }
 
   @override
-  void onClose() {}
-  void increment() => count.value++;
+  void onClose() {
+    logger.d('SplashController.onClose');
+    super.onClose();
+  }
 }

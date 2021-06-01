@@ -1,17 +1,17 @@
-import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../logger.dart';
 import '../models/account.dart';
 
 const String ACCOUNTS_BOX = 'accounts_box';
 
 class LocalDataService extends GetxService {
-  final accountsBox = Get.find<Box<Account>>(tag: ACCOUNTS_BOX);
+  late final accountsBox;
 
   Future<List<Account>> getAccounts() async {
-    if (accountsBox.isNotEmpty) {
+    if (accountsBox != null && accountsBox.isNotEmpty) {
       return accountsBox.values.map((account) => account).toList();
     }
     return <Account>[];
@@ -25,30 +25,30 @@ class LocalDataService extends GetxService {
   }
 
   Future<LocalDataService> init() async {
-    print('LocalDataService.init');
+    logger.d('LocalDataService.init');
     await Hive.initFlutter();
+
     Hive.registerAdapter(AccountAdapter());
 
-    final searchBox = await Hive.openBox<Account>(ACCOUNTS_BOX);
-    Get.put<Box>(searchBox, tag: ACCOUNTS_BOX);
+    accountsBox = await Hive.openBox<Account>(ACCOUNTS_BOX);
     return this;
   }
 
   @override
-  void onInit() {
-    print('LocalDataService.onInit');
+  Future<void> onInit() async {
+    logger.d('LocalDataService.onInit');
     super.onInit();
   }
 
   @override
   void onReady() {
-    print('LocalDataService.onReady');
+    logger.d('LocalDataService.onReady');
     super.onReady();
   }
 
   @override
   void onClose() {
-    print('LocalDataService.onClose');
+    logger.d('LocalDataService.onClose');
     super.onClose();
   }
 }

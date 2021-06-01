@@ -36,6 +36,12 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
 
+  # Logger
+  logger: ^1.0.0
+
+  # svg
+  flutter_svg: ^0.22.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,8 +68,8 @@ flutter:
     - assets/images/icon/token-sbd.svg
     - assets/images/icon/token-steem-power.svg
     - assets/images/icon/token-steem.svg
-    - assets/images/steem-logo.svg
-    - assets/images/steem-logo-circle.svg
+    - assets/images/steem_logo_with_text.png
+    - assets/images/steem_logo.webp
     - assets/images/start_background.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
