@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_account_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/bindings/start_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/views/start_view.dart';
 
@@ -30,6 +32,11 @@ class AppPages {
       name: _Paths.START,
       page: () => StartView(),
       binding: StartBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_ACCOUNT,
+      page: () => AddAccountView(),
+      binding: AddAccountBinding(),
     ),
   ];
 }

@@ -48,6 +48,9 @@ dependencies:
   # secure storage
   flutter_secure_storage: ^4.2.0
 
+  # Http client
+  dio: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

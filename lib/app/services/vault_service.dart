@@ -1,13 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/state_manager.dart';
 
-import '../../logger.dart';
-
 class ValutService extends GetxService {
   late final FlutterSecureStorage _secureStorage;
 
   Future<ValutService> init() async {
-    logger.d('ValutService.init');
     _secureStorage = FlutterSecureStorage();
     return this;
   }

@@ -8,10 +8,10 @@ import '../models/account.dart';
 const String ACCOUNTS_BOX = 'accounts_box';
 
 class LocalDataService extends GetxService {
-  late final accountsBox;
+  late final Box<Account> accountsBox;
 
   Future<List<Account>> getAccounts() async {
-    if (accountsBox != null && accountsBox.isNotEmpty) {
+    if (accountsBox.isNotEmpty) {
       return accountsBox.values.map((account) => account).toList();
     }
     return <Account>[];
@@ -25,7 +25,6 @@ class LocalDataService extends GetxService {
   }
 
   Future<LocalDataService> init() async {
-    logger.d('LocalDataService.init');
     await Hive.initFlutter();
 
     Hive.registerAdapter(AccountAdapter());
@@ -35,20 +34,8 @@ class LocalDataService extends GetxService {
   }
 
   @override
-  Future<void> onInit() async {
-    logger.d('LocalDataService.onInit');
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    logger.d('LocalDataService.onReady');
-    super.onReady();
-  }
-
-  @override
   void onClose() {
-    logger.d('LocalDataService.onClose');
+    Hive.close();
     super.onClose();
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../controllers/start_controller.dart';
 
 class StartView extends GetView<StartController> {
@@ -71,7 +72,9 @@ class StartView extends GetView<StartController> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.ADD_ACCOUNT);
+                        },
                         child: const Text('시작하기'),
                       ),
                     ),
