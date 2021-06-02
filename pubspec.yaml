@@ -42,6 +42,12 @@ dependencies:
   # svg
   flutter_svg: ^0.22.0
 
+  # shared preferences
+  shared_preferences: ^2.0.6
+
+  # secure storage
+  flutter_secure_storage: ^4.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
