@@ -8,6 +8,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const START = _Paths.START;
   static const ADD_ACCOUNT = _Paths.ADD_ACCOUNT;
+  static const WALLETS = _Paths.WALLETS;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const START = '/start';
   static const ADD_ACCOUNT = '/add-account';
+  static const WALLETS = '/wallets';
 }
