@@ -1,11 +1,26 @@
 import 'package:get/get.dart';
 
-class WalletsController extends GetxController {
-  //TODO: Implement WalletsController
+import '../../../services/local_data_service.dart';
 
-  final count = 0.obs;
+class WalletsController extends GetxController {
+  final accounts = <String>[].obs;
+  final selectedAccount = ''.obs;
+
+  void onChangeAccount(String? account) {
+    selectedAccount(account);
+  }
+
+  final localDataService = Get.find<LocalDataService>();
+
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    final _accounts = (await localDataService.getAccounts())
+        .map((account) => account.name)
+        .toList();
+    if (_accounts.isNotEmpty) {
+      accounts.addAll(_accounts);
+      selectedAccount(_accounts[0]);
+    }
     super.onInit();
   }
 
@@ -16,5 +31,4 @@ class WalletsController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

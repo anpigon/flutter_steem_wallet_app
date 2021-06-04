@@ -4,14 +4,32 @@ import 'package:get/get.dart';
 
 import '../controllers/wallets_controller.dart';
 
-class WalletsView extends GetView<WalletsController> {
+class WalletsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(WalletsController());
+
     return Scaffold(
-      body: Center(
-        child: Text(
-          'WalletsView is working',
-          style: TextStyle(fontSize: 20),
+      body: SafeArea(
+        child: Container(
+          child: Column(
+            children: [
+              Center(
+                child: Obx(() => DropdownButton(
+                      onChanged: controller.onChangeAccount,
+                      value: controller.selectedAccount.value,
+                      items: controller.accounts
+                          .map(
+                            (account) => DropdownMenuItem(
+                              value: account,
+                              child: Text(account),
+                            ),
+                          )
+                          .toList(),
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );
