@@ -1,11 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/account.dart';
 import '../../../services/local_data_service.dart';
 
-class WalletsController extends GetxController with StateMixin<Account> {
+class WalletsController extends GetxController
+    with StateMixin<Account>, SingleGetTickerProviderMixin {
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
+
+  late final TabController tabController =
+      TabController(length: 2, vsync: this);
 
   void onChangeAccount(String? username) {
     selectedAccount(username);

@@ -14,6 +14,7 @@ class WalletsView extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
+              // Start top area
               Container(
                 decoration: buildLinearGradientDecoration(),
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -81,6 +82,24 @@ class WalletsView extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+              // End top area
+              TabBar(
+                controller: controller.tabController,
+                labelColor: Get.theme.primaryColor,
+                tabs: [
+                  Tab(text: 'Primary'),
+                  Tab(text: 'Tokens'),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: controller.tabController,
+                  children: [
+                    Center(child: Text('Coins')),
+                    Center(child: Text('Tokens')),
                   ],
                 ),
               ),
