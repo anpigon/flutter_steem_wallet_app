@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../models/account.dart';
 import '../../../services/local_data_service.dart';
+import '../../../services/steem_service.dart';
 
 class WalletsController extends GetxController
     with StateMixin<Account>, SingleGetTickerProviderMixin {
@@ -19,6 +20,7 @@ class WalletsController extends GetxController
   static WalletsController get to => Get.find();
 
   final localDataService = Get.find<LocalDataService>();
+  final steemService = Get.find<SteemService>();
 
   /// account 잔액 정보를 가져온다.
   void loadAccountDetails(username) async {
@@ -32,6 +34,8 @@ class WalletsController extends GetxController
       memoPublicKey: '',
     );
     change(_account, status: RxStatus.loading());
+    final data = await steemService.getAccount(username);
+    print(data.toString());
     await Future.delayed(Duration(seconds: 5));
     change(_account, status: RxStatus.success());
   }

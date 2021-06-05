@@ -9,7 +9,7 @@ import '../controllers/wallets_controller.dart';
 class WalletsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(WalletsController());
+    final controller = Get.put(WalletsController(), permanent: true);
 
     return SafeArea(
       child: Container(
