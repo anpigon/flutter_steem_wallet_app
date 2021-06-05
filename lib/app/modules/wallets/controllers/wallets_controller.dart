@@ -10,6 +10,8 @@ class WalletsController extends GetxController {
     selectedAccount(account);
   }
 
+  static WalletsController get to => Get.find();
+
   final localDataService = Get.find<LocalDataService>();
 
   @override
@@ -18,7 +20,7 @@ class WalletsController extends GetxController {
         .map((account) => account.name)
         .toList();
     if (_accounts.isNotEmpty) {
-      accounts.addAll(_accounts);
+      accounts.assignAll(_accounts);
       selectedAccount(_accounts[0]);
     }
     super.onInit();
