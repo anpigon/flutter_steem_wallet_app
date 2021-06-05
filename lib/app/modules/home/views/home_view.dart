@@ -7,13 +7,13 @@ import '../controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Obx(() => controller.body),
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
+    return Obx(
+      () => Scaffold(
+        body: controller.currentPage,
+        bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          currentIndex: controller.selectedIndex.value, //현재 선택된 Index
-          onTap: controller.onTapBottomNavigationBar,
+          currentIndex: controller.currentIndex(), //현재 선택된 Index
+          onTap: controller.changePage,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.account_balance_wallet),

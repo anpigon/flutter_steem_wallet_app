@@ -14,6 +14,7 @@ class SplashController extends GetxController {
   @override
   Future<void> onReady() async {
     final localDataService = Get.find<LocalDataService>();
+
     final accounts = await localDataService.getAccounts();
     if (accounts.isEmpty) {
       // 초기 화면으로 이동
