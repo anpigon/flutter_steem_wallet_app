@@ -5,29 +5,40 @@ part 'account.g.dart';
 @HiveType(typeId: 0)
 class Account extends HiveObject {
   @HiveField(0)
-  final int id;
+  final int? id;
 
   @HiveField(1)
   final String name;
 
   @HiveField(2)
-  final String ownerPublicKey;
+  final String? ownerPublicKey;
 
   @HiveField(3)
-  final String activePublicKey;
+  final String? activePublicKey;
 
   @HiveField(4)
-  final String postingPublicKey;
+  final String? postingPublicKey;
 
   @HiveField(5)
-  final String memoPublicKey;
+  final String? memoPublicKey;
+
+  double? steemBalance;
+  double? sbdBalance;
+  double? steemPower;
+  double? votingPower;
+  double? resourceCredits;
 
   Account({
-    required this.id,
     required this.name,
-    required this.ownerPublicKey,
-    required this.activePublicKey,
-    required this.postingPublicKey,
-    required this.memoPublicKey,
+    this.id,
+    this.ownerPublicKey,
+    this.activePublicKey,
+    this.postingPublicKey,
+    this.memoPublicKey,
+    this.steemBalance,
+    this.sbdBalance,
+    this.steemPower,
+    this.votingPower,
+    this.resourceCredits,
   });
 }

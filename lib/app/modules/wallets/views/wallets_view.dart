@@ -134,8 +134,8 @@ class WalletsView extends StatelessWidget {
             ),
             controller.obx(
               (state) {
-                print('state');
-                print(state);
+                // print('state');
+                // print(state);
                 return Container();
               },
               onLoading: CircularProgressIndicator(),

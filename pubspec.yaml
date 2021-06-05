@@ -16,10 +16,12 @@ dependencies:
   flutter_secure_storage: ^4.2.0
   dio: ^4.0.0
   intl: ^0.17.0
-  steemdart_ecc: 
-    git: 
-      url: git://github.com/anpigon/steemdart_ecc.git
-      ref: develop
+  # steemdart_ecc: 
+  #   git: 
+  #     url: git://github.com/anpigon/steemdart_ecc.git
+  #     ref: develop
+  steemdart_ecc:
+      path: ../steemdart_ecc
 
   flutter: 
     sdk: flutter

@@ -31,12 +31,24 @@ class SteemService extends GetxService {
     client = steem.Client(url);
   }
 
-  Future getAccount(String username) async {
+  Future<steem.Account?> getAccount(String username) async {
     final accounts = await client.database.getAccounts([username]);
     if (accounts.isNotEmpty) {
       final account = accounts[0];
       return account;
     }
     return null;
+  }
+
+  Future<steem.Manabar?> getRCMana(String username) async {
+    final manabar = await client.rc.getRCMana(username);
+    if (manabar != null) {
+      return manabar;
+    }
+    return null;
+  }
+
+  Future<steem.DynamicGlobalProperties> getDynamicGlobalProperties() async {
+    return await client.database.getDynamicGlobalProperties();
   }
 }

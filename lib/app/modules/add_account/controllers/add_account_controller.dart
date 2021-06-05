@@ -86,7 +86,7 @@ class AddAccountController extends GetxController {
       // active private key 정보 저장
       final valutService = Get.find<ValutService>();
       await valutService.write(
-        account.activePublicKey,
+        account.activePublicKey!,
         privateKeyController.text,
       );
 

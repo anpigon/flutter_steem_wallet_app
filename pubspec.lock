@@ -598,12 +598,10 @@ packages:
   steemdart_ecc:
     dependency: "direct main"
     description:
-      path: "."
-      ref: develop
-      resolved-ref: "1bc152e3f5c47708cc8ad6ab3c54fb4f5887855b"
-      url: "git://github.com/anpigon/steemdart_ecc.git"
-    source: git
-    version: "0.4.3+2"
+      path: "../steemdart_ecc"
+      relative: true
+    source: path
+    version: "0.4.3+3"
   stream_channel:
     dependency: transitive
     description:
