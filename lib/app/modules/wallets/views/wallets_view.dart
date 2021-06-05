@@ -28,6 +28,16 @@ class WalletsView extends StatelessWidget {
                           .toList(),
                     )),
               ),
+              controller.obx(
+                (state) {
+                  print('state');
+                  print(state);
+                  return Container();
+                },
+                onLoading: CircularProgressIndicator(),
+                onEmpty: Text('No data found'),
+                onError: (error) => Text(error.toString()),
+              )
             ],
           ),
         ),

@@ -8,7 +8,7 @@ class Account extends HiveObject {
   final int id;
 
   @HiveField(1)
-  late final String name;
+  final String name;
 
   @HiveField(2)
   final String ownerPublicKey;
