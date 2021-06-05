@@ -14,6 +14,19 @@ class WalletsView extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Get.theme.primaryColorDark,
+                      Get.theme.primaryColor,
+                    ],
+                  ),
+                ),
+                height: 200,
+              ),
               Center(
                 child: Obx(() => DropdownButton(
                       onChanged: controller.onChangeAccount,

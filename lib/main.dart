@@ -16,7 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Steem Wallet',
-      theme: ThemeData(),
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );
