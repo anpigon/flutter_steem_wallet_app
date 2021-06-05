@@ -109,6 +109,7 @@ class WalletsView extends StatelessWidget {
                           balance: 101010.3432423,
                           symbol: 'STEEM',
                           price: 800,
+                          ratio: 2.3,
                         ),
                         const SizedBox(height: 10),
                         Card(
@@ -152,6 +153,7 @@ class WalletsView extends StatelessWidget {
     required double balance,
     required double price,
     required String symbol,
+    required double ratio,
   }) {
     return Card(
       child: Container(
@@ -181,8 +183,9 @@ class WalletsView extends StatelessWidget {
                     '\$ ${NumberFormat('###,###,###,###.##').format(balance * price).trim()}'),
                 SizedBox(height: 6.8),
                 Text(
-                  '+ 0.2%',
-                  style: TextStyle(color: Colors.green),
+                  '${ratio > 0 ? '+' : '-'} $ratio%',
+                  style:
+                      TextStyle(color: ratio > 0 ? Colors.green : Colors.red),
                 ),
               ],
             ),
