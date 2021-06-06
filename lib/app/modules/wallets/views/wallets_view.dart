@@ -57,9 +57,24 @@ class WalletsView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    '\$ 0.00 USD',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  controller.obx(
+                    (state) {
+                      final total = ((state!.steemBalance + state.steemPower) *
+                              controller.steemMarketPrice().price) +
+                          (state.sbdBalance *
+                              controller.sbdMarketPrice().price);
+                      final atotalString =
+                          NumberFormat('###,###,###,###.##').format(total);
+                      return Text(
+                        '\$ $atotalString USD',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 20),
+                      );
+                    },
+                    onLoading: Text(
+                      '\$ 0.00 USD',
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    ),
                   ),
                   Text(
                     'Estimated Account Value',
@@ -120,8 +135,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-steem.svg'),
                               amount: state!.steemBalance,
                               symbol: 'STEEM',
-                              price: 0,
-                              ratio: 0,
+                              price: controller.steemMarketPrice().price,
+                              ratio: controller.steemMarketPrice().change,
                             ),
                             const SizedBox(height: 10),
                             buildWalletCard(
@@ -129,8 +144,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-steem-power.svg'),
                               amount: state.steemPower,
                               symbol: 'SP',
-                              price: 0,
-                              ratio: 0,
+                              price: controller.steemMarketPrice().price,
+                              ratio: controller.steemMarketPrice().change,
                             ),
                             const SizedBox(height: 10),
                             buildWalletCard(
@@ -138,8 +153,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-sbd.svg'),
                               amount: state.sbdBalance,
                               symbol: 'SBD',
-                              price: 0,
-                              ratio: 0,
+                              price: controller.sbdMarketPrice().price,
+                              ratio: controller.sbdMarketPrice().change,
                             ),
                           ],
                         );
@@ -196,7 +211,7 @@ class WalletsView extends StatelessWidget {
                 Text('\$ $totalString'),
                 SizedBox(height: 6.8),
                 Text(
-                  '${ratio > 0 ? '+' : ratio < 0 ? '-' : ''} $ratio%',
+                  '${ratio > 0 ? '+' : ratio < 0 ? '-' : ''} ${ratio.toStringAsFixed(2)}%',
                   style: TextStyle(
                       color: ratio > 0
                           ? Colors.green

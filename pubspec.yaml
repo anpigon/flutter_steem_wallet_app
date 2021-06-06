@@ -16,13 +16,9 @@ dependencies:
   flutter_secure_storage: ^4.2.0
   dio: ^4.0.0
   intl: ^0.17.0
-  # steemdart_ecc: 
-  #   git: 
-  #     url: git://github.com/anpigon/steemdart_ecc.git
-  #     ref: develop
-  steemdart_ecc:
-      path: ../steemdart_ecc
-
+  flutter_dotenv: ^5.0.0
+  steemdart_ecc: 
+    path: ../steemdart_ecc
   flutter: 
     sdk: flutter
 
@@ -34,7 +30,8 @@ dev_dependencies:
     sdk: flutter
 
 flutter: 
-  assets: 
+  assets:  
+    - .env
     - assets/images/icon/token-sbd.svg
     - assets/images/icon/token-steem-power.svg
     - assets/images/icon/token-steem.svg

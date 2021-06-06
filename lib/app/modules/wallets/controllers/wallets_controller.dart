@@ -4,11 +4,28 @@ import 'package:get/get.dart';
 import '../../../models/wallet.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
+import '../../../data/price_provider.dart';
+
+class MarketPrice {
+  double price;
+  double change;
+  MarketPrice(this.price, this.change);
+}
 
 class WalletsController extends GetxController
     with StateMixin<Wallet>, SingleGetTickerProviderMixin {
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
+
+  final steemMarketPrice = MarketPrice(0, 0).obs;
+  final sbdMarketPrice = MarketPrice(0, 0).obs;
+
+  MarketPrice marketPrice(String symbol) {
+    if (symbol == 'STEEM') {
+      return steemMarketPrice();
+    }
+    return sbdMarketPrice();
+  }
 
   late final TabController tabController =
       TabController(length: 2, vsync: this);
@@ -21,10 +38,10 @@ class WalletsController extends GetxController
 
   final localDataService = Get.find<LocalDataService>();
   final steemService = Get.find<SteemService>();
+  final priceProvider = Get.put<PriceProvider>(PriceProvider());
 
   /// account 잔액 정보를 가져온다.
   void loadAccountDetails(username) async {
-    print(username);
     change(null, status: RxStatus.loading());
     // final data = await steemService.;
     try {
@@ -65,6 +82,22 @@ class WalletsController extends GetxController
     }
   }
 
+  void updateMatketPrice() {
+    // 시장 가격 조회
+    priceProvider.getQuotesLatest(['STEEM', 'SBD']).then((value) {
+      final steem = value.items['STEEM']!.quote.usd;
+      final sbd = value.items['SBD']!.quote.usd;
+      steemMarketPrice.update((val) {
+        val!.price = steem.price;
+        val.change = steem.percentChange1H;
+      });
+      sbdMarketPrice.update((val) {
+        val!.price = sbd.price;
+        val.change = sbd.percentChange1H;
+      });
+    });
+  }
+
   @override
   Future<void> onInit() async {
     // selectedAccount.firstRebuild = false;
@@ -77,6 +110,8 @@ class WalletsController extends GetxController
       accounts.assignAll(_accounts);
       selectedAccount(_accounts[0]);
     }
+
+    updateMatketPrice();
 
     super.onInit();
   }
