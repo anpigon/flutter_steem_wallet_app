@@ -54,6 +54,8 @@ class AddAccountController extends GetxController {
     if (!formKey.currentState!.validate()) {
       return;
     }
+    FocusScope.of(Get.context!).unfocus();
+
     loading(true);
 
     try {
@@ -69,7 +71,7 @@ class AddAccountController extends GetxController {
       if (response.data!['status'] == '404') {
         throw Exception(user);
       }
-      //   // Account 객체 생성하기
+
       final account = Account(
         id: user['id'],
         name: user['name'],
@@ -93,7 +95,7 @@ class AddAccountController extends GetxController {
       if (Get.previousRoute == Routes.START) {
         await Get.offAllNamed(Routes.HOME);
       } else {
-        Get.back();
+        Get.back(result: user['name']);
       }
     } catch (error) {
       Get.snackbar(

@@ -41,9 +41,9 @@ class WalletsController extends GetxController
   final priceProvider = Get.put<PriceProvider>(PriceProvider());
 
   /// account 잔액 정보를 가져온다.
-  void loadAccountDetails(username) async {
+  void loadAccountDetails(String username) async {
     change(null, status: RxStatus.loading());
-    // final data = await steemService.;
+
     try {
       final globalProperties = await steemService.getDynamicGlobalProperties();
       final data = await steemService.getAccount(username);
@@ -73,11 +73,13 @@ class WalletsController extends GetxController
           votingPower: currentVotingPower / 100,
           resourceCredits: currentResourceCredits / 100,
         );
+        print(5);
         change(wallet, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.empty());
       }
     } catch (e) {
+      e.printError();
       change(null, status: RxStatus.error(e.toString()));
     }
   }

@@ -50,8 +50,13 @@ class WalletsView extends StatelessWidget {
                         icon: Icon(Icons.add_box),
                         tooltip: 'Add Account',
                         color: Colors.white,
-                        onPressed: () {
-                          Get.toNamed(Routes.ADD_ACCOUNT);
+                        onPressed: () async {
+                          final newAccount =
+                              await Get.toNamed(Routes.ADD_ACCOUNT);
+                          print('newAccount: $newAccount');
+                          if (!newAccount.isEmpty) {
+                            controller.accounts.add(newAccount);
+                          }
                         },
                       ),
                     ],
