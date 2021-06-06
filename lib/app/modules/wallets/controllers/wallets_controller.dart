@@ -1,14 +1,12 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/account.dart';
+import '../../../models/wallet.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 
 class WalletsController extends GetxController
-    with StateMixin<Account>, SingleGetTickerProviderMixin {
+    with StateMixin<Wallet>, SingleGetTickerProviderMixin {
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
 
@@ -43,27 +41,22 @@ class WalletsController extends GetxController
             vestingShares / totalVestingShares * totalVestingFundSteem;
 
         // 보팅 파워 계산
-        final elapsedSeconds = (DateTime.now().millisecondsSinceEpoch -
-                DateTime.parse('${data.last_vote_time}Z')
-                    .millisecondsSinceEpoch) /
-            1000; // 마지막 보팅 후 경과 시간
-        final regeneratedPower = (10000 * elapsedSeconds) / (60 * 60 * 24 * 5);
-        final currentVotingPower = math
-            .min(data.voting_power + regeneratedPower, 10000)
-            .round(); // 현재 보팅파워 // 재생된 보팅파워
+        final currentVotingPower =
+            steemService.calculateVPMana(data).percentage;
 
         // RC 계산
-        final manabar = await steemService.getRCMana(username);
+        final currentResourceCredits =
+            (await steemService.getRCMana(username)).percentage;
 
-        final _account = Account(
+        final wallet = Wallet(
           name: data.name,
           steemBalance: double.parse(data.balance.split(' ')[0]),
           sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
           steemPower: steemPower,
           votingPower: currentVotingPower / 100,
-          resourceCredits: manabar!.percentage / 100,
+          resourceCredits: currentResourceCredits / 100,
         );
-        change(_account, status: RxStatus.success());
+        change(wallet, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.empty());
       }

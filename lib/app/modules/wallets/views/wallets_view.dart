@@ -67,20 +67,30 @@ class WalletsView extends StatelessWidget {
                         color: Colors.white.withOpacity(0.8), fontSize: 12),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      buildProgressBox(
-                        label: 'Resource Credits',
-                        value: 100.00,
-                        color: Colors.green.shade800,
-                      ),
-                      buildProgressBox(
-                        label: 'Voting Power',
-                        value: 100.00,
-                        color: Colors.lightBlue.shade800,
-                      ),
-                    ],
+                  controller.obx(
+                    (state) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          buildProgressBox(
+                            label: 'Resource Credits',
+                            value: state!.resourceCredits,
+                            color: Colors.green.shade800,
+                          ),
+                          buildProgressBox(
+                            label: 'Voting Power',
+                            value: state.votingPower,
+                            color: Colors.lightBlue.shade800,
+                          ),
+                        ],
+                      );
+                    },
+                    onLoading: SizedBox(
+                      height: 20,
+                      child: FittedBox(
+                          child:
+                              CircularProgressIndicator(color: Colors.white)),
+                    ),
                   ),
                   const SizedBox(height: 20),
                 ],
@@ -101,47 +111,48 @@ class WalletsView extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        buildWalletCard(
-                          icon: SvgPicture.asset(
-                              'assets/images/icon/token-steem.svg'),
-                          balance: 101010.3432423,
-                          symbol: 'STEEM',
-                          price: 800,
-                          ratio: 2.3,
-                        ),
-                        const SizedBox(height: 10),
-                        Card(
-                          child: Container(
-                            width: double.infinity,
-                            child: Text('Steem'),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Card(
-                          child: Container(
-                            width: double.infinity,
-                            child: Text('Steem'),
-                          ),
-                        ),
-                      ],
+                    child: controller.obx(
+                      (state) {
+                        return Column(
+                          children: [
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-steem.svg'),
+                              amount: state!.steemBalance,
+                              symbol: 'STEEM',
+                              price: 0,
+                              ratio: 0,
+                            ),
+                            const SizedBox(height: 10),
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-steem-power.svg'),
+                              amount: state.steemPower,
+                              symbol: 'SP',
+                              price: 0,
+                              ratio: 0,
+                            ),
+                            const SizedBox(height: 10),
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-sbd.svg'),
+                              amount: state.sbdBalance,
+                              symbol: 'SBD',
+                              price: 0,
+                              ratio: 0,
+                            ),
+                          ],
+                        );
+                      },
+                      onLoading: Center(child: CircularProgressIndicator()),
+                      // onEmpty: Text('No data found'),
+                      // onError: (error) => Text(error.toString()),
                     ),
                   ),
                   Center(child: Text('Tokens')),
                 ],
               ),
             ),
-            controller.obx(
-              (state) {
-                // print('state');
-                // print(state);
-                return Container();
-              },
-              onLoading: CircularProgressIndicator(),
-              onEmpty: Text('No data found'),
-              onError: (error) => Text(error.toString()),
-            )
           ],
         ),
       ),
@@ -150,11 +161,15 @@ class WalletsView extends StatelessWidget {
 
   Card buildWalletCard({
     required Widget icon,
-    required double balance,
+    required double amount,
     required double price,
     required String symbol,
     required double ratio,
   }) {
+    final amountString = NumberFormat('###,###,###,###.###').format(amount);
+    final priceString = NumberFormat('###,###,###,###.##').format(price);
+    final totalString =
+        NumberFormat('###,###,###,###.##').format(amount * price).trim();
     return Card(
       child: Container(
         width: double.infinity,
@@ -166,11 +181,10 @@ class WalletsView extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    '${NumberFormat('###,###,###,###.###').format(balance)} $symbol'),
+                Text('$amountString $symbol'),
                 SizedBox(height: 5),
                 Text(
-                  '\$ ${NumberFormat('###,###,###,###.##').format(price)}',
+                  '\$ $priceString',
                   style: TextStyle(color: Get.theme.hintColor),
                 ),
               ],
@@ -179,13 +193,16 @@ class WalletsView extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                    '\$ ${NumberFormat('###,###,###,###.##').format(balance * price).trim()}'),
+                Text('\$ $totalString'),
                 SizedBox(height: 6.8),
                 Text(
-                  '${ratio > 0 ? '+' : '-'} $ratio%',
-                  style:
-                      TextStyle(color: ratio > 0 ? Colors.green : Colors.red),
+                  '${ratio > 0 ? '+' : ratio < 0 ? '-' : ''} $ratio%',
+                  style: TextStyle(
+                      color: ratio > 0
+                          ? Colors.green
+                          : ratio < 0
+                              ? Colors.red
+                              : Get.theme.hintColor),
                 ),
               ],
             ),

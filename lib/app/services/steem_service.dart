@@ -40,12 +40,16 @@ class SteemService extends GetxService {
     return null;
   }
 
-  Future<steem.Manabar?> getRCMana(String username) async {
-    final manabar = await client.rc.getRCMana(username);
-    if (manabar != null) {
-      return manabar;
-    }
-    return null;
+  Future<steem.Manabar> getRCMana(String username) async {
+    return await client.rc.getRCMana(username);
+  }
+
+  Future<steem.Manabar> getVPMana(String username) async {
+    return await client.rc.getVPMana(username);
+  }
+
+  steem.Manabar calculateVPMana(steem.Account account) {
+    return client.rc.calculateVPMana(account);
   }
 
   Future<steem.DynamicGlobalProperties> getDynamicGlobalProperties() async {

@@ -22,12 +22,6 @@ class Account extends HiveObject {
   @HiveField(5)
   final String? memoPublicKey;
 
-  double? steemBalance;
-  double? sbdBalance;
-  double? steemPower;
-  double? votingPower;
-  double? resourceCredits;
-
   Account({
     required this.name,
     this.id,
@@ -35,10 +29,5 @@ class Account extends HiveObject {
     this.activePublicKey,
     this.postingPublicKey,
     this.memoPublicKey,
-    this.steemBalance,
-    this.sbdBalance,
-    this.steemPower,
-    this.votingPower,
-    this.resourceCredits,
   });
 }
