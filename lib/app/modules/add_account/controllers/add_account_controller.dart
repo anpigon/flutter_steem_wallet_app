@@ -1,11 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/modules/qrscan/views/qrscan_view.dart';
 import 'package:get/get.dart';
+import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
+import '../../../exceptions/message_exception.dart';
 import '../../../routes/app_pages.dart';
 import '../../../models/account.dart';
 import '../../../services/local_data_service.dart';
+import '../../../services/steem_service.dart';
 import '../../../services/vault_service.dart';
 
 class AddAccountController extends GetxController {
@@ -43,10 +44,11 @@ class AddAccountController extends GetxController {
   }
 
   String? privateKeyValidator(String? value) {
-    if (value == null ||
-        value.isEmpty ||
-        value.length < 51 ||
-        !value.startsWith('5')) {
+    if (value == null || value.isEmpty) {
+      return 'Invalid privateKey!';
+    } else if (value.startsWith('STM')) {
+      return 'Invalid privateKey!';
+    } else if (value.length < 51 || !value.startsWith('5')) {
       return 'Invalid privateKey!';
     }
     return null;
@@ -75,57 +77,78 @@ class AddAccountController extends GetxController {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    FocusScope.of(Get.overlayContext!).unfocus();
+    final currentFocus = FocusScope.of(Get.overlayContext!);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
 
     loading(true);
 
     try {
       // Account 정보 가져오기
       final username = usernameController.text;
-      final response = await Dio()
-          .get<Map<String, dynamic>>('https://steemit.com/@$username.json');
-      if (response.statusCode != 200 || response.data == null) {
-        throw Exception('Steem API 서버에서 장애가 발생했습니다.');
-      }
-      //   final json = jsonDecode(response.body);
-      final user = response.data!['user'];
-      if (response.data!['status'] == '404') {
-        throw Exception(user);
+      final steemService = Get.find<SteemService>();
+      final data = await steemService.getAccount(username);
+      print('==> $data');
+      if (data == null) {
+        throw MessageException('Account not found');
       }
 
       final account = Account(
-        id: user['id'],
-        name: user['name'],
-        ownerPublicKey: user['owner']['key_auths'][0][0],
-        activePublicKey: user['active']['key_auths'][0][0],
-        postingPublicKey: user['posting']['key_auths'][0][0],
-        memoPublicKey: user['memo_key'],
+        id: data.id,
+        name: data.name,
+        ownerPublicKey: data.owner.key_auths[0][0],
+        activePublicKey: data.active.key_auths[0][0],
+        postingPublicKey: data.posting.key_auths[0][0],
+        memoPublicKey: data.memo_key,
       );
+
+      // privateKey verify
+      final _privateKey =
+          steem.SteemPrivateKey.fromString(privateKeyController.text);
+      final _publicKey = _privateKey.toPublicKey().toString();
+
+      // active private key 정보 저장
+      final valutService = Get.find<ValutService>();
+      if (_publicKey == account.activePublicKey) {
+        await valutService.write(
+          account.activePublicKey!,
+          _privateKey.toString(),
+        );
+      } else if (_publicKey == account.postingPublicKey) {
+        await valutService.write(
+          account.postingPublicKey!,
+          _privateKey.toString(),
+        );
+      } else {
+        privateKeyController.clear();
+        throw MessageException('포스팅 키 또는 액티브 키가 필요합니다.');
+      }
 
       // account 정보 저장
       final localDataService = Get.find<LocalDataService>();
       await localDataService.addAccount(account);
 
-      // active private key 정보 저장
-      final valutService = Get.find<ValutService>();
-      await valutService.write(
-        account.activePublicKey!,
-        privateKeyController.text,
-      );
-
       if (Get.previousRoute == Routes.START) {
         await Get.offAllNamed(Routes.HOME);
       } else {
-        Get.back(result: user['name']);
+        Get.back(result: username);
       }
+    } on MessageException catch (error) {
+      showErrorMessage(error.message);
     } catch (error) {
-      Get.snackbar(
-        'Error',
-        error.toString(),
-        colorText: Get.theme.errorColor,
-      );
+      showErrorMessage(error.toString());
     } finally {
       loading(false);
     }
+  }
+
+  void showErrorMessage(String message) {
+    Get.snackbar(
+      'ERROR',
+      message,
+      backgroundColor: Get.theme.errorColor,
+      colorText: Colors.white,
+    );
   }
 }

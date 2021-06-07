@@ -30,4 +30,13 @@ class Account extends HiveObject {
     this.postingPublicKey,
     this.memoPublicKey,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'ownerPublicKey': ownerPublicKey,
+        'activePublicKey': activePublicKey,
+        'postingPublicKey': postingPublicKey,
+        'memoPublicKey': memoPublicKey,
+      };
 }

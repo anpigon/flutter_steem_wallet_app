@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.17.0
   flutter_dotenv: ^5.0.0
   qr_code_scanner: ^0.4.0
+  fluttertoast: ^8.0.7
   steemdart_ecc: 
     path: ../steemdart_ecc
 
