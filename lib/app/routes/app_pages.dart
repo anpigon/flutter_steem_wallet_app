@@ -4,6 +4,8 @@ import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_ac
 import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/qrscan/bindings/qrscan_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/qrscan/views/qrscan_view.dart';
+import 'package:flutter_steem_wallet_app/app/modules/send_coin/bindings/send_coin_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/send_coin/views/send_coin_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/bindings/start_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/views/start_view.dart';
 
@@ -44,6 +46,11 @@ class AppPages {
       name: _Paths.QRSCAN,
       page: () => QrscanView(),
       binding: QrscanBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEND_COIN,
+      page: () => SendCoinView(),
+      binding: SendCoinBinding(),
     ),
   ];
 }

@@ -10,6 +10,7 @@ abstract class Routes {
   static const ADD_ACCOUNT = _Paths.ADD_ACCOUNT;
   static const WALLETS = _Paths.WALLETS;
   static const QRSCAN = _Paths.QRSCAN;
+  static const SEND_COIN = _Paths.SEND_COIN;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const ADD_ACCOUNT = '/add-account';
   static const WALLETS = '/wallets';
   static const QRSCAN = '/qrscan';
+  static const SEND_COIN = '/send-coin';
 }

@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Steem Wallet',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
+        appBarTheme: Get.theme.appBarTheme.copyWith(centerTitle: true),
       ),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

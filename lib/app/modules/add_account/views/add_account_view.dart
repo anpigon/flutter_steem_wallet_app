@@ -8,9 +8,7 @@ class AddAccountView extends GetView<AddAccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Account'),
-      ),
+      appBar: AppBar(title: Text('Add Account')),
       body: Padding(
         padding: EdgeInsets.all(23),
         child: Column(
