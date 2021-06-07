@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/modules/qrscan/views/qrscan_view.dart';
 import 'package:get/get.dart';
 
 import '../../../routes/app_pages.dart';
@@ -10,6 +11,7 @@ import '../../../services/vault_service.dart';
 class AddAccountController extends GetxController {
   late final formKey = GlobalKey<FormState>();
   late final usernameFocusNode = FocusNode();
+  late final privateKeyFocusNode = FocusNode();
   late final usernameController = TextEditingController();
   late final privateKeyController = TextEditingController();
 
@@ -50,11 +52,30 @@ class AddAccountController extends GetxController {
     return null;
   }
 
+  Future<void> scanQRCode() async {
+    // referenced solution: https://github.com/flutter/flutter/issues/36948
+    // Unfocus all focus nodes
+    privateKeyFocusNode.unfocus();
+
+    // Disable text field's focus node request
+    privateKeyFocusNode.canRequestFocus = false;
+
+    Future.delayed(Duration(milliseconds: 100), () async {
+      final result = await Get.toNamed(Routes.QRSCAN);
+      if (result != null) {
+        privateKeyController.text = result;
+      }
+
+      //Enable the text field's focus node request after some delay
+      privateKeyFocusNode.canRequestFocus = true;
+    });
+  }
+
   Future<void> submit() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    FocusScope.of(Get.context!).unfocus();
+    FocusScope.of(Get.overlayContext!).unfocus();
 
     loading(true);
 

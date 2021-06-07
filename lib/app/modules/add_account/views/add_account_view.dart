@@ -7,7 +7,6 @@ import '../controllers/add_account_controller.dart';
 class AddAccountView extends GetView<AddAccountController> {
   @override
   Widget build(BuildContext context) {
-    print('Loading: ${controller.loading.value ? 'true' : 'false'}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Account'),
@@ -31,7 +30,6 @@ class AddAccountView extends GetView<AddAccountController> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        key: ValueKey('username'),
                         controller: controller.usernameController,
                         focusNode: controller.usernameFocusNode,
                         validator: controller.usernameValidator,
@@ -45,6 +43,7 @@ class AddAccountView extends GetView<AddAccountController> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        focusNode: controller.privateKeyFocusNode,
                         controller: controller.privateKeyController,
                         validator: controller.privateKeyValidator,
                         onEditingComplete: controller.submit,
@@ -53,6 +52,10 @@ class AddAccountView extends GetView<AddAccountController> {
                           labelText: 'Private Key',
                           hintText: 'Private Key를 입력하세요.',
                           prefixIcon: Icon(Icons.vpn_key),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.qr_code_scanner),
+                            onPressed: controller.scanQRCode,
+                          ),
                         ),
                         obscureText: true,
                         textInputAction: TextInputAction.done,
@@ -82,9 +85,8 @@ class AddAccountView extends GetView<AddAccountController> {
               height: 50,
               child: Obx(
                 () => ElevatedButton(
-                  onPressed:
-                      controller.loading.value ? null : controller.submit,
-                  child: controller.loading.value
+                  onPressed: controller.loading() ? null : controller.submit,
+                  child: controller.loading()
                       ? const SizedBox(
                           height: 20.0,
                           width: 20.0,

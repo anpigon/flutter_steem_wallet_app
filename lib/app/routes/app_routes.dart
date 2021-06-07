@@ -9,6 +9,7 @@ abstract class Routes {
   static const START = _Paths.START;
   static const ADD_ACCOUNT = _Paths.ADD_ACCOUNT;
   static const WALLETS = _Paths.WALLETS;
+  static const QRSCAN = _Paths.QRSCAN;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const START = '/start';
   static const ADD_ACCOUNT = '/add-account';
   static const WALLETS = '/wallets';
+  static const QRSCAN = '/qrscan';
 }
