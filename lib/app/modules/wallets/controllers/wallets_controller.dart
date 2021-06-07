@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/wallet.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 import '../../../data/price_provider.dart';
@@ -98,6 +99,13 @@ class WalletsController extends GetxController
         val.change = sbd.percentChange1H;
       });
     });
+  }
+
+  Future<void> addAccount() async {
+    final newAccount = await Get.toNamed(Routes.ADD_ACCOUNT);
+    if (!newAccount.isEmpty) {
+      accounts.add(newAccount);
+    }
   }
 
   @override

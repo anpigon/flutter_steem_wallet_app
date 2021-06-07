@@ -50,14 +50,7 @@ class WalletsView extends StatelessWidget {
                         icon: Icon(Icons.add_box),
                         tooltip: 'Add Account',
                         color: Colors.white,
-                        onPressed: () async {
-                          final newAccount =
-                              await Get.toNamed(Routes.ADD_ACCOUNT);
-                          print('newAccount: $newAccount');
-                          if (!newAccount.isEmpty) {
-                            controller.accounts.add(newAccount);
-                          }
-                        },
+                        onPressed: controller.addAccount,
                       ),
                     ],
                   ),
@@ -68,10 +61,10 @@ class WalletsView extends StatelessWidget {
                               controller.steemMarketPrice().price) +
                           (state.sbdBalance *
                               controller.sbdMarketPrice().price);
-                      final atotalString =
+                      final _totalString =
                           NumberFormat('###,###,###,###.##').format(total);
                       return Text(
-                        '\$ $atotalString USD',
+                        '\$ $_totalString USD',
                         style:
                             const TextStyle(color: Colors.white, fontSize: 20),
                       );
@@ -129,44 +122,46 @@ class WalletsView extends StatelessWidget {
               child: TabBarView(
                 controller: controller.tabController,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: controller.obx(
-                      (state) {
-                        return Column(
-                          children: [
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-steem.svg'),
-                              amount: state!.steemBalance,
-                              symbol: 'STEEM',
-                              price: controller.steemMarketPrice().price,
-                              ratio: controller.steemMarketPrice().change,
-                            ),
-                            const SizedBox(height: 10),
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-steem-power.svg'),
-                              amount: state.steemPower,
-                              symbol: 'SP',
-                              price: controller.steemMarketPrice().price,
-                              ratio: controller.steemMarketPrice().change,
-                            ),
-                            const SizedBox(height: 10),
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-sbd.svg'),
-                              amount: state.sbdBalance,
-                              symbol: 'SBD',
-                              price: controller.sbdMarketPrice().price,
-                              ratio: controller.sbdMarketPrice().change,
-                            ),
-                          ],
-                        );
-                      },
-                      onLoading: Center(child: CircularProgressIndicator()),
-                      // onEmpty: Text('No data found'),
-                      // onError: (error) => Text(error.toString()),
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: controller.obx(
+                        (state) {
+                          return Column(
+                            children: [
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-steem.svg'),
+                                amount: state!.steemBalance,
+                                symbol: 'STEEM',
+                                price: controller.steemMarketPrice().price,
+                                ratio: controller.steemMarketPrice().change,
+                              ),
+                              const SizedBox(height: 10),
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-steem-power.svg'),
+                                amount: state.steemPower,
+                                symbol: 'SP',
+                                price: controller.steemMarketPrice().price,
+                                ratio: controller.steemMarketPrice().change,
+                              ),
+                              const SizedBox(height: 10),
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-sbd.svg'),
+                                amount: state.sbdBalance,
+                                symbol: 'SBD',
+                                price: controller.sbdMarketPrice().price,
+                                ratio: controller.sbdMarketPrice().change,
+                              ),
+                            ],
+                          );
+                        },
+                        onLoading: Center(child: CircularProgressIndicator()),
+                        // onEmpty: Text('No data found'),
+                        // onError: (error) => Text(error.toString()),
+                      ),
                     ),
                   ),
                   Center(child: Text('Tokens')),
@@ -193,7 +188,7 @@ class WalletsView extends StatelessWidget {
     return Card(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: EdgeInsets.all(23),
         child: Row(
           children: [
             icon,
@@ -216,7 +211,7 @@ class WalletsView extends StatelessWidget {
                 Text('\$ $totalString'),
                 SizedBox(height: 6.8),
                 Text(
-                  '${ratio > 0 ? '+' : ratio < 0 ? '-' : ''} ${ratio.toStringAsFixed(2)}%',
+                  '${ratio > 0 ? '+' : ''} ${ratio.toStringAsFixed(2)}%',
                   style: TextStyle(
                       color: ratio > 0
                           ? Colors.green
@@ -237,22 +232,30 @@ class WalletsView extends StatelessWidget {
     required final double value,
     required final Color color,
   }) {
+    final maxWidth = Get.width > 300 ? 170.0 : 160.0;
     return SizedBox(
-      width: Get.width > 300 ? 170.0 : 160.0,
+      width: maxWidth,
       child: Column(
         children: [
           Row(
             children: [
-              Text(
-                '$label: ',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 13,
+              Flexible(
+                child: FittedBox(
+                  child: Text(
+                    '$label: ',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                '${value.toStringAsFixed(2)}%',
-                style: TextStyle(color: Colors.white),
+              Flexible(
+                child: FittedBox(
+                  child: Text(
+                    '${value.toStringAsFixed(2)}%',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               )
             ],
           ),
