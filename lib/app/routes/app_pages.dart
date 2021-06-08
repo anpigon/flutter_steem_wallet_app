@@ -26,6 +26,8 @@ class AppPages {
       name: _Paths.HOME,
       page: () => HomeView(),
       binding: HomeBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(seconds: 1),
     ),
     GetPage(
       name: _Paths.SPLASH,
@@ -36,6 +38,8 @@ class AppPages {
       name: _Paths.START,
       page: () => StartView(),
       binding: StartBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(seconds: 1),
     ),
     GetPage(
       name: _Paths.ADD_ACCOUNT,

@@ -1,4 +1,5 @@
 import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -9,6 +10,8 @@ const String ACCOUNTS_BOX = 'accounts_box';
 
 class LocalDataService extends GetxService {
   late final Box<Account> accountsBox;
+
+  static LocalDataService get to => Get.find();
 
   Future<List<Account>> getAccounts() async {
     if (accountsBox.isNotEmpty) {

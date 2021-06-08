@@ -7,14 +7,15 @@ import '../controllers/splash_controller.dart';
 class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
+    Get.put(SplashController());
+
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('assets/images/steem_logo_with_text.png'),
-            if (controller.loading()) CircularProgressIndicator(),
-          ],
+      body: Container(
+        color: Colors.black,
+        alignment: Alignment.center,
+        child: Hero(
+          tag: 'logo',
+          child: Image.asset('assets/images/steem_logo.png'),
         ),
       ),
     );

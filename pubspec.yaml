@@ -21,6 +21,7 @@ dependencies:
   flutter_dotenv: ^5.0.0
   qr_code_scanner: ^0.4.0
   fluttertoast: ^8.0.7
+  flutter_native_splash: ^1.1.8+4
   steemdart_ecc: 
     path: ../steemdart_ecc
 
@@ -38,7 +39,6 @@ flutter:
     - assets/images/icon/token-steem-power.svg
     - assets/images/icon/token-steem.svg
     - assets/images/steem_logo_with_text.png
-    - assets/images/steem_logo.webp
+    - assets/images/steem_logo.png
     - assets/images/start_background.jpeg
   uses-material-design: true
-

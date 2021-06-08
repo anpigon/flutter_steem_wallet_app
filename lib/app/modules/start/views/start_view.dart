@@ -33,7 +33,7 @@ class StartView extends GetView<StartController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/steem_logo.webp',
+                      'assets/images/steem_logo.png',
                       width: 100,
                       height: 100,
                       fit: BoxFit.contain,

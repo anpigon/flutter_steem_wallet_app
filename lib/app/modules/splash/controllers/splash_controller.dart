@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../../services/local_data_service.dart';
@@ -7,28 +8,17 @@ class SplashController extends GetxController {
   final loading = true.obs;
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   Future<void> onReady() async {
-    final localDataService = Get.find<LocalDataService>();
-
-    final accounts = await localDataService.getAccounts();
-    if (accounts.isEmpty) {
-      // 초기 화면으로 이동
-      await Get.offNamed(Routes.START);
-    } else {
-      // 홈 화면으로 이동
-      await Get.offNamed(Routes.HOME);
-    }
-    loading(false);
     super.onReady();
+
+    final accounts = await LocalDataService.to.getAccounts();
+    loading(false);
+
+    if (accounts.isEmpty) {
+      await Get.offAllNamed(Routes.START); // 초기 화면으로 이동
+    } else {
+      await Get.offAllNamed(Routes.HOME); // 홈 화면으로 이동
+    }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }
