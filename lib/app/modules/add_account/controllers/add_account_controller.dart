@@ -18,9 +18,11 @@ class AddAccountController extends GetxController {
 
   late final loading = false.obs;
 
+  late final String previousRoute;
   @override
   void onInit() {
-    print('Get.previousRoute: ${Get.previousRoute}');
+    previousRoute = Get.previousRoute;
+
     super.onInit();
   }
 
@@ -90,7 +92,6 @@ class AddAccountController extends GetxController {
       final username = usernameController.text;
       final steemService = Get.find<SteemService>();
       final data = await steemService.getAccount(username);
-      print('==> $data');
       if (data == null) {
         throw MessageException('Account not found');
       }
@@ -130,8 +131,7 @@ class AddAccountController extends GetxController {
       final localDataService = Get.find<LocalDataService>();
       await localDataService.addAccount(account);
 
-      print('Get.previousRoute: ${Get.previousRoute}');
-      if (Get.previousRoute == Routes.START) {
+      if (previousRoute == Routes.START) {
         await Get.offAllNamed(Routes.HOME);
       } else {
         Get.back(result: username);

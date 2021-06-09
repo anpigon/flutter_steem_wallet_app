@@ -14,7 +14,7 @@ class Balances {
   }
 
   void set(steem.Account data) {
-    balances['STEEM'] = double.parse(data!.balance.split(' ')[0]);
+    balances['STEEM'] = double.parse(data.balance.split(' ')[0]);
     balances['SBD'] = double.parse(data.sbd_balance.split(' ')[0]);
     loading(false);
   }
