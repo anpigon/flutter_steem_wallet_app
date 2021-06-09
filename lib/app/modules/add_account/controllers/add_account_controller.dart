@@ -20,6 +20,7 @@ class AddAccountController extends GetxController {
 
   @override
   void onInit() {
+    print('Get.previousRoute: ${Get.previousRoute}');
     super.onInit();
   }
 
@@ -109,14 +110,14 @@ class AddAccountController extends GetxController {
       final _publicKey = _privateKey.toPublicKey().toString();
 
       // active private key 정보 저장
-      final valutService = Get.find<ValutService>();
+      final vaultService = Get.find<VaultService>();
       if (_publicKey == account.activePublicKey) {
-        await valutService.write(
+        await vaultService.write(
           account.activePublicKey!,
           _privateKey.toString(),
         );
       } else if (_publicKey == account.postingPublicKey) {
-        await valutService.write(
+        await vaultService.write(
           account.postingPublicKey!,
           _privateKey.toString(),
         );
@@ -129,6 +130,7 @@ class AddAccountController extends GetxController {
       final localDataService = Get.find<LocalDataService>();
       await localDataService.addAccount(account);
 
+      print('Get.previousRoute: ${Get.previousRoute}');
       if (Get.previousRoute == Routes.START) {
         await Get.offAllNamed(Routes.HOME);
       } else {

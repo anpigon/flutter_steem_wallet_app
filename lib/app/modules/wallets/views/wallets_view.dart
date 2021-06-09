@@ -28,11 +28,7 @@ class WalletsView extends StatelessWidget {
                         icon: Icon(Icons.send_rounded),
                         tooltip: 'Send Coin',
                         color: Colors.white,
-                        onPressed: () {
-                          Get.toNamed(Routes.SEND_COIN, arguments: {
-                            'account': controller.selectedAccount,
-                          });
-                        },
+                        onPressed: controller.goSendCoin,
                       ),
                       const SizedBox(width: 48),
                       const Spacer(),
@@ -54,7 +50,7 @@ class WalletsView extends StatelessWidget {
                         icon: Icon(Icons.add_box),
                         tooltip: 'Add Account',
                         color: Colors.white,
-                        onPressed: controller.addAccount,
+                        onPressed: controller.goAddAccount,
                       ),
                     ],
                   ),

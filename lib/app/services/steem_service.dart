@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 const STEEM_API_NODES = [
@@ -21,6 +21,8 @@ const STEEM_API_NODES = [
 
 class SteemService extends GetxService {
   late final steem.Client client;
+
+  static SteemService get to => Get.find<SteemService>();
 
   Future<SteemService> init() async {
     client = steem.Client(STEEM_API_NODES[0]);

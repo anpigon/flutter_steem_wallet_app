@@ -8,7 +8,7 @@ import './logger.dart';
 Future<void> initServices() async {
   logger.d('starting services ...');
   await Get.putAsync<LocalDataService>(() => LocalDataService().init());
-  await Get.putAsync<ValutService>(() => ValutService().init());
+  await Get.putAsync<VaultService>(() => VaultService().init());
   await Get.putAsync<SteemService>(() => SteemService().init());
   logger.d('All services started...');
 }

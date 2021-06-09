@@ -1,15 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../data/price_provider.dart';
 import '../../../models/wallet.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
-import '../../../data/price_provider.dart';
 
 class MarketPrice {
   double price;
   double change;
+
   MarketPrice(this.price, this.change);
 }
 
@@ -42,7 +45,7 @@ class WalletsController extends GetxController
   final priceProvider = Get.put<PriceProvider>(PriceProvider());
 
   /// account 잔액 정보를 가져온다.
-  void loadAccountDetails(String username) async {
+  Future<void> loadAccountDetails(String username) async {
     change(null, status: RxStatus.loading());
 
     try {
@@ -74,7 +77,6 @@ class WalletsController extends GetxController
           votingPower: currentVotingPower / 100,
           resourceCredits: currentResourceCredits / 100,
         );
-        print(5);
         change(wallet, status: RxStatus.success());
       } else {
         change(null, status: RxStatus.empty());
@@ -85,7 +87,7 @@ class WalletsController extends GetxController
     }
   }
 
-  void updateMatketPrice() {
+  void updateMarketPrice() {
     // 시장 가격 조회
     priceProvider.getQuotesLatest(['STEEM', 'SBD']).then((value) {
       final steem = value.items['STEEM']!.quote.usd;
@@ -101,17 +103,24 @@ class WalletsController extends GetxController
     });
   }
 
-  Future<void> addAccount() async {
+  /// 새로운 계정 추가
+  Future<void> goAddAccount() async {
     final newAccount = await Get.toNamed(Routes.ADD_ACCOUNT);
     if (!newAccount.isEmpty) {
       accounts.add(newAccount);
     }
   }
 
+  void goSendCoin()  {
+    Get.toNamed(Routes.SEND_COIN, arguments: {
+      'account': selectedAccount,
+    });
+  }
+
   @override
   Future<void> onInit() async {
     // selectedAccount.firstRebuild = false;
-    ever<String>(selectedAccount, loadAccountDetails);
+    interval<String>(selectedAccount, loadAccountDetails);
 
     final _accounts = (await localDataService.getAccounts())
         .map((account) => account.name)
@@ -121,7 +130,7 @@ class WalletsController extends GetxController
       selectedAccount(_accounts[0]);
     }
 
-    updateMatketPrice();
+    updateMarketPrice();
 
     super.onInit();
   }
