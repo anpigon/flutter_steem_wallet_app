@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
+import '../models/transfer.dart';
+
 const STEEM_API_NODES = [
   'https://api.steemit.com',
   'https://steem.ecosynthesizer.com',
@@ -56,5 +58,10 @@ class SteemService extends GetxService {
 
   Future<steem.DynamicGlobalProperties> getDynamicGlobalProperties() async {
     return await client.database.getDynamicGlobalProperties();
+  }
+
+  Future<Map<String, dynamic>> transfer(Transfer data, String key) async {
+    return await client.broadcast
+        .transfer(data.toJson(), steem.SteemPrivateKey.fromString(key));
   }
 }

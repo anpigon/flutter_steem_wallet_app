@@ -25,7 +25,7 @@ class SendCoinView extends GetView<SendCoinController> {
                       children: [
                         BalanceSmallBox(
                           label: 'Balance',
-                          amount: controller.amount,
+                          amount: controller.balance,
                           symbol: controller.symbol(),
                           loading: !controller.balances().isDone,
                         ),

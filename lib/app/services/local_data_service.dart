@@ -20,6 +20,13 @@ class LocalDataService extends GetxService {
     return <Account>[];
   }
 
+  Future<Account?> getAccount(String username) async {
+    if (accountsBox.isNotEmpty) {
+      return accountsBox.get(username);
+    }
+    return null;
+  }
+
   Future<void> addAccount(Account account) async {
     if (accountsBox.get(account.name) != null) {
       throw MessageException('이미 등록되어 있는 account 입니다.');
