@@ -27,7 +27,7 @@ class SendCoinView extends GetView<SendCoinController> {
                           label: 'Balance',
                           amount: controller.amount,
                           symbol: controller.symbol(),
-                          loading: controller.balances.loading(),
+                          loading: !controller.balances().isDone,
                         ),
                         SizedBox(height: 15),
                         TextFormField(
@@ -90,14 +90,20 @@ class SendCoinView extends GetView<SendCoinController> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed:
-                      controller.balances.loading() ? null : controller.submit,
+                      controller.balances().isDone ? controller.submit : null,
                   child: controller.loading()
                       ? const SizedBox(
                           height: 20.0,
                           width: 20.0,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
-                      : const Text('Send'),
+                      : const Text(
+                          'Send',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -6,18 +7,22 @@ import '../../../exceptions/message_exception.dart';
 import '../../../services/steem_service.dart';
 
 class Balances {
-  final loading = true.obs;
-  final balances = <String, double>{'STEEM': 0.0, 'SBD': 0.0}.obs;
+  double steem;
+  double sbd;
+  bool isDone;
 
   double get(String symbol) {
-    return balances[symbol] ?? 0.0;
+    switch (symbol) {
+      case 'STEEM':
+        return steem;
+      case 'SBD':
+        return sbd;
+      default:
+        return 0.0;
+    }
   }
 
-  void set(steem.Account data) {
-    balances['STEEM'] = double.parse(data.balance.split(' ')[0]);
-    balances['SBD'] = double.parse(data.sbd_balance.split(' ')[0]);
-    loading(false);
-  }
+  Balances({this.steem = 0.0, this.sbd = 0.0, this.isDone = false});
 }
 
 class SendCoinController extends GetxController {
@@ -26,12 +31,13 @@ class SendCoinController extends GetxController {
   late final amountController = TextEditingController();
   late final memoController = TextEditingController();
 
+  final balances = Balances().obs;
+  final ready = false.obs;
   final symbol = 'STEEM'.obs;
-  final loading = true.obs;
-  final balances = Balances();
+  final loading = false.obs;
 
   double get amount {
-    return balances.get(symbol());
+    return balances().get(symbol());
   }
 
   void onChangedSymbol(String? value) {
@@ -80,10 +86,12 @@ class SendCoinController extends GetxController {
         throw MessageException('Account not found');
       }
 
-      // Get.back(result: true);
+      // showSuccessMessage('송금에 성공하였습니다.');
+      Get.back(result: true);
     } on MessageException catch (error) {
       showErrorMessage(error.message);
     } catch (error) {
+      print(error.toString());
       showErrorMessage(error.toString());
     } finally {
       loading(false);
@@ -99,14 +107,30 @@ class SendCoinController extends GetxController {
     );
   }
 
-  @override
-  void onInit() async {
+  void showSuccessMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.TOP,
+      backgroundColor: Colors.green.shade700,
+    );
+  }
+
+  Future<void> getBalance() async {
     final arguments = Get.arguments;
     final data = await SteemService.to.getAccount(arguments['account']());
-    // balance['STEEM'] = double.parse(data!.balance.split(' ')[0]);
-    // balance['SBD'] = double.parse(data.sbd_balance.split(' ')[0]);
-    // loading(false);
-    balances.set(data!);
+    if (data != null) {
+      balances.update((val) {
+        val!.steem = steem.Asset.from(data.balance).amount;
+        val.sbd = steem.Asset.from(data.sbd_balance).amount;
+        val.isDone = true;
+      });
+    }
+  }
+
+  @override
+  void onInit() {
+    getBalance();
+
     super.onInit();
   }
 
