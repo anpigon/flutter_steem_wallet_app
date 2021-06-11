@@ -1,15 +1,16 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../routes/app_pages.dart';
 import '../controllers/wallets_controller.dart';
 
 class WalletsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(WalletsController(), permanent: true);
+    final isSmallWidth = Get.width < 400;
 
     return SafeArea(
       child: Container(
@@ -24,13 +25,15 @@ class WalletsView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.send_rounded),
-                        tooltip: 'Send Coin',
-                        color: Colors.white,
-                        onPressed: controller.goSendCoin,
-                      ),
-                      const SizedBox(width: 48),
+                      if (!isSmallWidth) ...[
+                        IconButton(
+                          icon: Icon(Icons.send_rounded),
+                          tooltip: 'Send Coin',
+                          color: Colors.white,
+                          onPressed: controller.goSendCoin,
+                        ),
+                        const SizedBox(width: 48),
+                      ],
                       const Spacer(),
                       Obx(
                         () => buildAccountDropdownBox(
@@ -232,9 +235,8 @@ class WalletsView extends StatelessWidget {
     required final double value,
     required final Color color,
   }) {
-    final maxWidth = Get.width > 300 ? 170.0 : 160.0;
     return SizedBox(
-      width: maxWidth,
+      width: math.min(Get.width / 2 - 20, 170),
       child: Column(
         children: [
           Row(
@@ -330,7 +332,8 @@ class WalletsView extends StatelessWidget {
                         constraints: BoxConstraints(
                           minWidth: 100,
                           // username이 매우 긴 계정 때문에...
-                          maxWidth: (Get.width - (30 + 36 + 40 + (48 * 4))),
+                          maxWidth: (math.max(Get.mediaQuery.size.width, 400) -
+                              (106 + (48 * 4))),
                         ),
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
