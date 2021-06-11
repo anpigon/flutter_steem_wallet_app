@@ -132,6 +132,7 @@ class WalletsView extends StatelessWidget {
                         (state) {
                           return Column(
                             children: [
+                              // Wallet List
                               buildWalletCard(
                                 icon: SvgPicture.asset(
                                     'assets/images/icon/token-steem.svg'),
@@ -139,6 +140,47 @@ class WalletsView extends StatelessWidget {
                                 symbol: 'STEEM',
                                 price: controller.steemMarketPrice().price,
                                 ratio: controller.steemMarketPrice().change,
+                                onTap: () async {
+                                  final result = await Get.dialog(
+                                    SimpleDialog(
+                                      children: [
+                                        buildSimpleDialogOption(
+                                          id: 0,
+                                          text: 'STEEM 보내기',
+                                          icon: Icon(
+                                            Icons.send_rounded,
+                                            color: Colors.green.shade600,
+                                            size: 24,
+                                          ),
+                                        ),
+                                        Divider(),
+                                        buildSimpleDialogOption(
+                                          id: 1,
+                                          text: ' 파워 업',
+                                          icon: Icon(
+                                            Icons.bolt,
+                                            color: Colors.yellow.shade700,
+                                            size: 36,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  switch (result) {
+                                    case 0:
+                                      controller.goSendCoin(symbol: 'STEEM');
+                                      break;
+                                    case 1:
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text('준비 중입니다.'),
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
+                                      break;
+                                  }
+                                },
                               ),
                               const SizedBox(height: 10),
                               buildWalletCard(
@@ -148,6 +190,7 @@ class WalletsView extends StatelessWidget {
                                 symbol: 'SP',
                                 price: controller.steemMarketPrice().price,
                                 ratio: controller.steemMarketPrice().change,
+                                onTap: () {},
                               ),
                               const SizedBox(height: 10),
                               buildWalletCard(
@@ -157,6 +200,7 @@ class WalletsView extends StatelessWidget {
                                 symbol: 'SBD',
                                 price: controller.sbdMarketPrice().price,
                                 ratio: controller.sbdMarketPrice().change,
+                                onTap: () {},
                               ),
                             ],
                           );
@@ -177,54 +221,75 @@ class WalletsView extends StatelessWidget {
     );
   }
 
-  Card buildWalletCard({
+  SimpleDialogOption buildSimpleDialogOption({
+    required int id,
+    required String text,
+    required Icon icon,
+  }) {
+    return SimpleDialogOption(
+      onPressed: () => Get.back(result: id),
+      child: SizedBox(
+        height: 35,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Text(text), icon],
+        ),
+      ),
+    );
+  }
+
+  Widget buildWalletCard({
     required Widget icon,
     required double amount,
     required double price,
     required String symbol,
     required double ratio,
+    required VoidCallback onTap,
   }) {
     final amountString = NumberFormat('###,###,###,###.###').format(amount);
     final priceString = NumberFormat('###,###,###,###.##').format(price);
     final totalString =
         NumberFormat('###,###,###,###.##').format(amount * price).trim();
     return Card(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(23),
-        child: Row(
-          children: [
-            icon,
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('$amountString $symbol'),
-                SizedBox(height: 5),
-                Text(
-                  '\$ $priceString',
-                  style: TextStyle(color: Get.theme.hintColor),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('\$ $totalString'),
-                SizedBox(height: 6.8),
-                Text(
-                  '${ratio > 0 ? '+' : ''} ${ratio.toStringAsFixed(2)}%',
-                  style: TextStyle(
-                      color: ratio > 0
-                          ? Colors.green
-                          : ratio < 0
-                              ? Colors.red
-                              : Get.theme.hintColor),
-                ),
-              ],
-            ),
-          ],
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(23),
+          child: Row(
+            children: [
+              icon,
+              SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$amountString $symbol'),
+                  SizedBox(height: 5),
+                  Text(
+                    '\$ $priceString',
+                    style: TextStyle(color: Get.theme.hintColor),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('\$ $totalString'),
+                  SizedBox(height: 6.8),
+                  Text(
+                    '${ratio > 0 ? '+' : ''} ${ratio.toStringAsFixed(2)}%',
+                    style: TextStyle(
+                        color: ratio > 0
+                            ? Colors.green
+                            : ratio < 0
+                                ? Colors.red
+                                : Get.theme.hintColor),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

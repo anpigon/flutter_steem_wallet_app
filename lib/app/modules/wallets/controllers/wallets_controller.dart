@@ -111,9 +111,10 @@ class WalletsController extends GetxController
     }
   }
 
-  void goSendCoin()  {
+  void goSendCoin({String symbol = 'STEEM'}) {
     Get.toNamed(Routes.SEND_COIN, arguments: {
-      'account': selectedAccount,
+      'account': selectedAccount.value,
+      'symbol': symbol,
     });
   }
 

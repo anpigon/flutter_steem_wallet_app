@@ -117,7 +117,12 @@ class SendCoinController extends GetxController {
 
   Future<void> getBalance() async {
     final arguments = Get.arguments;
-    final data = await SteemService.to.getAccount(arguments['account']());
+    print('arguments: $arguments');
+
+    symbol(arguments['symbol']);
+
+    // 계정 잔액 조회
+    final data = await SteemService.to.getAccount(arguments['account']);
     if (data != null) {
       balances.update((val) {
         val!.steem = steem.Asset.from(data.balance).amount;
