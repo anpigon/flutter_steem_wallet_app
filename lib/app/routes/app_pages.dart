@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_account_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/qrscan/bindings/qrscan_binding.dart';
@@ -17,15 +15,6 @@ import '../modules/splash/views/splash_view.dart';
 
 part 'app_routes.dart';
 
-final SystemUiOverlayStyle overlayStyle = GetPlatform.isAndroid
-    ? SystemUiOverlayStyle(
-        statusBarColor: Get.theme.primaryColorDark,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      )
-    : SystemUiOverlayStyle.dark;
-
 class AppPages {
   AppPages._();
 
@@ -34,7 +23,7 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.HOME,
-      page: () => AnnotatedRegion(value: overlayStyle, child: HomeView()),
+      page: () => HomeView(),
       binding: HomeBinding(),
       transition: Transition.fadeIn,
       transitionDuration: Duration(seconds: 1),

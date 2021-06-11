@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
@@ -9,17 +10,27 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await initServices();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.light,
+    ));
     return GetMaterialApp(
       title: 'Flutter Steem Wallet',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
-        appBarTheme: Get.theme.appBarTheme.copyWith(centerTitle: true),
+        appBarTheme: Get.theme.appBarTheme.copyWith(
+          centerTitle: true,
+          backgroundColor: Colors.indigo,
+          brightness: Brightness.light,
+          backwardsCompatibility: false,
+          systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+        ),
       ),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
