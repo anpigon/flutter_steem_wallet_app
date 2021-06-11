@@ -13,10 +13,7 @@ class SplashView extends GetView<SplashController> {
       body: Container(
         color: Colors.black,
         alignment: Alignment.center,
-        child: Hero(
-          tag: 'logo',
-          child: Image.asset('assets/images/steem_logo.png'),
-        ),
+        child: Image.asset('assets/images/steem_logo.png', width: 282),
       ),
     );
   }
