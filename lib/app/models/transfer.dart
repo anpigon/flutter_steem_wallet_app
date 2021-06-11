@@ -18,8 +18,8 @@ class Transfer {
         assert(symbol == 'STEEM' || symbol == 'SBD');
 
   Map<String, dynamic> toJson() => {
-        'to': to,
         'from': from,
+        'to': to,
         'amount': '$amount $symbol',
         'memo': memo ?? '',
       };

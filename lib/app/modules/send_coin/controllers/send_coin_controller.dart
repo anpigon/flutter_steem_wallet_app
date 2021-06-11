@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
+import '../../../../logger.dart';
 import '../../../models/transfer.dart';
 import '../../../services/vault_service.dart';
 import '../../../exceptions/message_exception.dart';
@@ -105,23 +105,34 @@ class SendCoinController extends GetxController {
       final result = await Get.dialog(
         AlertDialog(
           title: Text('Signature'),
-          contentPadding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
-          content: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              color: Colors.grey.shade50,
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                _transferData.toPrettyJson(),
-                style: TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 12,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  color: Colors.grey.shade50,
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    _transferData.toPrettyJson(),
+                    style: TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              SizedBox(height: 10),
+              Text(
+                '서명 내용을 확인해주세요.\n실행 후에는 취소할 수 없습니다.',
+                style: Get.theme.textTheme.caption,
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -136,6 +147,7 @@ class SendCoinController extends GetxController {
         ),
       );
       print(result);
+
       if (result == true) {
         final _account = await LocalDataService.to.getAccount(_owner);
         if (_account == null) {
@@ -147,9 +159,13 @@ class SendCoinController extends GetxController {
           throw MessageException('액티브 키가 필요합니다.');
         }
 
+        logger.d('key: $_key');
+        logger.d('tx: ${_transferData.toJson()}');
+
         // 서명 및 송금
         await SteemService.to.transfer(_transferData, _key);
 
+        logger.d('success');
         showSuccessMessage('송금에 성공하였습니다.');
         Get.back(result: true);
       }
@@ -173,10 +189,12 @@ class SendCoinController extends GetxController {
   }
 
   void showSuccessMessage(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      gravity: ToastGravity.TOP,
-      backgroundColor: Colors.green.shade700,
+    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green.shade700,
+        duration: Duration(milliseconds: 2000),
+      ),
     );
   }
 
