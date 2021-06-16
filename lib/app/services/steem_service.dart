@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -63,5 +64,23 @@ class SteemService extends GetxService {
   Future<Map<String, dynamic>> transfer(Transfer data, String key) async {
     return await client.broadcast
         .transfer(data.toJson(), steem.SteemPrivateKey.fromString(key));
+  }
+
+  Future<Map<String, dynamic>> powerUp({
+    required String from,
+    required String to,
+    required String amount,
+    required String key,
+  }) async {
+    final operation = steem.Operation(
+      'transfer_to_vesting',
+      {
+        'from': from,
+        'to': to,
+        'amount': amount,
+      },
+    );
+    return await client.broadcast
+        .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
   }
 }

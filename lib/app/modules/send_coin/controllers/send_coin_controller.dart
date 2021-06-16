@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 import '../../../../logger.dart';
 import '../../../models/transfer.dart';
+import '../../../services/local_data_service.dart';
 import '../../../services/vault_service.dart';
 import '../../../exceptions/message_exception.dart';
 import '../../../services/steem_service.dart';

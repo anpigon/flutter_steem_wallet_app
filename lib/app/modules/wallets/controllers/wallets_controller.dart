@@ -9,6 +9,25 @@ import '../../../routes/app_pages.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 
+class Balances {
+  double steem;
+  double sbd;
+  bool isDone;
+
+  double get(String symbol) {
+    switch (symbol) {
+      case 'STEEM':
+        return steem;
+      case 'SBD':
+        return sbd;
+      default:
+        return 0.0;
+    }
+  }
+
+  Balances({this.steem = 0.0, this.sbd = 0.0, this.isDone = false});
+}
+
 class MarketPrice {
   double price;
   double change;
@@ -16,10 +35,14 @@ class MarketPrice {
   MarketPrice(this.price, this.change);
 }
 
+// TODO: singleton 으로 변경?
 class WalletsController extends GetxController
     with StateMixin<Wallet>, SingleGetTickerProviderMixin {
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
+
+  final loading = false.obs;
+  final wallet = Wallet().obs;
 
   final steemMarketPrice = MarketPrice(0, 0).obs;
   final sbdMarketPrice = MarketPrice(0, 0).obs;
@@ -46,7 +69,7 @@ class WalletsController extends GetxController
 
   /// account 잔액 정보를 가져온다.
   Future<void> loadAccountDetails(String username) async {
-    change(null, status: RxStatus.loading());
+    loading(true);
 
     try {
       final globalProperties = await steemService.getDynamicGlobalProperties();
@@ -69,21 +92,20 @@ class WalletsController extends GetxController
         final currentResourceCredits =
             (await steemService.getRCMana(username)).percentage;
 
-        final wallet = Wallet(
-          name: data.name,
-          steemBalance: double.parse(data.balance.split(' ')[0]),
-          sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
-          steemPower: steemPower,
-          votingPower: currentVotingPower / 100,
-          resourceCredits: currentResourceCredits / 100,
-        );
-        change(wallet, status: RxStatus.success());
-      } else {
-        change(null, status: RxStatus.empty());
+        wallet.update((val) {
+          val!.name = data.name;
+          val.steemBalance = double.parse(data.balance.split(' ')[0]);
+          val.sbdBalance = double.parse(data.sbd_balance.split(' ')[0]);
+          val.steemPower = steemPower;
+          val.votingPower = currentVotingPower / 100;
+          val.resourceCredits = currentResourceCredits / 100;
+        });
       }
     } catch (e) {
       e.printError();
       change(null, status: RxStatus.error(e.toString()));
+    } finally {
+      loading(false);
     }
   }
 
@@ -115,6 +137,18 @@ class WalletsController extends GetxController
     Get.toNamed(Routes.SEND_COIN, arguments: {
       'account': selectedAccount.value,
       'symbol': symbol,
+    });
+  }
+
+  void goPowerUp() {
+    Get.toNamed(Routes.POWER_UP, arguments: {
+      'account': selectedAccount.value,
+    });
+  }
+
+  void goPowerDown() {
+    Get.toNamed(Routes.POWER_DOWN, arguments: {
+      'account': selectedAccount.value,
     });
   }
 

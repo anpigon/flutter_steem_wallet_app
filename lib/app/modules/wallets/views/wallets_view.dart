@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -58,56 +59,42 @@ class WalletsView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  controller.obx(
-                    (state) {
-                      final total = ((state!.steemBalance + state.steemPower) *
-                              controller.steemMarketPrice().price) +
-                          (state.sbdBalance *
-                              controller.sbdMarketPrice().price);
-                      final _totalString =
-                          NumberFormat('###,###,###,###.##').format(total);
-                      return Text(
-                        '\$ $_totalString USD',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
-                      );
-                    },
-                    onLoading: Text(
-                      '\$ 0.00 USD',
+                  Obx(() {
+                    final wallet = controller.wallet();
+                    final total = ((wallet.steemBalance + wallet.steemPower) *
+                            controller.steemMarketPrice().price) +
+                        (wallet.sbdBalance * controller.sbdMarketPrice().price);
+                    final _totalString =
+                        NumberFormat('###,###,###,###.##').format(total);
+                    return Text(
+                      '\$ $_totalString USD',
                       style: const TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
+                    );
+                  }),
                   Text(
                     'Estimated Account Value',
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.8), fontSize: 12),
                   ),
                   const SizedBox(height: 20),
-                  controller.obx(
-                    (state) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          buildProgressBox(
-                            label: 'Resource Credits',
-                            value: state!.resourceCredits,
-                            color: Colors.green.shade800,
-                          ),
-                          buildProgressBox(
-                            label: 'Voting Power',
-                            value: state.votingPower,
-                            color: Colors.lightBlue.shade800,
-                          ),
-                        ],
-                      );
-                    },
-                    onLoading: SizedBox(
-                      height: 20,
-                      child: FittedBox(
-                          child:
-                              CircularProgressIndicator(color: Colors.white)),
-                    ),
-                  ),
+                  Obx(() {
+                    final wallet = controller.wallet();
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buildProgressBox(
+                          label: 'Resource Credits',
+                          value: wallet.resourceCredits,
+                          color: Colors.green.shade800,
+                        ),
+                        buildProgressBox(
+                          label: 'Voting Power',
+                          value: wallet.votingPower,
+                          color: Colors.lightBlue.shade800,
+                        ),
+                      ],
+                    );
+                  }),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -128,104 +115,94 @@ class WalletsView extends StatelessWidget {
                   SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: controller.obx(
-                        (state) {
-                          return Column(
-                            children: [
-                              // Wallet List
-                              buildWalletCard(
-                                icon: SvgPicture.asset(
-                                    'assets/images/icon/token-steem.svg'),
-                                amount: state!.steemBalance,
-                                symbol: 'STEEM',
-                                price: controller.steemMarketPrice().price,
-                                ratio: controller.steemMarketPrice().change,
-                                onTap: () async {
-                                  final result = await Get.dialog(
-                                    SimpleDialog(
-                                      children: [
-                                        buildSimpleDialogOption(
-                                          id: 0,
-                                          text: 'STEEM 보내기',
-                                          icon: Icon(
-                                            Icons.send_rounded,
-                                            color: Colors.green.shade600,
-                                            size: 24,
-                                          ),
+                      child: Obx(() {
+                        final wallet = controller.wallet();
+                        return Column(
+                          children: [
+                            // Wallet List
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-steem.svg'),
+                              amount: wallet.steemBalance,
+                              symbol: 'STEEM',
+                              price: controller.steemMarketPrice().price,
+                              ratio: controller.steemMarketPrice().change,
+                              onTap: () async {
+                                final result = await Get.dialog(
+                                  SimpleDialog(
+                                    children: [
+                                      buildSimpleDialogOption(
+                                        id: 0,
+                                        text: 'STEEM 보내기',
+                                        icon: Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 24,
                                         ),
-                                        Divider(),
-                                        buildSimpleDialogOption(
-                                          id: 1,
-                                          text: ' 파워 업',
-                                          icon: Icon(
-                                            Icons.bolt,
-                                            color: Colors.yellow.shade700,
-                                            size: 36,
-                                          ),
+                                      ),
+                                      Divider(),
+                                      buildSimpleDialogOption(
+                                        id: 1,
+                                        text: ' 파워 업',
+                                        icon: Icon(
+                                          Icons.bolt,
+                                          color: Colors.yellow.shade700,
+                                          size: 36,
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                  switch (result) {
-                                    case 0:
-                                      controller.goSendCoin(symbol: 'STEEM');
-                                      break;
-                                    case 1:
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text('준비 중입니다.'),
-                                          duration: Duration(seconds: 1),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                switch (result) {
+                                  case 0:
+                                    controller.goSendCoin(symbol: 'STEEM');
+                                    break;
+                                  case 1:
+                                    controller.goPowerUp();
+                                    break;
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-steem-power.svg'),
+                              amount: wallet.steemPower,
+                              symbol: 'SP',
+                              price: controller.steemMarketPrice().price,
+                              ratio: controller.steemMarketPrice().change,
+                              onTap: () {},
+                            ),
+                            const SizedBox(height: 10),
+                            buildWalletCard(
+                              icon: SvgPicture.asset(
+                                  'assets/images/icon/token-sbd.svg'),
+                              amount: wallet.sbdBalance,
+                              symbol: 'SBD',
+                              price: controller.sbdMarketPrice().price,
+                              ratio: controller.sbdMarketPrice().change,
+                              onTap: () async {
+                                final result = await Get.dialog(
+                                  SimpleDialog(
+                                    children: [
+                                      buildSimpleDialogOption(
+                                        id: 0,
+                                        text: 'SBD 보내기',
+                                        icon: Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 24,
                                         ),
-                                      );
-                                      break;
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              buildWalletCard(
-                                icon: SvgPicture.asset(
-                                    'assets/images/icon/token-steem-power.svg'),
-                                amount: state.steemPower,
-                                symbol: 'SP',
-                                price: controller.steemMarketPrice().price,
-                                ratio: controller.steemMarketPrice().change,
-                                onTap: () {},
-                              ),
-                              const SizedBox(height: 10),
-                              buildWalletCard(
-                                icon: SvgPicture.asset(
-                                    'assets/images/icon/token-sbd.svg'),
-                                amount: state.sbdBalance,
-                                symbol: 'SBD',
-                                price: controller.sbdMarketPrice().price,
-                                ratio: controller.sbdMarketPrice().change,
-                                onTap: () async {
-                                  final result = await Get.dialog(
-                                    SimpleDialog(
-                                      children: [
-                                        buildSimpleDialogOption(
-                                          id: 0,
-                                          text: 'SBD 보내기',
-                                          icon: Icon(
-                                            Icons.send_rounded,
-                                            color: Colors.green.shade600,
-                                            size: 24,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                  controller.goSendCoin(symbol: 'SBD');
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                        onLoading: Center(child: CircularProgressIndicator()),
-                        // onEmpty: Text('No data found'),
-                        // onError: (error) => Text(error.toString()),
-                      ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                controller.goSendCoin(symbol: 'SBD');
+                              },
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                   Center(child: Text('Tokens')),

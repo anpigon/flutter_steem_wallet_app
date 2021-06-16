@@ -1,17 +1,17 @@
 class Wallet {
-  final String name;
-  final double steemBalance;
-  final double sbdBalance;
-  final double steemPower;
-  final double votingPower;
-  final double resourceCredits;
+  late String name;
+  late double steemBalance;
+  late double sbdBalance;
+  late double steemPower;
+  late double votingPower;
+  late double resourceCredits;
 
   Wallet({
-    required this.name,
-    required this.steemBalance,
-    required this.sbdBalance,
-    required this.steemPower,
-    required this.votingPower,
-    required this.resourceCredits,
+    this.name = '',
+    this.steemBalance = 0.0,
+    this.sbdBalance = 0.0,
+    this.steemPower = 0.0,
+    this.votingPower = 0.0,
+    this.resourceCredits = 0.0,
   });
 }

@@ -14,13 +14,13 @@ class Transfer {
     required this.amount,
     this.memo,
   })  : assert(amount.isFinite),
-        assert(amount % 0.001 == 0),
+        assert(amount * 1000 is int),
         assert(symbol == 'STEEM' || symbol == 'SBD');
 
   Map<String, dynamic> toJson() => {
         'from': from,
         'to': to,
-        'amount': '$amount $symbol',
+        'amount': '${amount.toStringAsFixed(3)} $symbol',
         'memo': memo ?? '',
       };
 
