@@ -200,7 +200,24 @@ class WalletsView extends StatelessWidget {
                                 symbol: 'SBD',
                                 price: controller.sbdMarketPrice().price,
                                 ratio: controller.sbdMarketPrice().change,
-                                onTap: () {},
+                                onTap: () async {
+                                  final result = await Get.dialog(
+                                    SimpleDialog(
+                                      children: [
+                                        buildSimpleDialogOption(
+                                          id: 0,
+                                          text: 'SBD 보내기',
+                                          icon: Icon(
+                                            Icons.send_rounded,
+                                            color: Colors.green.shade600,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  controller.goSendCoin(symbol: 'SBD');
+                                },
                               ),
                             ],
                           );

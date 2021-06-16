@@ -83,7 +83,7 @@ class SendCoinController extends GetxController {
 
     try {
       // account 존재하는지 여부 체크
-      final username = usernameController.text;
+      final username = usernameController.text.trim();
       final data = await SteemService.to.getAccount(username);
       if (data == null) {
         throw MessageException('Account not found');
@@ -93,8 +93,8 @@ class SendCoinController extends GetxController {
 
       FocusScope.of(Get.overlayContext!).requestFocus(FocusNode());
 
-      final _amount = amountController.text;
-      final _memo = memoController.text;
+      final _amount = amountController.text.trim();
+      final _memo = memoController.text.trim();
       final _transferData = Transfer(
         from: _owner,
         to: username,
