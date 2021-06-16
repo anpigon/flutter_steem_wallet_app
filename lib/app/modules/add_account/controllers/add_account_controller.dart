@@ -89,7 +89,7 @@ class AddAccountController extends GetxController {
 
     try {
       // Account 정보 가져오기
-      final username = usernameController.text;
+      final username = usernameController.text.trim();
       final steemService = Get.find<SteemService>();
       final data = await steemService.getAccount(username);
       if (data == null) {
@@ -107,7 +107,7 @@ class AddAccountController extends GetxController {
 
       // privateKey verify
       final _privateKey =
-          steem.SteemPrivateKey.fromString(privateKeyController.text);
+          steem.SteemPrivateKey.fromString(privateKeyController.text.trim());
       final _publicKey = _privateKey.toPublicKey().toString();
 
       // active private key 정보 저장
