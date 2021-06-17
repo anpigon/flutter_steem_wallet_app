@@ -139,7 +139,7 @@ class WalletsController extends GetxController
   /// 새로운 계정 추가
   Future<void> goAddAccount() async {
     final newAccount = await Get.toNamed(Routes.ADD_ACCOUNT);
-    if (!newAccount.isEmpty) {
+    if (newAccount != null && !newAccount.isEmpty) {
       accounts.add(newAccount);
     }
   }
