@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../exceptions/message_exception.dart';
 import '../../../services/steem_service.dart';
@@ -11,8 +12,14 @@ class PowerUpController extends GetxController {
   late final TextEditingController amountController;
   late final FocusNode usernameFocusNode;
 
-  late final loading = false.obs;
+  final amountFormat =  NumberFormat('##0.0##', 'en_US');
+
   late final _owner;
+  late final loading = false.obs;
+  // late final username = ''.obs;
+  late final enabledEditUsername = false.obs;
+
+  late final WalletsController walletsController;
 
   String? usernameValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 3) {
@@ -31,11 +38,17 @@ class PowerUpController extends GetxController {
       return 'Invalid amount!';
     }
 
-    final balance = Get.find<WalletsController>().wallet().steemBalance;
-    if (_amount.isGreaterThan(balance)) {
+    final steemBalance = walletsController.wallet().steemBalance;
+    if (_amount.isGreaterThan(steemBalance)) {
       return '잔액이 부족합니다.';
     }
     return null;
+  }
+
+  void setRatioAmount(double ratio) {
+    final steemBalance = walletsController.wallet().steemBalance;
+    final ratioAmount = (steemBalance - steemBalance % 0.001) * ratio;
+    amountController.text = amountFormat.format(ratioAmount);
   }
 
   Future<void> submit() async {
@@ -95,6 +108,8 @@ class PowerUpController extends GetxController {
   void onInit() {
     final arguments = Get.arguments;
     _owner = arguments['account'];
+
+    walletsController = Get.find<WalletsController>();
 
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
