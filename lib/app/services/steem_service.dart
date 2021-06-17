@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
-import '../models/transfer.dart';
+import '../models/signature/transfer.dart';
+import '../models/signature/transfer_to_vesting.dart';
 
 const STEEM_API_NODES = [
   'https://api.steemit.com',
@@ -66,19 +67,13 @@ class SteemService extends GetxService {
         .transfer(data.toJson(), steem.SteemPrivateKey.fromString(key));
   }
 
-  Future<Map<String, dynamic>> powerUp({
-    required String from,
-    required String to,
-    required String amount,
-    required String key,
-  }) async {
+  Future<Map<String, dynamic>> powerUp(
+    TransferToVesting transferToVesting,
+    String key,
+  ) async {
     final operation = steem.Operation(
       'transfer_to_vesting',
-      {
-        'from': from,
-        'to': to,
-        'amount': amount,
-      },
+      transferToVesting.toJson(),
     );
     return await client.broadcast
         .sendOperations([operation], steem.SteemPrivateKey.fromString(key));

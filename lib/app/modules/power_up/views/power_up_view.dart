@@ -31,7 +31,7 @@ class PowerUpView extends GetView<PowerUpController> {
                           symbol: 'STEEM',
                           loading: false,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         controller.enabledEditUsername()
                             ? TextFormField(
                                 decoration: InputDecoration(
@@ -81,7 +81,7 @@ class PowerUpView extends GetView<PowerUpController> {
                             suffixIcon: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
+                                const Padding(
                                   padding: EdgeInsets.only(right: 15.0),
                                   child: Text('STEEM'),
                                 ),
@@ -92,35 +92,8 @@ class PowerUpView extends GetView<PowerUpController> {
                           validator: controller.amountValidator,
                           keyboardType: TextInputType.number,
                         ),
-                        Row(
-                          children: [
-                            TightButton(
-                              '10%',
-                              () => controller.setRatioAmount(0.1),
-                            ),
-                            SizedBox(width: 5),
-                            TightButton(
-                              '30%',
-                              () => controller.setRatioAmount(0.3),
-                            ),
-                            SizedBox(width: 5),
-                            TightButton(
-                              '50%',
-                              () => controller.setRatioAmount(0.5),
-                            ),
-                            SizedBox(width: 5),
-                            TightButton(
-                              '70%',
-                              () => controller.setRatioAmount(0.7),
-                            ),
-                            SizedBox(width: 5),
-                            TightButton(
-                              '100%',
-                              () => controller.setRatioAmount(1.0),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
+                        buildSetRatioAmountButtons(),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -150,6 +123,37 @@ class PowerUpView extends GetView<PowerUpController> {
           ),
         ),
       ),
+    );
+  }
+
+  Row buildSetRatioAmountButtons() {
+    return Row(
+      children: [
+        TightButton(
+          '10%',
+          () => controller.setRatioAmount(0.1),
+        ),
+        SizedBox(width: 5),
+        TightButton(
+          '30%',
+          () => controller.setRatioAmount(0.3),
+        ),
+        SizedBox(width: 5),
+        TightButton(
+          '50%',
+          () => controller.setRatioAmount(0.5),
+        ),
+        SizedBox(width: 5),
+        TightButton(
+          '70%',
+          () => controller.setRatioAmount(0.7),
+        ),
+        SizedBox(width: 5),
+        TightButton(
+          '100%',
+          () => controller.setRatioAmount(1.0),
+        ),
+      ],
     );
   }
 }

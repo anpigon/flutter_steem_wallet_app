@@ -1,5 +1,7 @@
+import 'package:flutter_steem_wallet_app/app/models/signature/signature_model.dart';
+
 /// ref: https://developers.steem.io/apidefinitions/broadcast-ops#broadcast_ops_transfer_to_vesting
-class TransferToVesting {
+class TransferToVesting extends SignatureModel {
   late final String from;
   late final String to;
   late final double amount;
@@ -8,12 +10,12 @@ class TransferToVesting {
     required this.from,
     required this.to,
     required this.amount,
-  })  : assert(amount.isFinite),
-        assert(amount * 1000 is int);
+  }) : assert(amount.isFinite);
 
   Map<String, dynamic> toJson() => {
         'from': from,
         'to': to,
-        'amount': '${amount.toStringAsFixed(3)} STEEM',
+        'amount':
+            '${((amount * 1000).floor() / 1000).toStringAsFixed(3)} STEEM',
       };
 }

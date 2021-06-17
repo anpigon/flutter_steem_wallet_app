@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 import '../../../../logger.dart';
-import '../../../models/transfer.dart';
-import '../../../services/local_data_service.dart';
-import '../../../services/vault_service.dart';
 import '../../../exceptions/message_exception.dart';
+import '../../../models/signature/transfer.dart';
+import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
+import '../../../services/vault_service.dart';
+import '../../../views/dialog/signature_confirm_dialog.dart';
 
 class Balances {
   double steem;
@@ -77,10 +78,10 @@ class SendCoinController extends GetxController {
     final currentFocus = FocusScope.of(Get.overlayContext!);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
+      currentFocus.requestFocus(FocusNode());
     }
 
     loading(true);
-
     try {
       // account 존재하는지 여부 체크
       final username = usernameController.text.trim();
@@ -91,8 +92,6 @@ class SendCoinController extends GetxController {
 
       // TODO: 액티브 키가 있는지 체크
 
-      FocusScope.of(Get.overlayContext!).requestFocus(FocusNode());
-
       final _amount = amountController.text.trim();
       final _memo = memoController.text.trim();
       final _transferData = Transfer(
@@ -102,51 +101,10 @@ class SendCoinController extends GetxController {
         symbol: symbol.value,
         memo: _memo,
       );
-      final result = await Get.dialog(
-        AlertDialog(
-          title: Text('Signature'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  color: Colors.grey.shade50,
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Text(
-                    _transferData.toPrettyJson(),
-                    style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                '서명 내용을 확인해주세요.\n실행 후에는 취소할 수 없습니다.',
-                style: Get.theme.textTheme.caption,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(result: true),
-              child: Text('Sign'),
-            ),
-            TextButton(
-              onPressed: () => Get.back(result: false),
-              child: Text('Cancel'),
-            ),
-          ],
-        ),
+      final result = await SignatureConfirmDialog.show(
+        SignatureType.TRANSFER,
+        _transferData,
       );
-      print(result);
 
       if (result == true) {
         final _account = await LocalDataService.to.getAccount(_owner);
