@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../constants.dart';
 import '../../controller/wallets_controller.dart';
 
 class WalletsView extends StatelessWidget {
@@ -12,6 +14,25 @@ class WalletsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(WalletsController(), permanent: true);
     final isSmallWidth = Get.width < 400;
+
+    void goSendCoin({String symbol = 'STEEM'}) {
+      Get.toNamed(Routes.SEND_COIN, arguments: {
+        'account': controller.selectedAccount.value,
+        'symbol': symbol,
+      });
+    }
+
+    void goPowerUp() {
+      Get.toNamed(Routes.POWER_UP, arguments: {
+        'account': controller.selectedAccount.value,
+      });
+    }
+
+    void goPowerDown() {
+      Get.toNamed(Routes.POWER_DOWN, arguments: {
+        'account': controller.selectedAccount.value,
+      });
+    }
 
     return SafeArea(
       child: Container(
@@ -31,7 +52,7 @@ class WalletsView extends StatelessWidget {
                           icon: Icon(Icons.send_rounded),
                           tooltip: 'Send Coin',
                           color: Colors.white,
-                          onPressed: controller.goSendCoin,
+                          onPressed: goSendCoin,
                         ),
                         const SizedBox(width: 48),
                       ],
@@ -155,11 +176,9 @@ class WalletsView extends StatelessWidget {
                                 );
                                 switch (result) {
                                   case 0:
-                                    controller.goSendCoin(symbol: 'STEEM');
-                                    break;
+                                    return goSendCoin(symbol: Symbols.STEEM);
                                   case 1:
-                                    controller.goPowerUp();
-                                    break;
+                                    return goPowerUp();
                                 }
                               },
                             ),
@@ -197,7 +216,7 @@ class WalletsView extends StatelessWidget {
                                     ],
                                   ),
                                 );
-                                controller.goSendCoin(symbol: 'SBD');
+                                goSendCoin(symbol: Symbols.SBD);
                               },
                             ),
                           ],
