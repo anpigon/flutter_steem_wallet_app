@@ -12,10 +12,10 @@ import '../../../services/vault_service.dart';
 import '../../../views/dialog/signature_confirm_dialog.dart';
 
 class SendCoinController extends GetxController {
-  late final formKey = GlobalKey<FormState>();
-  late final usernameController = TextEditingController();
-  late final amountController = TextEditingController();
-  late final memoController = TextEditingController();
+  late final GlobalKey<FormState> formKey;
+  late final TextEditingController usernameController;
+  late final TextEditingController amountController;
+  late final TextEditingController memoController;
 
   late final _ownerUsername;
   final symbol = Symbols.STEEM.obs;
@@ -85,18 +85,18 @@ class SendCoinController extends GetxController {
         throw MessageException('Account not found');
       }
 
-      // 서명 데이터 확인
-      final amount = amountController.text.trim();
+      // 서명 데이터 확인 다이얼로그
+      final amount = double.parse(amountController.text.trim());
       final memo = memoController.text.trim();
       final _transferData = Transfer(
         from: _ownerUsername,
         to: receivingUsername,
-        amount: double.parse(amount),
+        amount: amount,
         symbol: symbol.value,
         memo: memo,
       );
       final result = await SignatureConfirmDialog.show(
-        SignatureType.TRANSFER,
+        SignatureType.transfer,
         _transferData,
       );
 
@@ -118,10 +118,10 @@ class SendCoinController extends GetxController {
 
         // 서명 및 송금
         await SteemService.to.transfer(_transferData, _activeKey);
+        await walletsController.reload();
 
         logger.d('success');
         showSuccessMessage('송금에 성공하였습니다.');
-
         Get.back(result: true);
       }
     } on MessageException catch (error) {
@@ -157,6 +157,11 @@ class SendCoinController extends GetxController {
   void onInit() {
     final arguments = Get.arguments;
     print('arguments: $arguments');
+
+    formKey = GlobalKey<FormState>();
+    usernameController = TextEditingController();
+    amountController = TextEditingController();
+    memoController = TextEditingController();
 
     walletsController = Get.find<WalletsController>();
 

@@ -9,6 +9,7 @@ import '../routes/app_pages.dart';
 import '../services/local_data_service.dart';
 import '../services/steem_service.dart';
 
+/// 잔액
 class Balances {
   double steem;
   double sbd;
@@ -28,6 +29,7 @@ class Balances {
   Balances({this.steem = 0.0, this.sbd = 0.0, this.isDone = false});
 }
 
+/// 시장 가격
 class MarketPrice {
   double price;
   double change;
@@ -35,7 +37,6 @@ class MarketPrice {
   MarketPrice(this.price, this.change);
 }
 
-// TODO: singleton 으로 변경?
 class WalletsController extends GetxController
     with StateMixin<Wallet>, SingleGetTickerProviderMixin {
   final accounts = <String>[].obs;
@@ -107,6 +108,10 @@ class WalletsController extends GetxController
     } finally {
       loading(false);
     }
+  }
+
+  Future<void> reload() async {
+    await loadAccountDetails(selectedAccount.value);
   }
 
   void updateMarketPrice() {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/signature/transfer_to_vesting.dart';
-import '../../../exceptions/message_exception.dart';
-import '../../../services/steem_service.dart';
+import '../../../../logger.dart';
 import '../../../controller/wallets_controller.dart';
-
+import '../../../exceptions/message_exception.dart';
+import '../../../models/signature/transfer_to_vesting.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 import '../../../services/vault_service.dart';
@@ -17,15 +17,15 @@ class PowerUpController extends GetxController {
   late final TextEditingController amountController;
   late final FocusNode usernameFocusNode;
 
-  final amountFormat =  NumberFormat('##0.0##', 'en_US');
+  final amountFormat = NumberFormat('##0.0##', 'en_US');
 
-  late final _owner;
+  late final _ownerUsername;
   late final loading = false.obs;
-  // late final username = ''.obs;
   late final enabledEditUsername = false.obs;
 
   late final WalletsController walletsController;
 
+  /// 유효성 체크
   String? usernameValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 3) {
       return 'Invalid username!';
@@ -37,15 +37,18 @@ class PowerUpController extends GetxController {
     if (value == null || value.isEmpty) {
       return 'Invalid amount!';
     }
-
-    final _amount = double.parse(value);
-    if (!_amount.isGreaterThan(0.0)) {
+    try {
+      final amount = double.parse(value);
+      if (amount.isLowerThan(0.001)) {
+        return 'Invalid amount!';
+      }
+      final steemBalance = walletsController.wallet().steemBalance;
+      if (amount.isGreaterThan(steemBalance)) {
+        return '잔액이 부족합니다.';
+      }
+    } catch (error) {
+      logger.e(error);
       return 'Invalid amount!';
-    }
-
-    final steemBalance = walletsController.wallet().steemBalance;
-    if (_amount.isGreaterThan(steemBalance)) {
-      return '잔액이 부족합니다.';
     }
     return null;
   }
@@ -70,32 +73,44 @@ class PowerUpController extends GetxController {
     loading(true);
     try {
       // account 존재하는지 여부 체크
-      final _username = usernameController.text.trim();
-      final data = await SteemService.to.getAccount(_username);
+      final receivingUsername = usernameController.text.trim();
+      final data = await SteemService.to.getAccount(receivingUsername);
       if (data == null) {
         throw MessageException('Account not found');
       }
 
-      final _amount = double.parse(amountController.text.trim());
-      print(_amount * 1000);
-      final _transferToVesting = TransferToVesting(from: _owner, to: _username, amount: _amount);
+      // 서명 데이터 확인 다이얼로그
+      final amount = double.parse(amountController.text.trim());
+      final _transferToVesting = TransferToVesting(
+        from: _ownerUsername,
+        to: receivingUsername,
+        amount: amount,
+      );
+      final result = await SignatureConfirmDialog.show(
+        SignatureType.transferToVesting,
+        _transferToVesting,
+      );
 
-      final _account = await LocalDataService.to.getAccount(_owner);
-      if (_account == null) {
-        throw MessageException('Account not found in local db.');
+      // 서명 및 전송
+      if (result == true) {
+        final ownerAccount = await LocalDataService.to.getAccount(_ownerUsername);
+        if (ownerAccount == null) {
+          throw MessageException('Account not found in local db.');
+        }
+
+        final _activeKey =
+            await VaultService.to.read(ownerAccount.activePublicKey!);
+        if (_activeKey == null) {
+          throw MessageException('액티브 키가 필요합니다.');
+        }
+
+        // 서명 및 송금
+        await SteemService.to.powerUp(_transferToVesting, _activeKey);
+        await walletsController.reload();
+
+        showSuccessMessage('파워업에 성공하였습니다.');
+        Get.back(result: true);
       }
-
-      final _key = await VaultService.to.read(_account.activePublicKey!);
-      if (_key == null) {
-        throw MessageException('액티브 키가 필요합니다.');
-      }
-
-      // 서명 및 송금
-      await SteemService.to.powerUp(_transferToVesting, _key);
-
-      // showSuccessMessage('송금에 성공하였습니다.');
-      // Get.back(result: true);
-
     } on MessageException catch (error) {
       showErrorMessage(error.message);
     } catch (error) {
@@ -128,7 +143,6 @@ class PowerUpController extends GetxController {
   @override
   void onInit() {
     final arguments = Get.arguments;
-    _owner = arguments['account'];
 
     walletsController = Get.find<WalletsController>();
 
@@ -137,7 +151,9 @@ class PowerUpController extends GetxController {
     amountController = TextEditingController();
     usernameFocusNode = FocusNode();
 
-    usernameController.text = _owner;
+    _ownerUsername = arguments['account'];
+    usernameController.text = _ownerUsername;
+
     super.onInit();
   }
 

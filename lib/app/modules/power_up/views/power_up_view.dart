@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../constants.dart';
+import '../../../controller/wallets_controller.dart';
 import '../../../widgets/balance_small_box.dart';
 import '../../../widgets/tight_button.dart';
-import '../../../controller/wallets_controller.dart';
 import '../controllers/power_up_controller.dart';
 
 class PowerUpView extends GetView<PowerUpController> {
@@ -83,7 +84,7 @@ class PowerUpView extends GetView<PowerUpController> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.only(right: 15.0),
-                                  child: Text('STEEM'),
+                                  child: Text(Symbols.STEEM),
                                 ),
                               ],
                             ),
@@ -99,29 +100,33 @@ class PowerUpView extends GetView<PowerUpController> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: controller.submit,
-                  child: controller.loading()
-                      ? const SizedBox(
-                          height: 20.0,
-                          width: 20.0,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          'Power Up',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-              ),
+              buildPowerUpButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox buildPowerUpButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: controller.submit,
+        child: controller.loading()
+            ? const SizedBox(
+                height: 20.0,
+                width: 20.0,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : const Text(
+                'Power Up',
+                style: TextStyle(color: Colors.white),
+              ),
       ),
     );
   }
