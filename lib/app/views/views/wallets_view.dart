@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../controllers/wallets_controller.dart';
+import '../../controller/wallets_controller.dart';
 
 class WalletsView extends StatelessWidget {
   @override

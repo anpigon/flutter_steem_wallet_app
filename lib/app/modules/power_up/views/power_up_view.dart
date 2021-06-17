@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../widgets/balance_small_box.dart';
 import '../../../widgets/tight_button.dart';
-import '../../wallets/controllers/wallets_controller.dart';
+import '../../../controller/wallets_controller.dart';
 import '../controllers/power_up_controller.dart';
 
 class PowerUpView extends GetView<PowerUpController> {

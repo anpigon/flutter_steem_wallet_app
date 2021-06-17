@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../models/signature/transfer_to_vesting.dart';
 import '../../../exceptions/message_exception.dart';
 import '../../../services/steem_service.dart';
-import '../../wallets/controllers/wallets_controller.dart';
+import '../../../controller/wallets_controller.dart';
 
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';

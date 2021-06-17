@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/price_provider.dart';
-import '../../../models/wallet.dart';
-import '../../../routes/app_pages.dart';
-import '../../../services/local_data_service.dart';
-import '../../../services/steem_service.dart';
+import '../data/price_provider.dart';
+import '../models/wallet.dart';
+import '../routes/app_pages.dart';
+import '../services/local_data_service.dart';
+import '../services/steem_service.dart';
 
 class Balances {
   double steem;
