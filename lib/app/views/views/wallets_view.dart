@@ -172,7 +172,7 @@ class WalletsView extends GetView<WalletsController> {
                                         id: 1,
                                         text: ' 파워 업',
                                         icon: Icon(
-                                          Icons.bolt,
+                                          Icons.bolt_rounded,
                                           color: Colors.yellow.shade700,
                                           size: 36,
                                         ),
@@ -196,7 +196,39 @@ class WalletsView extends GetView<WalletsController> {
                               symbol: 'SP',
                               price: appController.steemMarketPrice().price,
                               ratio: appController.steemMarketPrice().change,
-                              onTap: () {},
+                              onTap: () async {
+                                final result = await Get.dialog(
+                                  SimpleDialog(
+                                    children: [
+                                      buildSimpleDialogOption(
+                                        id: 0,
+                                        text: '임대',
+                                        icon: Icon(
+                                          Icons.swap_horiz_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 36,
+                                        ),
+                                      ),
+                                      Divider(),
+                                      buildSimpleDialogOption(
+                                        id: 1,
+                                        text: '파워 다운',
+                                        icon: Icon(
+                                          Icons.bolt_rounded,
+                                          color: Colors.orange.shade700,
+                                          size: 36,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                switch (result) {
+                                  case 0:
+                                    return null;
+                                  case 1:
+                                    return goPowerDown();
+                                }
+                              },
                             ),
                             const SizedBox(height: 10),
                             buildWalletCard(
@@ -222,7 +254,9 @@ class WalletsView extends GetView<WalletsController> {
                                     ],
                                   ),
                                 );
-                                goSendCoin(symbol: Symbols.SBD);
+                                if (result == 0) {
+                                  goSendCoin(symbol: Symbols.SBD);
+                                }
                               },
                             ),
                           ],
