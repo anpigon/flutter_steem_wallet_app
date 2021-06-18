@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
 
 import '../../../constants.dart';
-import '../../../controller/wallets_controller.dart';
 import '../../../widgets/balance_small_box.dart';
 import '../../../widgets/tight_button.dart';
 import '../controllers/power_up_controller.dart';
 
 class PowerUpView extends GetView<PowerUpController> {
-  final walletsController = Get.find<WalletsController>();
+  final appController = Get.find<AppController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class PowerUpView extends GetView<PowerUpController> {
                       children: [
                         BalanceSmallBox(
                           label: 'Balance',
-                          amount: walletsController.wallet().steemBalance,
+                          amount: appController.wallet().steemBalance,
                           symbol: 'STEEM',
                           loading: false,
                         ),

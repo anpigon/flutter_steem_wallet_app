@@ -1,36 +1,41 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/wallets_controller.dart';
 import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants.dart';
-import '../../controller/wallets_controller.dart';
 
-class WalletsView extends StatelessWidget {
+class WalletsView extends GetView<WalletsController> {
+  final appController = AppController.to;
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(WalletsController(), permanent: true);
     final isSmallWidth = Get.width < 400;
 
+    // 송금 화면으로 이동
     void goSendCoin({String symbol = 'STEEM'}) {
       Get.toNamed(Routes.SEND_COIN, arguments: {
-        'account': controller.selectedAccount.value,
+        'account': appController.selectedAccount.value,
         'symbol': symbol,
       });
     }
 
+    // 파워업 화면으로 이동
     void goPowerUp() {
       Get.toNamed(Routes.POWER_UP, arguments: {
-        'account': controller.selectedAccount.value,
+        'account': appController.selectedAccount.value,
       });
     }
 
+    // 파워다운 화면으로 이동
     void goPowerDown() {
       Get.toNamed(Routes.POWER_DOWN, arguments: {
-        'account': controller.selectedAccount.value,
+        'account': appController.selectedAccount.value,
       });
     }
 
@@ -49,7 +54,7 @@ class WalletsView extends StatelessWidget {
                     children: [
                       if (!isSmallWidth) ...[
                         IconButton(
-                          icon: Icon(Icons.send_rounded),
+                          icon: const Icon(Icons.send_rounded),
                           tooltip: 'Send Coin',
                           color: Colors.white,
                           onPressed: goSendCoin,
@@ -59,32 +64,33 @@ class WalletsView extends StatelessWidget {
                       const Spacer(),
                       Obx(
                         () => buildAccountDropdownBox(
-                          onChanged: controller.onChangeAccount,
-                          value: controller.selectedAccount(),
-                          items: controller.accounts,
+                          onChanged: appController.onChangeAccount,
+                          value: appController.selectedAccount(),
+                          items: appController.accounts,
                         ),
                       ),
                       const Spacer(),
                       IconButton(
-                        icon: Icon(Icons.history_rounded),
+                        icon: const Icon(Icons.history_rounded),
                         tooltip: 'History',
                         color: Colors.white,
                         onPressed: () {},
                       ),
                       IconButton(
-                        icon: Icon(Icons.add_box),
+                        icon: const Icon(Icons.add_box),
                         tooltip: 'Add Account',
                         color: Colors.white,
-                        onPressed: controller.goAddAccount,
+                        onPressed: appController.goAddAccount,
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   Obx(() {
-                    final wallet = controller.wallet();
+                    final wallet = appController.wallet();
                     final total = ((wallet.steemBalance + wallet.steemPower) *
-                            controller.steemMarketPrice().price) +
-                        (wallet.sbdBalance * controller.sbdMarketPrice().price);
+                            appController.steemMarketPrice().price) +
+                        (wallet.sbdBalance *
+                            appController.sbdMarketPrice().price);
                     final _totalString =
                         NumberFormat('###,###,###,###.##').format(total);
                     return Text(
@@ -99,7 +105,7 @@ class WalletsView extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Obx(() {
-                    final wallet = controller.wallet();
+                    final wallet = appController.wallet();
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -137,7 +143,7 @@ class WalletsView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Obx(() {
-                        final wallet = controller.wallet();
+                        final wallet = appController.wallet();
                         return Column(
                           children: [
                             // Wallet List
@@ -146,8 +152,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-steem.svg'),
                               amount: wallet.steemBalance,
                               symbol: 'STEEM',
-                              price: controller.steemMarketPrice().price,
-                              ratio: controller.steemMarketPrice().change,
+                              price: appController.steemMarketPrice().price,
+                              ratio: appController.steemMarketPrice().change,
                               onTap: () async {
                                 final result = await Get.dialog(
                                   SimpleDialog(
@@ -188,8 +194,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-steem-power.svg'),
                               amount: wallet.steemPower,
                               symbol: 'SP',
-                              price: controller.steemMarketPrice().price,
-                              ratio: controller.steemMarketPrice().change,
+                              price: appController.steemMarketPrice().price,
+                              ratio: appController.steemMarketPrice().change,
                               onTap: () {},
                             ),
                             const SizedBox(height: 10),
@@ -198,8 +204,8 @@ class WalletsView extends StatelessWidget {
                                   'assets/images/icon/token-sbd.svg'),
                               amount: wallet.sbdBalance,
                               symbol: 'SBD',
-                              price: controller.sbdMarketPrice().price,
-                              ratio: controller.sbdMarketPrice().change,
+                              price: appController.sbdMarketPrice().price,
+                              ratio: appController.sbdMarketPrice().change,
                               onTap: () async {
                                 final result = await Get.dialog(
                                   SimpleDialog(

@@ -10,26 +10,6 @@ import '../routes/app_pages.dart';
 import '../services/local_data_service.dart';
 import '../services/steem_service.dart';
 
-/// 잔액
-class Balances {
-  double steem;
-  double sbd;
-  bool isDone;
-
-  double get(String symbol) {
-    switch (symbol) {
-      case 'STEEM':
-        return steem;
-      case 'SBD':
-        return sbd;
-      default:
-        return 0.0;
-    }
-  }
-
-  Balances({this.steem = 0.0, this.sbd = 0.0, this.isDone = false});
-}
-
 /// 시장 가격
 class MarketPrice {
   double price;
@@ -38,11 +18,9 @@ class MarketPrice {
   MarketPrice(this.price, this.change);
 }
 
-class WalletsController extends GetxController
-    with StateMixin<Wallet>, SingleGetTickerProviderMixin {
+class AppController extends GetxController with SingleGetTickerProviderMixin {
   late final LocalDataService localDataService;
   late final SteemService steemService;
-  late final PriceProvider priceProvider;
 
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
@@ -53,7 +31,7 @@ class WalletsController extends GetxController
   final steemMarketPrice = MarketPrice(0, 0).obs;
   final sbdMarketPrice = MarketPrice(0, 0).obs;
 
-  static WalletsController get to => Get.find();
+  static AppController get to => Get.find();
 
   MarketPrice marketPrice(String symbol) {
     if (symbol == Symbols.STEEM) {
@@ -63,10 +41,6 @@ class WalletsController extends GetxController
     }
     return MarketPrice(0, 0);
   }
-
-  /// TODO: AppController 로 옮길 것
-  late final TabController tabController =
-      TabController(length: 2, vsync: this);
 
   /// account 선택
   void onChangeAccount(String? username) {
@@ -109,7 +83,12 @@ class WalletsController extends GetxController
       }
     } catch (e) {
       e.printError();
-      change(null, status: RxStatus.error(e.toString()));
+      Get.snackbar(
+        'ERROR',
+        e.toString(),
+        backgroundColor: Get.theme.errorColor,
+        colorText: Colors.white,
+      );
     } finally {
       loading(false);
     }
@@ -121,8 +100,9 @@ class WalletsController extends GetxController
   }
 
   /// 시장 가격을 조회한다.
-  void updateMarketPrice() {
-    priceProvider.getQuotesLatest(['STEEM', 'SBD']).then((value) {
+  Future<void> updateMarketPrice() async {
+    try {
+      final value = await PriceProvider.to.getQuotesLatest(['STEEM', 'SBD']);
       final steem = value.items['STEEM']!.quote.usd;
       final sbd = value.items['SBD']!.quote.usd;
       steemMarketPrice.update((val) {
@@ -133,7 +113,14 @@ class WalletsController extends GetxController
         val!.price = sbd.price;
         val.change = sbd.percentChange1H;
       });
-    });
+    } catch (error) {
+      Get.snackbar(
+        'ERROR',
+        error.toString(),
+        backgroundColor: Get.theme.errorColor,
+        colorText: Colors.white,
+      );
+    }
   }
 
   /// 새로운 계정 추가
@@ -148,9 +135,7 @@ class WalletsController extends GetxController
   Future<void> onInit() async {
     localDataService = Get.find<LocalDataService>();
     steemService = Get.find<SteemService>();
-    priceProvider = Get.put(PriceProvider());
 
-    // selectedAccount.firstRebuild = false;
     interval<String>(selectedAccount, loadAccountDetails);
 
     final accountList = (await localDataService.getAccounts())
@@ -161,7 +146,7 @@ class WalletsController extends GetxController
       selectedAccount(accountList.first);
     }
 
-    updateMarketPrice();
+    await updateMarketPrice();
 
     super.onInit();
   }

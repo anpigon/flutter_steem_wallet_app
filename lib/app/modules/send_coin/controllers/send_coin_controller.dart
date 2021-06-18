@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/controller/wallets_controller.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
 
 import '../../../../logger.dart';
@@ -21,15 +21,15 @@ class SendCoinController extends GetxController {
   final symbol = Symbols.STEEM.obs;
   final loading = false.obs;
 
-  late final WalletsController walletsController;
+  late final AppController appController;
 
   /// 잔액 조회
   double get balance {
     switch (symbol()) {
       case Symbols.STEEM:
-        return walletsController.wallet().steemBalance;
+        return appController.wallet().steemBalance;
       case Symbols.SBD:
-        return walletsController.wallet().sbdBalance;
+        return appController.wallet().sbdBalance;
       default:
         return 0;
     }
@@ -118,7 +118,7 @@ class SendCoinController extends GetxController {
 
         // 서명 및 송금
         await SteemService.to.transfer(_transferData, _activeKey);
-        await walletsController.reload();
+        await appController.reload();
 
         logger.d('success');
         showSuccessMessage('송금에 성공하였습니다.');
@@ -163,7 +163,7 @@ class SendCoinController extends GetxController {
     amountController = TextEditingController();
     memoController = TextEditingController();
 
-    walletsController = Get.find<WalletsController>();
+    appController = Get.find<AppController>();
 
     _ownerUsername = arguments['account'];
     symbol(arguments['symbol']);

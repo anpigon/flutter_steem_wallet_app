@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../logger.dart';
-import '../../../controller/wallets_controller.dart';
 import '../../../exceptions/message_exception.dart';
 import '../../../models/signature/transfer_to_vesting.dart';
 import '../../../services/local_data_service.dart';
@@ -23,7 +23,7 @@ class PowerUpController extends GetxController {
   late final loading = false.obs;
   late final enabledEditUsername = false.obs;
 
-  late final WalletsController walletsController;
+  late final AppController appController;
 
   /// 유효성 체크
   String? usernameValidator(String? value) {
@@ -42,7 +42,7 @@ class PowerUpController extends GetxController {
       if (amount.isLowerThan(0.001)) {
         return 'Invalid amount!';
       }
-      final steemBalance = walletsController.wallet().steemBalance;
+      final steemBalance = appController.wallet().steemBalance;
       if (amount.isGreaterThan(steemBalance)) {
         return '잔액이 부족합니다.';
       }
@@ -54,7 +54,7 @@ class PowerUpController extends GetxController {
   }
 
   void setRatioAmount(double ratio) {
-    final steemBalance = walletsController.wallet().steemBalance;
+    final steemBalance = appController.wallet().steemBalance;
     amountController.text = amountFormat.format(steemBalance * ratio);
   }
 
@@ -106,7 +106,7 @@ class PowerUpController extends GetxController {
 
         // 서명 및 송금
         await SteemService.to.powerUp(_transferToVesting, _activeKey);
-        await walletsController.reload();
+        await appController.reload();
 
         showSuccessMessage('파워업에 성공하였습니다.');
         Get.back(result: true);
@@ -144,7 +144,7 @@ class PowerUpController extends GetxController {
   void onInit() {
     final arguments = Get.arguments;
 
-    walletsController = Get.find<WalletsController>();
+    appController = Get.find<AppController>();
 
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
