@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
@@ -23,44 +22,28 @@ class AddAccountController extends GetxController
 
   late final bool isFirst;
 
-// animations
   late final AnimationController animationController;
   late final Animation<double> buttonSqueezeAnimation;
-  late final Animation<double> buttonZoomOut;
 
   @override
   void onInit() {
     isFirst = Get.previousRoute == Routes.START;
 
     animationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..addListener(() => update());
+        duration: Duration(milliseconds: 1500), vsync: this);
+    ;
 
-    buttonSqueezeAnimation = Tween<double>(
-      begin: Get.width,
-      end: 60.0,
-    ).animate(
-      CurvedAnimation(
-        parent: animationController,
-        curve: Interval(0.0, 0.250),
-      ),
-    );
+    buttonSqueezeAnimation = Tween<double>(begin: Get.width, end: 50).animate(
+        CurvedAnimation(
+            parent: animationController, curve: Interval(0.0, 0.250)));
 
-    buttonZoomOut =
-        Tween<double>(begin: 60.0, end: math.max(Get.height, Get.width))
-            .animate(
-      CurvedAnimation(
-        parent: animationController,
-        curve: Interval(
-          0.550,
-          0.900,
-          curve: Curves.bounceOut,
-        ),
-      ),
-    );
-
-    // animationController.repeat(reverse: true);
+    ever<bool>(loading, (value) {
+      if (value) {
+        animationController.forward();
+      } else {
+        animationController.reset();
+      }
+    });
 
     super.onInit();
   }
@@ -75,8 +58,6 @@ class AddAccountController extends GetxController
     usernameFocusNode.dispose();
     usernameController.dispose();
     privateKeyController.dispose();
-
-    animationController.dispose();
     super.onClose();
   }
 
@@ -121,6 +102,7 @@ class AddAccountController extends GetxController
     if (!formKey.currentState!.validate()) {
       return;
     }
+
     final currentFocus = FocusScope.of(Get.overlayContext!);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
@@ -128,7 +110,6 @@ class AddAccountController extends GetxController
     }
 
     loading(true);
-
     try {
       // Account 정보 가져오기
       final username = usernameController.text.trim();

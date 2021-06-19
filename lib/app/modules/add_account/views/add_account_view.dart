@@ -9,12 +9,12 @@ class AddAccountView extends GetView<AddAccountController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Add Account')),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(23.0),
+      body: Padding(
+        padding: EdgeInsets.all(23),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
                 child: Form(
                   key: controller.formKey,
                   child: Column(
@@ -78,86 +78,35 @@ class AddAccountView extends GetView<AddAccountController> {
                 ),
               ),
             ),
-          ),
-          // SizedBox(
-          //   width: controller.buttonSqueezeAnimation.value,
-          //   height: 50,
-          //   child: Obx(
-          //     () => ElevatedButton(
-          //       onPressed: controller.loading() ? () {} : controller.submit,
-          //       child: controller.loading()
-          //           ? const SizedBox(
-          //               height: 20.0,
-          //               width: 20.0,
-          //               child: CircularProgressIndicator(
-          //                 strokeWidth: 2,
-          //                 color: Colors.white,
-          //               ),
-          //             )
-          //           : const Text('Import'),
-          //     ),
-          //   ),
-          // ),
-          GetBuilder<AddAccountController>(
-            builder: (_) => controller.buttonZoomOut.value <= 300
-                ? Container(
-                    margin: EdgeInsets.all(23.0),
-                    width: controller.buttonZoomOut.value == 60
-                        ? controller.buttonSqueezeAnimation.value
-                        : controller.buttonZoomOut.value,
-                    height: controller.buttonZoomOut.value,
-                    // decoration: BoxDecoration(),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              controller.buttonSqueezeAnimation.value <
-                                          Get.width * 0.5 &&
-                                      controller.buttonZoomOut.value == 60
-                                  ? 30
-                                  : 5),
-                        ),
-                      ),
-                      onPressed: controller.loading()
-                          ? () {}
-                          : () async {
-                              controller.loading(true);
-                              await controller.animationController.forward();
-                              if (controller.animationController.isCompleted) {
-                                Get.back();
-                              }
-                            },
-                      child: controller.loading()
-                          ? const SizedBox(
-                              height: 30.0,
-                              width: 30.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Text('Import'),
-                    ),
-                  )
-                : Positioned(
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: controller.buttonZoomOut.value,
-                      height: controller.buttonZoomOut.value,
-                      decoration: BoxDecoration(
-                        shape: controller.buttonZoomOut.value < 500
-                            ? BoxShape.circle
-                            : BoxShape.rectangle,
-                        color: Get.theme.primaryColor,
-                      ),
+            AnimatedBuilder(
+              animation: controller.animationController,
+              builder: (_, __) => SizedBox(
+                width: controller.buttonSqueezeAnimation.value,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: controller.loading() ? () {} : controller.submit,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(controller.loading() ? 30 : 5),
                     ),
                   ),
-          ),
-        ],
+                  child: controller.animationController.isAnimating
+                      ? const SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text('Import'),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
