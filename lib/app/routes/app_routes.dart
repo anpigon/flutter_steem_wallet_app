@@ -13,6 +13,7 @@ abstract class Routes {
   static const SEND_COIN = _Paths.SEND_COIN;
   static const POWER_UP = _Paths.POWER_UP;
   static const POWER_DOWN = _Paths.POWER_DOWN;
+  static const DELEGATE_POWER = _Paths.DELEGATE_POWER;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const SEND_COIN = '/send-coin';
   static const POWER_UP = '/power-up';
   static const POWER_DOWN = '/power-down';
+  static const DELEGATE_POWER = '/delegate-power';
 }

@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_account_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
+import 'package:flutter_steem_wallet_app/app/modules/delegate_power/bindings/delegate_power_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/delegate_power/views/delegate_power_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/power_down/bindings/power_down_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/power_down/views/power_down_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/power_up/bindings/power_up_binding.dart';
@@ -69,6 +71,11 @@ class AppPages {
       name: _Paths.POWER_DOWN,
       page: () => PowerDownView(),
       binding: PowerDownBinding(),
+    ),
+    GetPage(
+      name: _Paths.DELEGATE_POWER,
+      page: () => DelegatePowerView(),
+      binding: DelegatePowerBinding(),
     ),
   ];
 }
