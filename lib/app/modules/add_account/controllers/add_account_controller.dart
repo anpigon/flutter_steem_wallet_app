@@ -30,12 +30,16 @@ class AddAccountController extends GetxController
     isFirst = Get.previousRoute == Routes.START;
 
     animationController = AnimationController(
-        duration: Duration(milliseconds: 1500), vsync: this);
-    ;
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
 
     buttonSqueezeAnimation = Tween<double>(begin: Get.width, end: 50).animate(
-        CurvedAnimation(
-            parent: animationController, curve: Interval(0.0, 0.250)));
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(0.0, 0.250),
+      ),
+    );
 
     ever<bool>(loading, (value) {
       if (value) {
@@ -58,6 +62,8 @@ class AddAccountController extends GetxController
     usernameFocusNode.dispose();
     usernameController.dispose();
     privateKeyController.dispose();
+
+    animationController.dispose();
     super.onClose();
   }
 
