@@ -51,6 +51,11 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
   Future<void> loadAccountDetails(String username) async {
     loading(true);
 
+    if (!accounts.contains(username)) {
+      accounts.add(username);
+      selectedAccount(username);
+    }
+
     try {
       final globalProperties = await steemService.getDynamicGlobalProperties();
       final data = await steemService.getAccount(username);

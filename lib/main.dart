@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.indigo,
           brightness: Brightness.light,
           backwardsCompatibility: false,
-          systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+          systemOverlayStyle:
+              SystemUiOverlayStyle(statusBarColor: Colors.indigo),
         ),
       ),
       initialBinding: InitBinding(),

@@ -1,4 +1,6 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -9,7 +11,8 @@ import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 import '../../../services/vault_service.dart';
 
-class AddAccountController extends GetxController {
+class AddAccountController extends GetxController
+    with SingleGetTickerProviderMixin {
   late final formKey = GlobalKey<FormState>();
   late final usernameFocusNode = FocusNode();
   late final privateKeyFocusNode = FocusNode();
@@ -18,10 +21,46 @@ class AddAccountController extends GetxController {
 
   late final loading = false.obs;
 
-  late final String previousRoute;
+  late final bool isFirst;
+
+// animations
+  late final AnimationController animationController;
+  late final Animation<double> buttonSqueezeAnimation;
+  late final Animation<double> buttonZoomOut;
+
   @override
   void onInit() {
-    previousRoute = Get.previousRoute;
+    isFirst = Get.previousRoute == Routes.START;
+
+    animationController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    )..addListener(() => update());
+
+    buttonSqueezeAnimation = Tween<double>(
+      begin: Get.width,
+      end: 60.0,
+    ).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(0.0, 0.250),
+      ),
+    );
+
+    buttonZoomOut =
+        Tween<double>(begin: 60.0, end: math.max(Get.height, Get.width))
+            .animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(
+          0.550,
+          0.900,
+          curve: Curves.bounceOut,
+        ),
+      ),
+    );
+
+    // animationController.repeat(reverse: true);
 
     super.onInit();
   }
@@ -36,6 +75,8 @@ class AddAccountController extends GetxController {
     usernameFocusNode.dispose();
     usernameController.dispose();
     privateKeyController.dispose();
+
+    animationController.dispose();
     super.onClose();
   }
 
@@ -83,6 +124,7 @@ class AddAccountController extends GetxController {
     final currentFocus = FocusScope.of(Get.overlayContext!);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
+      currentFocus.requestFocus(FocusNode());
     }
 
     loading(true);
@@ -131,7 +173,8 @@ class AddAccountController extends GetxController {
       final localDataService = Get.find<LocalDataService>();
       await localDataService.addAccount(account);
 
-      if (previousRoute == Routes.START) {
+      if (isFirst) {
+        await AppController.to.loadAccountDetails(username);
         await Get.offAllNamed(Routes.HOME);
       } else {
         Get.back(result: username);
