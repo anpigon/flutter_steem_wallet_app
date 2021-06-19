@@ -9,6 +9,11 @@ import '../../../widgets/balance_small_box.dart';
 import '../../../widgets/tight_button.dart';
 
 class PowerDownView extends GetView<PowerDownController> {
+  // TODO: 1. 임대 중인 스팀파워는 제거하고 실제 파워다운 가능한 vest를 표시한다.
+  // "현재 1,000 STEEM을 임대 중입니다. 이 수량은 임대 종료 후 회수 기간이 완전히 지날 때까지는 파워다운을 할 수 없습니다."
+  // TODO: 2. 현재 파워 다운 진행 중인 상태 표시하기
+  // "이미 1,000 STEEM의 파워 다운을 진행하고 있습니다. 파워 다운 수량을 변경하면 파워 다운 일정이 초기화되니 유의하십시오."
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,7 @@ class PowerDownView extends GetView<PowerDownController> {
                           symbol: 'SP',
                           loading: false,
                         ),
-                        // const SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         // Row(
                         //   children: [
                         //     // Text('Current Power Down : '),
@@ -39,6 +44,10 @@ class PowerDownView extends GetView<PowerDownController> {
                         //     Text('다음 파워다운 예정: 모레 (~93.192 SP)')
                         //   ],
                         // ),
+                        Text(
+                          '스팀 파워를 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 총 13주가 소요됩니다.',
+                          style: Get.theme.textTheme.caption,
+                        ),
                         const SizedBox(height: 20),
                         TextFormField(
                           decoration: InputDecoration(
