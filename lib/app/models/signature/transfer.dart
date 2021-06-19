@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'signature_model.dart';
 
 class Transfer extends SignatureModel {

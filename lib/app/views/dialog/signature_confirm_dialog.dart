@@ -4,12 +4,17 @@ import 'package:get/get.dart';
 
 enum SignatureType {
   transfer,
-  transferToVesting
+  transferToVesting,
+  withdrawVesting,
 }
 
 class SignatureConfirmDialog extends GetView {
   static Future<bool> show(SignatureType type, SignatureModel data) async {
-    return await Get.dialog<bool>(SignatureConfirmDialog(type, data), barrierDismissible: false,) == true;
+    return await Get.dialog<bool>(
+          SignatureConfirmDialog(type, data),
+          barrierDismissible: false,
+        ) ==
+        true;
   }
 
   final SignatureType type;

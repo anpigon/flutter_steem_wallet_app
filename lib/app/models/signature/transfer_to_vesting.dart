@@ -12,6 +12,7 @@ class TransferToVesting extends SignatureModel {
     required this.amount,
   }) : assert(amount.isFinite);
 
+  @override
   Map<String, dynamic> toJson() => {
         'from': from,
         'to': to,

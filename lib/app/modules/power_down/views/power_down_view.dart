@@ -31,14 +31,14 @@ class PowerDownView extends GetView<PowerDownController> {
                           symbol: 'SP',
                           loading: false,
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            // Text('Current Power Down : '),
-                            // Text('200.3 / 10294.5 SP'),
-                            Text('다음 파워다운 예정: 모레 (~93.192 SP)')
-                          ],
-                        ),
+                        // const SizedBox(height: 20),
+                        // Row(
+                        //   children: [
+                        //     // Text('Current Power Down : '),
+                        //     // Text('200.3 / 10294.5 SP'),
+                        //     Text('다음 파워다운 예정: 모레 (~93.192 SP)')
+                        //   ],
+                        // ),
                         const SizedBox(height: 20),
                         TextFormField(
                           decoration: InputDecoration(
