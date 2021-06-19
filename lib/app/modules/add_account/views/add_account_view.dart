@@ -78,17 +78,28 @@ class AddAccountView extends GetView<AddAccountController> {
                 ),
               ),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: Obx(
-                () => ElevatedButton(
-                  onPressed: controller.loading() ? null : controller.submit,
-                  child: controller.loading()
+            AnimatedBuilder(
+              animation: controller.animationController,
+              builder: (_, __) => SizedBox(
+                width: controller.buttonSqueezeAnimation.value,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: controller.loading() ? () {} : controller.submit,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(controller.loading() ? 30 : 5),
+                    ),
+                  ),
+                  child: controller.animationController.isAnimating
                       ? const SizedBox(
                           height: 20.0,
                           width: 20.0,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
                         )
                       : const Text('Import'),
                 ),

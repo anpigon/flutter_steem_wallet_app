@@ -1,39 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 
 import '../../../../logger.dart';
-import '../../../constants.dart';
 import '../../../exceptions/message_exception.dart';
-import '../../../models/signature/transfer.dart';
 import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 import '../../../services/vault_service.dart';
-import '../../../views/dialog/signature_confirm_dialog.dart';
 
-class SendCoinController extends GetxController {
+class PowerDownController extends GetxController {
   late final GlobalKey<FormState> formKey;
-  late final TextEditingController usernameController;
   late final TextEditingController amountController;
-  late final TextEditingController memoController;
 
   late final _ownerUsername;
-  final symbol = Symbols.STEEM.obs;
-  final loading = false.obs;
+  late final loading = false.obs;
 
   late final AppController appController;
-
-  /// 잔액 조회
-  double get balance {
-    switch (symbol()) {
-      case Symbols.STEEM:
-        return appController.wallet().steemBalance;
-      case Symbols.SBD:
-        return appController.wallet().sbdBalance;
-      default:
-        return 0;
-    }
-  }
 
   /// 유효성 체크
   String? usernameValidator(String? value) {
@@ -52,7 +37,8 @@ class SendCoinController extends GetxController {
       if (amount.isLowerThan(0.001)) {
         return 'Invalid amount!';
       }
-      if (amount.isGreaterThan(balance)) {
+      final steemPower = appController.wallet().steemPower;
+      if (amount.isGreaterThan(steemPower)) {
         return '잔액이 부족합니다.';
       }
     } catch (error) {
@@ -62,14 +48,17 @@ class SendCoinController extends GetxController {
     return null;
   }
 
-  /// 전송
+  void setRatioAmount(double ratio) {
+    final steemPower = appController.wallet().steemPower;
+    amountController.text = toFixedTrunc(steemPower * ratio, 3);
+  }
+
   Future<void> submit() async {
-    // 입력값 유효성 체크
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    // 소프트 키보드 숨김
+    // 소프트 키보드 감추기
     final currentFocus = FocusScope.of(Get.overlayContext!);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
@@ -78,26 +67,25 @@ class SendCoinController extends GetxController {
 
     loading(true);
     try {
-      // account 존재하는지 여부 체크
-      final receivingUsername = usernameController.text.trim();
-      final data = await SteemService.to.getAccount(receivingUsername);
-      if (data == null) {
-        throw MessageException('Account not found');
-      }
+      final amount = double.parse(amountController.text.trim());
+
+      final globalProperties =
+          await SteemService.to.getDynamicGlobalProperties();
+      final totalVestingShares =
+          double.parse(globalProperties.total_vesting_shares.split(' ')[0]);
+      final totalVestingFundSteem =
+          double.parse(globalProperties.total_vesting_fund_steem.split(' ')[0]);
+
+      final vestingShares = amount / totalVestingFundSteem * totalVestingShares;
 
       // 서명 데이터 확인 다이얼로그
-      final amount = double.parse(amountController.text.trim());
-      final memo = memoController.text.trim();
-      final _transferData = Transfer(
-        from: _ownerUsername,
-        to: receivingUsername,
-        amount: amount,
-        symbol: symbol.value,
-        memo: memo,
+      final _withdrawVesting = WithdrawVesting(
+        account: _ownerUsername,
+        vesting_shares: vestingShares,
       );
       final result = await SignatureConfirmDialog.show(
-        SignatureType.transfer,
-        _transferData,
+        SignatureType.withdrawVesting,
+        _withdrawVesting,
       );
 
       // 서명 및 전송
@@ -108,8 +96,6 @@ class SendCoinController extends GetxController {
           throw MessageException('Account not found in local db.');
         }
 
-        // TODO: PIN 번호 입력
-
         final _activeKey =
             await VaultService.to.read(ownerAccount.activePublicKey!);
         if (_activeKey == null) {
@@ -117,11 +103,10 @@ class SendCoinController extends GetxController {
         }
 
         // 서명 및 송금
-        await SteemService.to.transfer(_transferData, _activeKey);
-        await appController.reload();
+        await SteemService.to.powerDown(_withdrawVesting, _activeKey);
+        await AppController.to.reload();
 
-        logger.d('success');
-        showSuccessMessage('송금에 성공하였습니다.');
+        showSuccessMessage('파워 다운이 시작되었습니다.');
         Get.back(result: true);
       }
     } on MessageException catch (error) {
@@ -155,18 +140,13 @@ class SendCoinController extends GetxController {
 
   @override
   void onInit() {
-    final arguments = Get.arguments;
-    print('arguments: $arguments');
-
     formKey = GlobalKey<FormState>();
-    usernameController = TextEditingController();
     amountController = TextEditingController();
-    memoController = TextEditingController();
 
-    appController = Get.find<AppController>();
+    appController = AppController.to;
 
+    final arguments = Get.arguments;
     _ownerUsername = arguments['account'];
-    symbol(arguments['symbol']);
 
     super.onInit();
   }
@@ -178,9 +158,7 @@ class SendCoinController extends GetxController {
 
   @override
   void onClose() {
-    usernameController.dispose();
     amountController.dispose();
-    memoController.dispose();
     super.onClose();
   }
 }

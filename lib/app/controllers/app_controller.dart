@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/price_provider.dart';
-import '../../../models/wallet.dart';
-import '../../../routes/app_pages.dart';
-import '../../../services/local_data_service.dart';
-import '../../../services/steem_service.dart';
+import '../constants.dart';
+import '../data/price_provider.dart';
+import '../models/wallet.dart';
+import '../routes/app_pages.dart';
+import '../services/local_data_service.dart';
+import '../services/steem_service.dart';
 
+/// 시장 가격
 class MarketPrice {
   double price;
   double change;
@@ -16,37 +18,43 @@ class MarketPrice {
   MarketPrice(this.price, this.change);
 }
 
-class WalletsController extends GetxController
-    with StateMixin<Wallet>, SingleGetTickerProviderMixin {
+class AppController extends GetxController with SingleGetTickerProviderMixin {
+  late final LocalDataService localDataService;
+  late final SteemService steemService;
+
   final accounts = <String>[].obs;
   final selectedAccount = ''.obs;
+
+  final loading = false.obs;
+  final wallet = Wallet().obs;
 
   final steemMarketPrice = MarketPrice(0, 0).obs;
   final sbdMarketPrice = MarketPrice(0, 0).obs;
 
+  static AppController get to => Get.find();
+
   MarketPrice marketPrice(String symbol) {
-    if (symbol == 'STEEM') {
+    if (symbol == Symbols.STEEM) {
       return steemMarketPrice();
+    } else if (symbol == Symbols.SBD) {
+      return sbdMarketPrice();
     }
-    return sbdMarketPrice();
+    return MarketPrice(0, 0);
   }
 
-  late final TabController tabController =
-      TabController(length: 2, vsync: this);
-
+  /// account 선택
   void onChangeAccount(String? username) {
     selectedAccount(username);
   }
 
-  static WalletsController get to => Get.find();
-
-  final localDataService = Get.find<LocalDataService>();
-  final steemService = Get.find<SteemService>();
-  final priceProvider = Get.put<PriceProvider>(PriceProvider());
-
   /// account 잔액 정보를 가져온다.
   Future<void> loadAccountDetails(String username) async {
-    change(null, status: RxStatus.loading());
+    loading(true);
+
+    if (!accounts.contains(username)) {
+      accounts.add(username);
+      selectedAccount(username);
+    }
 
     try {
       final globalProperties = await steemService.getDynamicGlobalProperties();
@@ -69,27 +77,37 @@ class WalletsController extends GetxController
         final currentResourceCredits =
             (await steemService.getRCMana(username)).percentage;
 
-        final wallet = Wallet(
-          name: data.name,
-          steemBalance: double.parse(data.balance.split(' ')[0]),
-          sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
-          steemPower: steemPower,
-          votingPower: currentVotingPower / 100,
-          resourceCredits: currentResourceCredits / 100,
-        );
-        change(wallet, status: RxStatus.success());
-      } else {
-        change(null, status: RxStatus.empty());
+        wallet.update((val) {
+          val!.name = data.name;
+          val.steemBalance = double.parse(data.balance.split(' ')[0]);
+          val.sbdBalance = double.parse(data.sbd_balance.split(' ')[0]);
+          val.steemPower = steemPower;
+          val.votingPower = currentVotingPower / 100;
+          val.resourceCredits = currentResourceCredits / 100;
+        });
       }
     } catch (e) {
       e.printError();
-      change(null, status: RxStatus.error(e.toString()));
+      Get.snackbar(
+        'ERROR',
+        e.toString(),
+        backgroundColor: Get.theme.errorColor,
+        colorText: Colors.white,
+      );
+    } finally {
+      loading(false);
     }
   }
 
-  void updateMarketPrice() {
-    // 시장 가격 조회
-    priceProvider.getQuotesLatest(['STEEM', 'SBD']).then((value) {
+  /// account 정보 갱신
+  Future<void> reload() async {
+    await loadAccountDetails(selectedAccount.value);
+  }
+
+  /// 시장 가격을 조회한다.
+  Future<void> updateMarketPrice() async {
+    try {
+      final value = await PriceProvider.to.getQuotesLatest(['STEEM', 'SBD']);
       final steem = value.items['STEEM']!.quote.usd;
       final sbd = value.items['SBD']!.quote.usd;
       steemMarketPrice.update((val) {
@@ -100,38 +118,40 @@ class WalletsController extends GetxController
         val!.price = sbd.price;
         val.change = sbd.percentChange1H;
       });
-    });
+    } catch (error) {
+      Get.snackbar(
+        'ERROR',
+        error.toString(),
+        backgroundColor: Get.theme.errorColor,
+        colorText: Colors.white,
+      );
+    }
   }
 
   /// 새로운 계정 추가
   Future<void> goAddAccount() async {
     final newAccount = await Get.toNamed(Routes.ADD_ACCOUNT);
-    if (!newAccount.isEmpty) {
+    if (newAccount != null && !newAccount.isEmpty) {
       accounts.add(newAccount);
     }
   }
 
-  void goSendCoin({String symbol = 'STEEM'}) {
-    Get.toNamed(Routes.SEND_COIN, arguments: {
-      'account': selectedAccount.value,
-      'symbol': symbol,
-    });
-  }
-
   @override
   Future<void> onInit() async {
-    // selectedAccount.firstRebuild = false;
+    localDataService = Get.find<LocalDataService>();
+    steemService = Get.find<SteemService>();
+
     interval<String>(selectedAccount, loadAccountDetails);
 
-    final _accounts = (await localDataService.getAccounts())
+    final accountList = (await localDataService.getAccounts())
         .map((account) => account.name)
         .toList();
-    if (_accounts.isNotEmpty) {
-      accounts.assignAll(_accounts);
-      selectedAccount(_accounts[0]);
+    if (accountList.isNotEmpty) {
+      accounts.assignAll(accountList);
+      selectedAccount(accountList.first);
     }
 
-    updateMarketPrice();
+    await updateMarketPrice();
 
     super.onInit();
   }

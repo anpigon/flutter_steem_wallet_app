@@ -1,6 +1,6 @@
-import 'dart:convert';
+import 'signature_model.dart';
 
-class Transfer {
+class Transfer extends SignatureModel {
   late final String to;
   late final String from;
   late final String symbol;
@@ -14,15 +14,13 @@ class Transfer {
     required this.amount,
     this.memo,
   })  : assert(amount.isFinite),
-        assert(amount % 0.001 == 0),
         assert(symbol == 'STEEM' || symbol == 'SBD');
 
+  @override
   Map<String, dynamic> toJson() => {
         'from': from,
         'to': to,
-        'amount': '$amount $symbol',
+        'amount': '${amount.toStringAsFixed(3)} $symbol',
         'memo': memo ?? '',
       };
-
-  String toPrettyJson() => JsonEncoder.withIndent('  ').convert(toJson());
 }

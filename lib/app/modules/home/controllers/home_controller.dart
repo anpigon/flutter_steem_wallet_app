@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../wallets/views/wallets_view.dart';
+import '../../../views/views/wallets_view.dart';
 
 class HomeController extends GetxController {
   final currentIndex = 0.obs;

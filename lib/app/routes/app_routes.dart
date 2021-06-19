@@ -11,6 +11,8 @@ abstract class Routes {
   static const WALLETS = _Paths.WALLETS;
   static const QRSCAN = _Paths.QRSCAN;
   static const SEND_COIN = _Paths.SEND_COIN;
+  static const POWER_UP = _Paths.POWER_UP;
+  static const POWER_DOWN = _Paths.POWER_DOWN;
 }
 
 abstract class _Paths {
@@ -21,4 +23,6 @@ abstract class _Paths {
   static const WALLETS = '/wallets';
   static const QRSCAN = '/qrscan';
   static const SEND_COIN = '/send-coin';
+  static const POWER_UP = '/power-up';
+  static const POWER_DOWN = '/power-down';
 }

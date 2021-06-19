@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
+import 'initial_binding.dart';
 import 'init_services.dart';
 
 void main() async {
@@ -29,9 +30,11 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.indigo,
           brightness: Brightness.light,
           backwardsCompatibility: false,
-          systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+          systemOverlayStyle:
+              SystemUiOverlayStyle(statusBarColor: Colors.indigo),
         ),
       ),
+      initialBinding: InitBinding(),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );

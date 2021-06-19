@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -9,7 +10,8 @@ import '../../../services/local_data_service.dart';
 import '../../../services/steem_service.dart';
 import '../../../services/vault_service.dart';
 
-class AddAccountController extends GetxController {
+class AddAccountController extends GetxController
+    with SingleGetTickerProviderMixin {
   late final formKey = GlobalKey<FormState>();
   late final usernameFocusNode = FocusNode();
   late final privateKeyFocusNode = FocusNode();
@@ -18,10 +20,30 @@ class AddAccountController extends GetxController {
 
   late final loading = false.obs;
 
-  late final String previousRoute;
+  late final bool isFirst;
+
+  late final AnimationController animationController;
+  late final Animation<double> buttonSqueezeAnimation;
+
   @override
   void onInit() {
-    previousRoute = Get.previousRoute;
+    isFirst = Get.previousRoute == Routes.START;
+
+    animationController = AnimationController(
+        duration: Duration(milliseconds: 1500), vsync: this);
+    ;
+
+    buttonSqueezeAnimation = Tween<double>(begin: Get.width, end: 50).animate(
+        CurvedAnimation(
+            parent: animationController, curve: Interval(0.0, 0.250)));
+
+    ever<bool>(loading, (value) {
+      if (value) {
+        animationController.forward();
+      } else {
+        animationController.reset();
+      }
+    });
 
     super.onInit();
   }
@@ -80,13 +102,14 @@ class AddAccountController extends GetxController {
     if (!formKey.currentState!.validate()) {
       return;
     }
+
     final currentFocus = FocusScope.of(Get.overlayContext!);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
+      currentFocus.requestFocus(FocusNode());
     }
 
     loading(true);
-
     try {
       // Account 정보 가져오기
       final username = usernameController.text.trim();
@@ -131,7 +154,8 @@ class AddAccountController extends GetxController {
       final localDataService = Get.find<LocalDataService>();
       await localDataService.addAccount(account);
 
-      if (previousRoute == Routes.START) {
+      if (isFirst) {
+        await AppController.to.loadAccountDetails(username);
         await Get.offAllNamed(Routes.HOME);
       } else {
         Get.back(result: username);

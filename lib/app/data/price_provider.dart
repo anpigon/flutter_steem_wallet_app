@@ -4,6 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dto/quote_lastest.dart';
 
 class PriceProvider extends GetConnect {
+
+  static PriceProvider get to => Get.find();
+
   @override
   void onInit() {
     final API_KEY = dotenv.env['COINMARKETCAP_API_KEY'];

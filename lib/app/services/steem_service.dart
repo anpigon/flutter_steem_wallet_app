@@ -1,8 +1,11 @@
 import 'dart:async';
+
+import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
-import '../models/transfer.dart';
+import '../models/signature/transfer.dart';
+import '../models/signature/transfer_to_vesting.dart';
 
 const STEEM_API_NODES = [
   'https://api.steemit.com',
@@ -63,5 +66,29 @@ class SteemService extends GetxService {
   Future<Map<String, dynamic>> transfer(Transfer data, String key) async {
     return await client.broadcast
         .transfer(data.toJson(), steem.SteemPrivateKey.fromString(key));
+  }
+
+  Future<Map<String, dynamic>> powerUp(
+    TransferToVesting transferToVesting,
+    String key,
+  ) async {
+    final operation = steem.Operation(
+      'transfer_to_vesting',
+      transferToVesting.toJson(),
+    );
+    return await client.broadcast
+        .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
+  }
+
+  Future<Map<String, dynamic>> powerDown(
+    WithdrawVesting withdrawVesting,
+    String key,
+  ) async {
+    final operation = steem.Operation(
+      'withdraw_vesting',
+      withdrawVesting.toJson(),
+    );
+    return await client.broadcast
+        .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
   }
 }

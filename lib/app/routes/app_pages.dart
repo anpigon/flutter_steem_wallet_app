@@ -1,12 +1,17 @@
+import 'package:get/get.dart';
+
 import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_account_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
+import 'package:flutter_steem_wallet_app/app/modules/power_down/bindings/power_down_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/power_down/views/power_down_view.dart';
+import 'package:flutter_steem_wallet_app/app/modules/power_up/bindings/power_up_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/power_up/views/power_up_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/qrscan/bindings/qrscan_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/qrscan/views/qrscan_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/send_coin/bindings/send_coin_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/send_coin/views/send_coin_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/bindings/start_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/start/views/start_view.dart';
-import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -54,6 +59,16 @@ class AppPages {
       name: _Paths.SEND_COIN,
       page: () => SendCoinView(),
       binding: SendCoinBinding(),
+    ),
+    GetPage(
+      name: _Paths.POWER_UP,
+      page: () => PowerUpView(),
+      binding: PowerUpBinding(),
+    ),
+    GetPage(
+      name: _Paths.POWER_DOWN,
+      page: () => PowerDownView(),
+      binding: PowerDownBinding(),
     ),
   ];
 }

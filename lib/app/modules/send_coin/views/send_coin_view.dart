@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../constants.dart';
 import '../../../widgets/balance_small_box.dart';
 import '../controllers/send_coin_controller.dart';
 
 class SendCoinView extends GetView<SendCoinController> {
   @override
   Widget build(BuildContext context) {
-    print(Get.arguments);
     return Scaffold(
       appBar: AppBar(title: Text('Transfer')),
       body: Padding(
@@ -26,8 +26,7 @@ class SendCoinView extends GetView<SendCoinController> {
                         BalanceSmallBox(
                           label: 'Balance',
                           amount: controller.balance,
-                          symbol: controller.symbol(),
-                          loading: !controller.balances().isDone,
+                          symbol: controller.symbol.value,
                         ),
                         SizedBox(height: 15),
                         TextFormField(
@@ -50,19 +49,18 @@ class SendCoinView extends GetView<SendCoinController> {
                             suffixIcon: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 isDense: true,
-                                value: controller.symbol(),
+                                value: controller.symbol.value,
                                 items: [
                                   DropdownMenuItem(
-                                    value: 'STEEM',
-                                    child: Text('STEEM'),
+                                    value: Symbols.STEEM,
+                                    child: Text(Symbols.STEEM),
                                   ),
                                   DropdownMenuItem(
-                                    value: 'SBD',
-                                    child: Text('SBD'),
+                                    value: Symbols.SBD,
+                                    child: Text(Symbols.SBD),
                                   )
                                 ],
-                                underline: Container(),
-                                onChanged: controller.onChangedSymbol,
+                                onChanged: controller.symbol,
                               ),
                             ),
                           ),
@@ -85,30 +83,33 @@ class SendCoinView extends GetView<SendCoinController> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed:
-                      controller.balances().isDone ? controller.submit : null,
-                  child: controller.loading()
-                      ? const SizedBox(
-                          height: 20.0,
-                          width: 20.0,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          'Send',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-              ),
+              buildSendButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox buildSendButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: controller.submit,
+        child: controller.loading()
+            ? const SizedBox(
+                height: 20.0,
+                width: 20.0,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : const Text(
+                'Send',
+                style: TextStyle(color: Colors.white),
+              ),
       ),
     );
   }

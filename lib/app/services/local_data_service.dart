@@ -40,6 +40,7 @@ class LocalDataService extends GetxService {
     Hive.registerAdapter(AccountAdapter());
 
     accountsBox = await Hive.openBox<Account>(ACCOUNTS_BOX);
+    // await accountsBox.clear();
     return this;
   }
 
