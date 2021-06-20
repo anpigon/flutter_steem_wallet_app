@@ -39,6 +39,12 @@ class WalletsView extends GetView<WalletsController> {
       });
     }
 
+    void goDelegateDown() {
+      Get.toNamed(Routes.DELEGATE_POWER, arguments: {
+        'account': appController.selectedAccount.value,
+      });
+    }
+
     return SafeArea(
       child: Container(
         child: Column(
@@ -219,7 +225,7 @@ class WalletsView extends GetView<WalletsController> {
                                 );
                                 switch (result) {
                                   case 0:
-                                    return null;
+                                    return goDelegateDown();
                                   case 1:
                                     return goPowerDown();
                                 }
