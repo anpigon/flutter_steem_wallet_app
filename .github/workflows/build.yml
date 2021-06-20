@@ -3,6 +3,8 @@ name: Flutter Build
 on:
   push:
     branches: [master]
+    tags:
+      - v*
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -57,6 +59,7 @@ jobs:
 
       - name: Release APK
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             build/app/outputs/bundle/release/app-release.aab
