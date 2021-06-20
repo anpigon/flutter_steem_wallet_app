@@ -1,0 +1,73 @@
+name: Flutter Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: "12.x"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Download Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: key.jks
+          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: Create key.properties
+        run: |
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Statically analyze the Dart code for any errors.
+      # - run: flutter analyze .
+    
+      # Run widget tests for our flutter project.
+      # - run: flutter test
+
+      - name: Build APK
+        run: |
+          flutter build apk --release
+          flutter build appbundle --release
+
+      - name: Release APK
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename APK
+        run: |
+          mkdir upload
+          mv build/app/outputs/flutter-apk/app-release.apk ./upload/FlutterSteemWalletApp-SNAPSHOT.apk
+          mv build/app/outputs/bundle/release/app-release.aab ./upload/FlutterSteemWalletApp-SNAPSHOT.aab
+
+      - name: Archive APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-build
+          path: ./upload

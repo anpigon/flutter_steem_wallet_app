@@ -1,4 +1,4 @@
-package com.example.flutter_steem_wallet_app
+package io.github.anpigon.flutter_steem_wallet_app
 
 import io.flutter.embedding.android.FlutterActivity
 

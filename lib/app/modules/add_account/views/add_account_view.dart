@@ -91,7 +91,7 @@ class AddAccountView extends GetView<AddAccountController> {
                           BorderRadius.circular(controller.loading() ? 30 : 5),
                     ),
                   ),
-                  child: controller.animationController.isAnimating
+                  child: controller.loading()
                       ? const SizedBox(
                           height: 20.0,
                           width: 20.0,
