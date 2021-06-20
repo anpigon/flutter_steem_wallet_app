@@ -2,8 +2,8 @@ name: Flutter Build
 
 on:
   push:
-    branches: [ master ]
-
+    tags:
+      - v*
   workflow_dispatch:
 
 jobs:
@@ -43,25 +43,17 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # Statically analyze the Dart code for any errors.
-      # - run: flutter analyze .
-
-      # Run widget tests for our flutter project.
-      # - run: flutter test
-
       - name: Build APK
         run: |
           flutter build apk --release
           flutter build appbundle --release
 
-      - name: Rename APK
-        run: |
-          mkdir upload
-          mv build/app/outputs/flutter-apk/app-release.apk ./upload/FlutterSteemWalletApp-SNAPSHOT.apk
-          mv build/app/outputs/bundle/release/app-release.aab ./upload/FlutterSteemWalletApp-SNAPSHOT.aab
-
-      - name: Archive APK
-        uses: actions/upload-artifact@v2
+      - name: Release APK
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: android-build
-          path: ./upload
+          files: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
