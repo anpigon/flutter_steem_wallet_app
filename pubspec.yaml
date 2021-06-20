@@ -23,7 +23,9 @@ dependencies:
   fluttertoast: ^8.0.7
   flutter_native_splash: ^1.1.8+4
   steemdart_ecc: 
-    path: ../steemdart_ecc
+    git: 
+      url: git://github.com/anpigon/steemdart_ecc.git
+      ref: develop
 
 dev_dependencies: 
   pedantic: ^1.11.0
