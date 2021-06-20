@@ -2,11 +2,11 @@ name: Flutter Build
 
 on:
   push:
-    branches: [master]
+    # branches: [master]
     tags:
       - v*
-  pull_request:
-    branches: [master]
+  # pull_request:
+  #   branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -67,14 +67,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Rename APK
-        run: |
-          mkdir upload
-          mv build/app/outputs/flutter-apk/app-release.apk ./upload/FlutterSteemWalletApp-SNAPSHOT.apk
-          mv build/app/outputs/bundle/release/app-release.aab ./upload/FlutterSteemWalletApp-SNAPSHOT.aab
+      # - name: Rename APK
+      #   run: |
+      #     mkdir upload
+      #     mv build/app/outputs/flutter-apk/app-release.apk ./upload/FlutterSteemWalletApp-SNAPSHOT.apk
+      #     mv build/app/outputs/bundle/release/app-release.aab ./upload/FlutterSteemWalletApp-SNAPSHOT.aab
 
-      - name: Archive APK
-        uses: actions/upload-artifact@v2
-        with:
-          name: android-build
-          path: ./upload
+      # - name: Archive APK
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: android-build
+      #     path: ./upload
