@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:flutter_steem_wallet_app/app/modules/account_history/bindings/account_history_binding.dart';
+import 'package:flutter_steem_wallet_app/app/modules/account_history/views/account_history_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/bindings/add_account_binding.dart';
 import 'package:flutter_steem_wallet_app/app/modules/add_account/views/add_account_view.dart';
 import 'package:flutter_steem_wallet_app/app/modules/delegate_power/bindings/delegate_power_binding.dart';
@@ -76,6 +78,11 @@ class AppPages {
       name: _Paths.DELEGATE_POWER,
       page: () => DelegatePowerView(),
       binding: DelegatePowerBinding(),
+    ),
+    GetPage(
+      name: _Paths.ACCOUNT_HISTORY,
+      page: () => AccountHistoryView(),
+      binding: AccountHistoryBinding(),
     ),
   ];
 }
