@@ -177,7 +177,7 @@ class WalletsView extends GetView<WalletsController> {
                                       Divider(),
                                       buildSimpleDialogOption(
                                         id: 1,
-                                        text: ' 파워 업',
+                                        text: '파워 업',
                                         icon: Icon(
                                           Icons.bolt_rounded,
                                           color: Colors.yellow.shade700,

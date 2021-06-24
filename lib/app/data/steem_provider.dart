@@ -46,7 +46,17 @@ class SteemProvider extends GetConnect {
               ))
           .toList());
 
-      return accountHistory;
+      accountHistory.sort((a, b) {
+        var adate = a.timestamp;
+        var bdate = b.timestamp;
+        return -adate.compareTo(bdate);
+      });
+
+      return accountHistory
+          .where(
+            (e) => e.message?.isNotEmpty ?? false,
+          )
+          .toList();
     }
     return [];
   }

@@ -1,8 +1,11 @@
-import 'dart:convert';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/constants/operation_type.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
 
 class AccountHistory extends Equatable {
+  late final String opType;
+  late final IconData icon;
   late final int id;
   late final String trxId;
   late final int block;
@@ -10,12 +13,14 @@ class AccountHistory extends Equatable {
   late final int opInTrx;
   late final int virtualOp;
   late final DateTime timestamp;
-  late String? message;
-  late String? author;
-  late String? permlink;
-  late String? memo;
+  late final String? message;
+  late final String? author;
+  late final String? permlink;
+  late final String? memo;
 
   AccountHistory({
+    required this.opType,
+    required this.icon,
     required this.id,
     required this.trxId,
     required this.block,
@@ -24,6 +29,9 @@ class AccountHistory extends Equatable {
     required this.virtualOp,
     required this.timestamp,
     this.message,
+    this.author,
+    this.permlink,
+    this.memo,
   });
 
   factory AccountHistory.fromJson(
@@ -36,97 +44,150 @@ class AccountHistory extends Equatable {
     final tx = item[1] as Map<String, dynamic>;
 
     final operation = item[1]['op'];
-    final action = operation[0];
-    final payload = operation[1];
+    final opType = operation[0];
+    final opData = operation[1];
 
-    final accountHistory = AccountHistory(
-      id: id,
-      trxId: tx['trx_id'] as String,
-      block: tx['block'] as int,
-      trxInBlock: tx['trx_in_block'] as int,
-      opInTrx: tx['op_in_trx'] as int,
-      virtualOp: tx['virtual_op'] as int,
-      timestamp: DateTime.parse('${tx['timestamp'] as String}Z'),
-    );
+    final trxId = tx['trx_id'] as String;
+    final block = tx['block'] as int;
+    final trxInBlock = tx['trx_in_block'] as int;
+    final opInTrx = tx['op_in_trx'] as int;
+    final virtualOp = tx['virtual_op'] as int;
+    final timestamp = DateTime.parse('${tx['timestamp'] as String}Z');
 
-    switch (action) {
-      case 'curation_reward':
+    switch (opType) {
+      case OperationType.CURATION_REWARD:
         // final curator = payload['curator'] as String;
-        final reward = payload['reward'] as String;
-        final commentAuthor = payload['comment_author'] as String;
-        final commentPermlink = payload['comment_permlink'] as String;
+        final reward = opData['reward'] as String;
+        final commentAuthor = opData['comment_author'] as String;
+        final commentPermlink = opData['comment_permlink'] as String;
         final spPayout = calculateVestToSteem(
             reward, totalVestingShares, totalVestingFundSteem);
-        accountHistory.author = commentAuthor;
-        accountHistory.permlink = commentPermlink;
-        accountHistory.message =
-            'Curation rewards: ${toFixedTrunc(spPayout, 3)} SP';
-        break;
-      case 'author_reward':
-      case 'comment_benefactor_reward':
-        final author = payload['author'] as String;
-        final permlink = payload['permlink'] as String;
-        final sbdPayout = payload['sbd_payout'] as String;
-        final steemPayout = payload['steem_payout'] as String;
-        final vestingPayout = payload['vesting_payout'] as String;
+        return AccountHistory(
+          icon: Icons.favorite,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          author: commentAuthor,
+          permlink: commentPermlink,
+          message: 'Curation rewards: ${toFixedTrunc(spPayout, 3)} SP',
+        );
+      case OperationType.AUTHOR_REWARD:
+      case OperationType.COMMENT_BENEFACTOR_REWARD:
+        final author = opData['author'] as String;
+        final permlink = opData['permlink'] as String;
+        final sbdPayout = opData['sbd_payout'] as String;
+        final steemPayout = opData['steem_payout'] as String;
+        final vestingPayout = opData['vesting_payout'] as String;
         final spPayout = calculateVestToSteem(
             vestingPayout, totalVestingShares, totalVestingFundSteem);
-        accountHistory.author = author;
-        accountHistory.permlink = permlink;
-        accountHistory.message = [
-          'Author reward:',
-          if (sbdPayout != '0.000 SBD') '$sbdPayout and',
-          if (sbdPayout != '0.000 STEEM') '$steemPayout and',
-          if (spPayout > 0) '${toFixedTrunc(spPayout, 3)} SP',
-        ].join(' ');
-        break;
-      case 'claim_reward_balance':
+        return AccountHistory(
+          icon: Icons.face,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          author: author,
+          permlink: permlink,
+          message: [
+            'Author reward:',
+            if (sbdPayout != '0.000 SBD') '$sbdPayout and',
+            if (sbdPayout != '0.000 STEEM') '$steemPayout and',
+            if (spPayout > 0) '${toFixedTrunc(spPayout, 3)} SP',
+          ].join(' '),
+        );
+      case OperationType.CLAIM_REWARD_BALANCE:
         // final account = payload['account'] as String;
-        final rewardSteem = payload['reward_steem'] as String;
-        final rewardSbd = payload['reward_sbd'] as String;
-        final rewardVests = payload['reward_vests'] as String;
+        final rewardSteem = opData['reward_steem'] as String;
+        final rewardSbd = opData['reward_sbd'] as String;
+        final rewardVests = opData['reward_vests'] as String;
         final rewardSP = calculateVestToSteem(
             rewardVests, totalVestingShares, totalVestingFundSteem);
-        accountHistory.message = [
-          'Claim rewards:',
-          if (rewardSbd != '0.000 SBD') '$rewardSbd and',
-          if (rewardSteem != '0.000 STEEM') '$rewardSteem and',
-          if (rewardSP > 0) '${toFixedTrunc(rewardSP, 3)} SP',
-        ].join(' ');
-        break;
-      case 'transfer':
-      case 'transfer_to_savings':
-      case 'transfer_from_savings':
-      case 'transfer_to_vesting':
-        final _amount = payload['amount'] as String;
-        final _from = payload['from'] as String;
-        final _to = payload['to'] as String;
-        final _memo = payload['memo'] as String?;
-        accountHistory.memo = _memo;
-        if (ownerAccount == _from) {
-          accountHistory.message = 'Transfer $_amount to $_to';
-        } else if (ownerAccount == _from && ownerAccount == _to) {
+        return AccountHistory(
+          icon: Icons.payment,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          message: [
+            'Claim rewards:',
+            if (rewardSbd != '0.000 SBD') '$rewardSbd and',
+            if (rewardSteem != '0.000 STEEM') '$rewardSteem and',
+            if (rewardSP > 0) '${toFixedTrunc(rewardSP, 3)} SP',
+          ].join(' '),
+        );
+      case OperationType.TRANSFER:
+      case OperationType.TRANSFER_TO_SAVINGS:
+      case OperationType.TRANSFER_FROM_SAVINGS:
+      case OperationType.TRANSFER_TO_VESTING:
+        final amount = opData['amount'] as String;
+        final from = opData['from'] as String;
+        final to = opData['to'] as String;
+        final memo = opData['memo'] as String?;
+        String message;
+        IconData icon;
+        if (ownerAccount == from) {
+          icon = Icons.arrow_circle_up;
+          message = 'Transfer $amount to $to';
+        } else if (ownerAccount == from && ownerAccount == to) {
           // STEEM POWER UP
-          accountHistory.message = '	Transfer $_amount POWER to $_to';
+          icon = Icons.bolt;
+          message = '	Transfer $amount POWER to $to';
         } else {
-          accountHistory.message = 'Received $_amount from $_from';
+          icon = Icons.arrow_circle_down;
+          message = 'Received $amount from $from';
         }
-        break;
-      case 'delegate_vesting_shares':
-        final delegator = payload['delegator'] as String;
-        final delegatee = payload['delegatee'] as String;
-        final vesting_shares = payload['vesting_shares'] as String;
+        return AccountHistory(
+          icon: icon,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          message: message,
+          memo: memo,
+        );
+      case OperationType.DELEGATE_VESTING_SHARES:
+        final delegator = opData['delegator'] as String;
+        final delegatee = opData['delegatee'] as String;
+        final vesting_shares = opData['vesting_shares'] as String;
         final delegateSP = calculateVestToSteem(
             vesting_shares, totalVestingShares, totalVestingFundSteem);
+        String message;
         if (ownerAccount == delegator) {
-          accountHistory.message =
-              'Delegate ${toFixedTrunc(delegateSP, 3)} SP to $delegatee';
+          message = 'Delegate ${toFixedTrunc(delegateSP, 3)} SP to $delegatee';
         } else {
-          accountHistory.message =
+          message =
               'Delegate ${toFixedTrunc(delegateSP, 3)} SP from $delegator';
         }
-        break;
-      case 'custom_json':
+        return AccountHistory(
+          icon: Icons.swap_horiz,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          message: message,
+        );
+      /* case 'custom_json':
         final customJsonId = payload['id'] as String;
         final customJson = jsonDecode(payload['json'] as String);
         switch (customJsonId) {
@@ -140,8 +201,17 @@ class AccountHistory extends Equatable {
                   customJson is Map ? customJson['symbol'] : customJson;
               accountHistory.message = 'Scot Claim Token: $symbols';
             }
-
-            break;
+            return AccountHistory(
+                opType: opType,
+                id: id,
+                trxId: trxId,
+                block: block,
+                trxInBlock: trxInBlock,
+                opInTrx: opInTrx,
+                virtualOp: virtualOp,
+                timestamp: timestamp,
+                message: 'Scot Claim Token: $symbols',
+              );
           case 'ssc-mainnet1':
             final contractName = customJson['contractName'];
             final contractAction = customJson['contractAction'];
@@ -150,17 +220,36 @@ class AccountHistory extends Equatable {
               final symbol = contractPayload['symbol'];
               final to = contractPayload['to'];
               final quantity = contractPayload['quantity'];
-              accountHistory.memo = contractPayload['memo'];
-              accountHistory.message = 'Transfer $quantity  $symbol to $to';
+              return AccountHistory(
+                opType: opType,
+                id: id,
+                trxId: trxId,
+                block: block,
+                trxInBlock: trxInBlock,
+                opInTrx: opInTrx,
+                virtualOp: virtualOp,
+                timestamp: timestamp,
+                message: Transfer $quantity  $symbol to $to',
+                memo: contractPayload['memo'];
+              );
             }
             break;
           default:
+            break;
         }
-
-        break;
+        break; */
     }
-
-    return accountHistory;
+    return AccountHistory(
+      icon: Icons.message,
+      opType: opType,
+      id: id,
+      trxId: trxId,
+      block: block,
+      trxInBlock: trxInBlock,
+      opInTrx: opInTrx,
+      virtualOp: virtualOp,
+      timestamp: timestamp,
+    );
   }
 
   @override
