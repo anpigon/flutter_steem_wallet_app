@@ -8,4 +8,5 @@ class OperationType {
   static const String TRANSFER_FROM_SAVINGS = 'transfer_from_savings';
   static const String TRANSFER_TO_VESTING = 'transfer_to_vesting';
   static const String DELEGATE_VESTING_SHARES = 'delegate_vesting_shares';
+  static const String WITHDRAW_VESTING = 'withdraw_vesting';
 }

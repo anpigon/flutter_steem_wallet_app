@@ -17,6 +17,7 @@ class AccountHistory extends Equatable {
   late final String? author;
   late final String? permlink;
   late final String? memo;
+  late final bool? positive;
 
   AccountHistory({
     required this.opType,
@@ -32,6 +33,7 @@ class AccountHistory extends Equatable {
     this.author,
     this.permlink,
     this.memo,
+    this.positive,
   });
 
   factory AccountHistory.fromJson(
@@ -138,16 +140,20 @@ class AccountHistory extends Equatable {
         final memo = opData['memo'] as String?;
         String message;
         IconData icon;
-        if (ownerAccount == from) {
-          icon = Icons.arrow_circle_up;
-          message = 'Transfer $amount to $to';
-        } else if (ownerAccount == from && ownerAccount == to) {
+        bool positive;
+        if (ownerAccount == from && ownerAccount == to && memo == null) {
           // STEEM POWER UP
           icon = Icons.bolt;
-          message = '	Transfer $amount POWER to $to';
+          message = 'Transfer $amount POWER to $to';
+          positive = true;
+        } else if (ownerAccount == from) {
+          icon = Icons.arrow_circle_up;
+          message = 'Transfer $amount to $to';
+          positive = true;
         } else {
           icon = Icons.arrow_circle_down;
           message = 'Received $amount from $from';
+          positive = false;
         }
         return AccountHistory(
           icon: icon,
@@ -161,6 +167,27 @@ class AccountHistory extends Equatable {
           timestamp: timestamp,
           message: message,
           memo: memo,
+          positive: positive,
+        );
+      case OperationType.WITHDRAW_VESTING:
+        // STEEM POWER DOWN
+        final vestingShares = opData['vesting_shares'] as String;
+        final amount = toFixedTrunc(
+            calculateVestToSteem(
+                vestingShares, totalVestingShares, totalVestingFundSteem),
+            3);
+        return AccountHistory(
+          icon: Icons.bolt,
+          opType: opType,
+          id: id,
+          trxId: trxId,
+          block: block,
+          trxInBlock: trxInBlock,
+          opInTrx: opInTrx,
+          virtualOp: virtualOp,
+          timestamp: timestamp,
+          message: 'Start power down of $amount STEEM',
+          positive: false,
         );
       case OperationType.DELEGATE_VESTING_SHARES:
         final delegator = opData['delegator'] as String;
@@ -238,6 +265,8 @@ class AccountHistory extends Equatable {
             break;
         }
         break; */
+      default:
+        print(tx);
     }
     return AccountHistory(
       icon: Icons.message,

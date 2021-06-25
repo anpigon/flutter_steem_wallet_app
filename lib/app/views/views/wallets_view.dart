@@ -71,7 +71,7 @@ class WalletsView extends GetView<WalletsController> {
                     SizeChangedLayoutNotifier(
                       child: Row(
                         children: [
-                          if (Get.width > 400) ...[
+                          if (Get.width >= 400) ...[
                             IconButton(
                               icon: const Icon(Icons.send_rounded),
                               tooltip: 'Send Coin',

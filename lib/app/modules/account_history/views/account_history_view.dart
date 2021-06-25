@@ -12,7 +12,7 @@ class AccountHistoryView extends GetView<AccountHistoryController> {
     Get.put((AccountHistoryController()));
     return Scaffold(
       appBar: AppBar(
-        title: Text('AccountHistoryView'),
+        title: Text('Account History'),
         centerTitle: true,
       ),
       body: Container(
@@ -45,7 +45,7 @@ class AccountHistoryView extends GetView<AccountHistoryController> {
                 } else if (item.icon == Icons.bolt) {
                   icon = Icon(
                     item.icon,
-                    color: Colors.yellow,
+                    color: item.positive! ? Colors.yellow.shade800 : Colors.red,
                   );
                 } else {
                   icon = Icon(item.icon, color: Colors.blue);
