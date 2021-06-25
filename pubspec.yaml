@@ -23,6 +23,7 @@ dependencies:
   fluttertoast: ^8.0.7
   flutter_native_splash: ^1.1.8+4
   equatable: ^2.0.3
+  skeleton_text: ^3.0.0
   steemdart_ecc: 
     git: 
       url: git://github.com/anpigon/steemdart_ecc.git

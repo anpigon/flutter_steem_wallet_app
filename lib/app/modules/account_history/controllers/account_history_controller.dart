@@ -7,7 +7,7 @@ class AccountHistoryController extends GetxController
   @override
   Future<void> onInit() async {
     final arguments = Get.arguments;
-    final account = 'anpigon'; // arguments['account'];
+    final account = arguments['account'];
 
     try {
       change(null, status: RxStatus.loading());
