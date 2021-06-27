@@ -15,7 +15,7 @@ class PowerDownView extends GetView<PowerDownController> {
     final wallet = AppController.to.wallet();
 
     return Scaffold(
-      appBar: AppBar(title: Text('powerdown_power_down'.tr)),
+      appBar: AppBar(title: Text('powerdown'.tr)),
       body: Obx(
         () => Padding(
           padding: const EdgeInsets.all(23),
@@ -130,7 +130,7 @@ class PowerDownView extends GetView<PowerDownController> {
                 ),
               )
             : Text(
-                'powerdown_power_down'.tr,
+                'powerdown'.tr,
                 style: TextStyle(color: Colors.white),
               ),
       ),

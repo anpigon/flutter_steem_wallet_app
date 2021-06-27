@@ -1,5 +1,5 @@
 {
-  "powerdown_power_down": "Power Down",
+  "powerdown": "Power Down",
   "powerdown_message": "Power Down your Steem Power to get liquid STEEM. The entire Power Down process will take 4 weeks.",
   "powerdown_already_power_down": "You are already powering down @AMOUNT STEEM (@WITHDRAWN STEEM paid out so far). Note that if you change the power down amount the payout schedule will reset.",
   "powerdown_delegating": "You are delegating @AMOUNT STEEM. That amount is locked up and not available to power down until the delegation is removed and 5 days have passed.",
@@ -8,5 +8,9 @@
   "powerdown_error": "Unable to power down (ERROR: @MESSAGE)",
   "powerdown_next_power_down_is_scheduled_to_happen": "The next power down is scheduled to happen: %s %s",
   "powerdown_available": "Available",
-  "powerdown_current": "Current"
+  "powerdown_current": "Current",
+  "powerup": "Power Up",
+  "powerup_influence_token": "Influence tokens which give you more control over post payouts and allow you to earn on curation rewards.",
+  "powerup_non_transferable": "STEEM POWER is non-transferable and requires 1 month (4 payments) to convert back to STEEM.",
+  "powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted STEEM POWER can be sent to yourself or someone else but can not transfer again without converting back to STEEM."
 }

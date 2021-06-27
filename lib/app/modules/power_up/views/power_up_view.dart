@@ -13,7 +13,7 @@ class PowerUpView extends GetView<PowerUpController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Power Up')),
+      appBar: AppBar(title: Text('powerup'.tr)),
       body: Obx(
         () => Padding(
           padding: const EdgeInsets.all(23),
@@ -32,7 +32,30 @@ class PowerUpView extends GetView<PowerUpController> {
                           symbol: 'STEEM',
                           loading: false,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
+                        Text(
+                          'powerup_influence_token'.tr,
+                          style: Get.theme.textTheme.caption,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'powerup_non_transferable'.tr,
+                          style: Get.theme.textTheme.caption,
+                        ),
+                        if (controller.enabledEditUsername()) ...[
+                          TextFormField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              labelText: 'Username',
+                              prefixIcon: const Icon(Icons.alternate_email),
+                            ),
+                            controller: controller.usernameController,
+                            validator: controller.usernameValidator,
+                            focusNode: controller.usernameFocusNode,
+                            keyboardType: TextInputType.name,
+                          )
+                        ],
+                        /* const SizedBox(height: 20),
                         controller.enabledEditUsername()
                             ? TextFormField(
                                 decoration: InputDecoration(
@@ -45,7 +68,8 @@ class PowerUpView extends GetView<PowerUpController> {
                                 focusNode: controller.usernameFocusNode,
                                 keyboardType: TextInputType.name,
                               )
-                            : TextFormField(
+                            : Container(),
+                        TextFormField(
                                 decoration: InputDecoration(
                                   filled: true,
                                   labelText: 'Username',
@@ -60,7 +84,7 @@ class PowerUpView extends GetView<PowerUpController> {
                                 showCursor: false,
                                 onTap: () => FocusScope.of(context)
                                     .requestFocus(FocusNode()),
-                              ),
+                              ), */
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.start,
                         //   children: [
@@ -123,8 +147,8 @@ class PowerUpView extends GetView<PowerUpController> {
                   color: Colors.white,
                 ),
               )
-            : const Text(
-                'Power Up',
+            : Text(
+                'powerup'.tr,
                 style: TextStyle(color: Colors.white),
               ),
       ),

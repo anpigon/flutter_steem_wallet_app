@@ -22,6 +22,12 @@ class LocaleKeys {
       'powerdown_next_power_down_is_scheduled_to_happen';
   static const powerdown_available = 'powerdown_available';
   static const powerdown_current = 'powerdown_current';
+  static const powerup = 'powerup';
+  static const powerup_influence_token = 'powerup_influence_token';
+  static const powerup_non_transferable = 'powerup_non_transferable';
+  static const powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again =
+      'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again';
+  static const powerdown = 'powerdown';
 }
 
 class Locales {
@@ -39,9 +45,16 @@ class Locales {
     'powerdown_next_power_down_is_scheduled_to_happen': '다음 파워다운 예정: %s %s',
     'powerdown_available': '이용 가능',
     'powerdown_current': '현재 잔액',
+    'powerup': '파워 업',
+    'powerup_influence_token':
+        '스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.',
+    'powerup_non_transferable':
+        'STEEM POWER는 전송이 불가능하며, 다시 STEEM으로 전환하기 위해서는 1달이 소요됩니다. (4회로 나누어 전환 됩니다)',
+    'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again':
+        'STEEM POWER는 본인 또는 다른 사람에게 보낼 수 있지만 다시 STEEM으로 전환하지 않고는 전송할 수 없습니다.',
   };
   static const en_US = {
-    'powerdown_power_down': 'Power Down',
+    'powerdown': 'Power Down',
     'powerdown_message':
         'Power Down your Steem Power to get liquid STEEM. The entire Power Down process will take 4 weeks.',
     'powerdown_already_power_down':
@@ -56,5 +69,12 @@ class Locales {
         'The next power down is scheduled to happen: %s %s',
     'powerdown_available': 'Available',
     'powerdown_current': 'Current',
+    'powerup': 'Power Up',
+    'powerup_influence_token':
+        'Influence tokens which give you more control over post payouts and allow you to earn on curation rewards.',
+    'powerup_non_transferable':
+        'STEEM POWER is non-transferable and requires 1 month (4 payments) to convert back to STEEM.',
+    'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again':
+        'Converted STEEM POWER can be sent to yourself or someone else but can not transfer again without converting back to STEEM.',
   };
 }

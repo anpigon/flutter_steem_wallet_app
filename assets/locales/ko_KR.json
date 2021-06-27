@@ -8,5 +8,9 @@
   "powerdown_error": "파워다운 실패: @MESSAGE",
   "powerdown_next_power_down_is_scheduled_to_happen": "다음 파워다운 예정: %s %s",
   "powerdown_available": "이용 가능",
-  "powerdown_current": "현재 잔액"
+  "powerdown_current": "현재 잔액",
+  "powerup": "파워 업",
+  "powerup_influence_token": "스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.",
+  "powerup_non_transferable": "STEEM POWER는 전송이 불가능하며, 다시 STEEM으로 전환하기 위해서는 1달이 소요됩니다. (4회로 나누어 전환 됩니다)",
+  "powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "STEEM POWER는 본인 또는 다른 사람에게 보낼 수 있지만 다시 STEEM으로 전환하지 않고는 전송할 수 없습니다."
 }
