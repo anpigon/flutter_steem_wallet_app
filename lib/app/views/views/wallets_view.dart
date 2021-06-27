@@ -68,38 +68,40 @@ class WalletsView extends GetView<WalletsController> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    SizeChangedLayoutNotifier(
-                      child: Row(
-                        children: [
-                          if (Get.width >= 400) ...[
-                            IconButton(
-                              icon: const Icon(Icons.send_rounded),
-                              tooltip: 'Send Coin',
-                              color: Colors.white,
-                              onPressed: goSendCoin,
+                    NotificationListener<SizeChangedLayoutNotification>(
+                      child: SizeChangedLayoutNotifier(
+                        child: Row(
+                          children: [
+                            if (Get.width >= 400) ...[
+                              IconButton(
+                                icon: const Icon(Icons.send_rounded),
+                                tooltip: 'Send Coin',
+                                color: Colors.white,
+                                onPressed: goSendCoin,
+                              ),
+                              const SizedBox(width: 48),
+                            ],
+                            const Spacer(),
+                            buildAccountDropdownBox(
+                              onChanged: appController.onChangeAccount,
+                              value: appController.selectedAccount.value,
+                              items: appController.accounts,
                             ),
-                            const SizedBox(width: 48),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(Icons.history_rounded),
+                              tooltip: 'History',
+                              color: Colors.white,
+                              onPressed: goAccountHistory,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add_box),
+                              tooltip: 'Add Account',
+                              color: Colors.white,
+                              onPressed: appController.goAddAccount,
+                            ),
                           ],
-                          const Spacer(),
-                          buildAccountDropdownBox(
-                            onChanged: appController.onChangeAccount,
-                            value: appController.selectedAccount.value,
-                            items: appController.accounts,
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.history_rounded),
-                            tooltip: 'History',
-                            color: Colors.white,
-                            onPressed: goAccountHistory,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add_box),
-                            tooltip: 'Add Account',
-                            color: Colors.white,
-                            onPressed: appController.goAddAccount,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),

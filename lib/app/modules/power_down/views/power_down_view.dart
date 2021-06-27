@@ -45,7 +45,7 @@ class PowerDownView extends GetView<PowerDownController> {
                         //   ],
                         // ),
                         Text(
-                          '스팀 파워를 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 총 13주가 소요됩니다.',
+                          '스팀 파워를 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 총 4주가 소요됩니다.',
                           style: Get.theme.textTheme.caption,
                         ),
                         const SizedBox(height: 20),
