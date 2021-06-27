@@ -83,16 +83,35 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
           val.steemPower = steemPower;
           val.votingPower = currentVotingPower / 100;
           val.resourceCredits = currentResourceCredits / 100;
-          val.to_withdraw = calculateVestToSteem(
-            data.to_withdraw,
-            globalProperties.total_vesting_shares,
-            globalProperties.total_vesting_fund_steem,
-          );
+          val.toWithdraw = calculateVestToSteem(
+                data.to_withdraw,
+                globalProperties.total_vesting_shares,
+                globalProperties.total_vesting_fund_steem,
+              ) /
+              1e6;
           val.withdrawn = calculateVestToSteem(
-            data.withdrawn,
+                data.withdrawn,
+                globalProperties.total_vesting_shares,
+                globalProperties.total_vesting_fund_steem,
+              ) /
+              1e6;
+          val.delegatedSteemPower = calculateVestToSteem(
+            data.delegated_vesting_shares,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
           );
+          val.receivedSteemPower = calculateVestToSteem(
+            data.received_vesting_shares,
+            globalProperties.total_vesting_shares,
+            globalProperties.total_vesting_fund_steem,
+          );
+          val.nextSteemPowerWithdrawRate = calculateVestToSteem(
+            data.vesting_withdraw_rate,
+            globalProperties.total_vesting_shares,
+            globalProperties.total_vesting_fund_steem,
+          );
+          val.nextSteemPowerWithdrawal =
+              DateTime.parse('${data.next_vesting_withdrawal}Z');
         });
       }
     } on Exception catch (e, stackTrace) {

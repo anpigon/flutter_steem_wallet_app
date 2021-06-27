@@ -10,17 +10,12 @@ import '../../../widgets/balance_small_box.dart';
 import '../../../widgets/tight_button.dart';
 
 class PowerDownView extends GetView<PowerDownController> {
-  // TODO: 1. 임대 중인 스팀파워는 제거하고 실제 파워다운 가능한 vest를 표시한다.
-  // "현재 1,000 STEEM을 임대 중입니다. 이 수량은 임대 종료 후 회수 기간이 완전히 지날 때까지는 파워다운을 할 수 없습니다."
-  // TODO: 2. 현재 파워 다운 진행 중인 상태 표시하기
-  // "이미 1,000 STEEM의 파워 다운을 진행하고 있습니다. 파워 다운 수량을 변경하면 파워 다운 일정이 초기화되니 유의하십시오."
-
   @override
   Widget build(BuildContext context) {
     final wallet = AppController.to.wallet();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Power Down')),
+      appBar: AppBar(title: Text('powerdown_power_down'.tr)),
       body: Obx(
         () => Padding(
           padding: const EdgeInsets.all(23),
@@ -34,19 +29,20 @@ class PowerDownView extends GetView<PowerDownController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         BalanceSmallBox(
-                          label: 'Balance',
+                          label: 'powerdown_current'.tr,
                           amount: AppController.to.wallet().steemPower,
                           symbol: 'SP',
                           loading: false,
                         ),
+                        const SizedBox(height: 5),
+                        BalanceSmallBox(
+                          label: 'powerdown_available'.tr,
+                          amount: AppController.to.wallet().steemPower -
+                              AppController.to.wallet().delegatedSteemPower,
+                          symbol: 'SP',
+                          loading: false,
+                        ),
                         const SizedBox(height: 20),
-                        // Row(
-                        //   children: [
-                        //     // Text('Current Power Down : '),
-                        //     // Text('200.3 / 10294.5 SP'),
-                        //     Text('다음 파워다운 예정: 모레 (~93.192 SP)')
-                        //   ],
-                        // ),
                         Text(
                           'powerdown_message'.tr,
                           style: Get.theme.textTheme.caption,
@@ -72,13 +68,39 @@ class PowerDownView extends GetView<PowerDownController> {
                         ),
                         buildSetRatioAmountButtons(),
                         const SizedBox(height: 20),
-                        Text(
-                          'powerdown_already_power_down'.trParams({
-                            'AMOUNT': toCurrencyFormat(wallet.to_withdraw),
-                            'WITHDRAWN': toCurrencyFormat(wallet.withdrawn),
-                          })!,
-                          style: Get.theme.textTheme.caption,
-                        ),
+                        if (wallet.delegatedSteemPower != 0.0) ...[
+                          Text(
+                            'powerdown_delegating'.trParams({
+                              'AMOUNT':
+                                  toCurrencyFormat(wallet.delegatedSteemPower),
+                            })!,
+                            style: Get.theme.textTheme.caption,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                        if (wallet.toWithdraw - wallet.withdrawn > 0) ...[
+                          Text(
+                            'powerdown_already_power_down'.trParams({
+                              'AMOUNT': toCurrencyFormat(wallet.toWithdraw),
+                              'WITHDRAWN': toCurrencyFormat(wallet.withdrawn),
+                            })!,
+                            style: Get.theme.textTheme.caption,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                        if (wallet.nextSteemPowerWithdrawRate != 0.0) ...[
+                          Text(
+                            'powerdown_next_power_down_is_scheduled_to_happen'
+                                .trArgs(
+                              [
+                                '${wallet.nextSteemPowerWithdrawal.toString().split(' ')[0]}',
+                                '(~${toCurrencyFormat(wallet.nextSteemPowerWithdrawRate)} STEEM)'
+                              ],
+                            ),
+                            style: Get.theme.textTheme.caption,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       ],
                     ),
                   ),
@@ -107,8 +129,8 @@ class PowerDownView extends GetView<PowerDownController> {
                   color: Colors.white,
                 ),
               )
-            : const Text(
-                'Power Down',
+            : Text(
+                'powerdown_power_down'.tr,
                 style: TextStyle(color: Colors.white),
               ),
       ),

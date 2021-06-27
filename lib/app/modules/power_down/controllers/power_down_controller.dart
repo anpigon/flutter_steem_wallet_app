@@ -50,7 +50,9 @@ class PowerDownController extends GetxController {
 
   void setRatioAmount(double ratio) {
     final steemPower = appController.wallet().steemPower;
-    amountController.text = toFixedTrunc(steemPower * ratio, 3);
+    final delegatedSteemPower = appController.wallet().delegatedSteemPower;
+    amountController.text =
+        toFixedTrunc((steemPower - delegatedSteemPower) * ratio, 3);
   }
 
   Future<void> submit() async {

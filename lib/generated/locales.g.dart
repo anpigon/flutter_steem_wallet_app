@@ -18,20 +18,27 @@ class LocaleKeys {
   static const powerdown_per_week = 'powerdown_per_week';
   static const powerdown_warning = 'powerdown_warning';
   static const powerdown_error = 'powerdown_error';
+  static const powerdown_next_power_down_is_scheduled_to_happen =
+      'powerdown_next_power_down_is_scheduled_to_happen';
+  static const powerdown_available = 'powerdown_available';
+  static const powerdown_current = 'powerdown_current';
 }
 
 class Locales {
   static const ko_KR = {
     'powerdown_power_down': '파워 다운',
     'powerdown_message':
-        '스팀 파워를 파워 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 4주가 소요될 것입니다.',
+        '스팀 파워를 파워 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 4주가 소요됩니다.',
     'powerdown_already_power_down':
-        '이미 @AMOUNT STEEM의 파워 다운을 진행하고 있습니다(현재까지 @WITHDRAWN STEEM 파워 다운). 파워다운 수량을 변경하게 되면 파워 다운 일정이 초기화되니 유의하십시오..',
+        '이미 @AMOUNT STEEM의 파워 다운을 진행하고 있습니다(현재까지 @WITHDRAWN STEEM 파워 다운). 파워다운 수량을 변경하게 되면 파워 다운 일정이 초기화되니 유의하십시오.',
     'powerdown_delegating':
         '현재 @AMOUNT STEEM을 임대 중입니다. 이 수량은 임대 종료 후 회수 기간이 완전히 지날 때까지는 파워 다운을 할 수 없습니다.',
     'powerdown_per_week': 'That\'s ~@AMOUNT)s STEEM per week.',
     'powerdown_warning': '@VESTING_TOKEN가 @AMOUNT 이하로 내려가면 계정의 사용에 제약이 생깁니다.',
     'powerdown_error': '파워다운 실패: @MESSAGE',
+    'powerdown_next_power_down_is_scheduled_to_happen': '다음 파워다운 예정: %s %s',
+    'powerdown_available': '이용 가능',
+    'powerdown_current': '현재 잔액',
   };
   static const en_US = {
     'powerdown_power_down': 'Power Down',
@@ -45,5 +52,9 @@ class Locales {
     'powerdown_warning':
         'Leaving less than @AMOUNT @VESTING_TOKEN in your account is not recommended and can leave your account in a unusable state.',
     'powerdown_error': 'Unable to power down (ERROR: @MESSAGE)',
+    'powerdown_next_power_down_is_scheduled_to_happen':
+        'The next power down is scheduled to happen: %s %s',
+    'powerdown_available': 'Available',
+    'powerdown_current': 'Current',
   };
 }

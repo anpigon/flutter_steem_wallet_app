@@ -5,5 +5,8 @@
   "powerdown_delegating": "You are delegating @AMOUNT STEEM. That amount is locked up and not available to power down until the delegation is removed and 5 days have passed.",
   "powerdown_per_week": "That's ~@AMOUNT STEEM per week.",
   "powerdown_warning": "Leaving less than @AMOUNT @VESTING_TOKEN in your account is not recommended and can leave your account in a unusable state.",
-  "powerdown_error": "Unable to power down (ERROR: @MESSAGE)"
+  "powerdown_error": "Unable to power down (ERROR: @MESSAGE)",
+  "powerdown_next_power_down_is_scheduled_to_happen": "The next power down is scheduled to happen: %s %s",
+  "powerdown_available": "Available",
+  "powerdown_current": "Current"
 }
