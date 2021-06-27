@@ -1,0 +1,9 @@
+{
+  "powerdown_power_down": "Power Down",
+  "powerdown_message": "Power Down your Steem Power to get liquid STEEM. The entire Power Down process will take 4 weeks.",
+  "powerdown_already_power_down": "You are already powering down %(AMOUNT)s %(LIQUID_TICKER)s (%(WITHDRAWN)s %(LIQUID_TICKER)s paid out so far). Note that if you change the power down amount the payout schedule will reset.",
+  "powerdown_delegating": "You are delegating %(AMOUNT)s %(LIQUID_TICKER)s. That amount is locked up and not available to power down until the delegation is removed and 5 days have passed.",
+  "powerdown_per_week": "That's ~%(AMOUNT)s %(LIQUID_TICKER)s per week.",
+  "powerdown_warning": "Leaving less than %(AMOUNT)s %(VESTING_TOKEN)s in your account is not recommended and can leave your account in a unusable state.",
+  "powerdown_error": "Unable to power down (ERROR: %(MESSAGE)s)"
+}
