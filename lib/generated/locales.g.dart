@@ -11,7 +11,7 @@ class AppTranslation {
 
 class LocaleKeys {
   LocaleKeys._();
-  static const powerdown_power_down = 'powerdown_power_down';
+  static const powerdown = 'powerdown';
   static const powerdown_message = 'powerdown_message';
   static const powerdown_already_power_down = 'powerdown_already_power_down';
   static const powerdown_delegating = 'powerdown_delegating';
@@ -27,12 +27,11 @@ class LocaleKeys {
   static const powerup_non_transferable = 'powerup_non_transferable';
   static const powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again =
       'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again';
-  static const powerdown = 'powerdown';
 }
 
 class Locales {
   static const ko_KR = {
-    'powerdown_power_down': '파워 다운',
+    'powerdown': '파워 다운',
     'powerdown_message':
         '스팀 파워를 파워 다운하면 스팀을 얻을 수 있습니다. 전체 파워 다운 과정이 완료되려면 4주가 소요됩니다.',
     'powerdown_already_power_down':
