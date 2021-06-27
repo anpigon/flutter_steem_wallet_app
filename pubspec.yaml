@@ -2,11 +2,11 @@ name: flutter_steem_wallet_app
 version: 1.0.0+1
 publish_to: none
 description: Flutter Steem Wallet App.
-environment: 
-  sdk: '>=2.12.0 <3.0.0'
+environment:
+  sdk: ">=2.12.0 <3.0.0"
 
-dependencies: 
-  flutter: 
+dependencies:
+  flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   get: ^4.1.4
@@ -24,20 +24,21 @@ dependencies:
   flutter_native_splash: ^1.1.8+4
   equatable: ^2.0.3
   skeleton_text: ^3.0.0
-  steemdart_ecc: 
-    git: 
+  freezed: ^0.14.2
+  steemdart_ecc:
+    git:
       url: git://github.com/anpigon/steemdart_ecc.git
       ref: develop
 
-dev_dependencies: 
+dev_dependencies:
   pedantic: ^1.11.0
-  build_runner: ^2.0.4
+  build_runner: ^2.0.5
   hive_generator: ^1.1.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
-  assets:  
+flutter:
+  assets:
     - .env
     - assets/images/icon/token-sbd.svg
     - assets/images/icon/token-steem-power.svg

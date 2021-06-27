@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 import 'package:intl/intl.dart';
 
 final amountFormat = NumberFormat('###,##0.0##', 'en_US');
@@ -13,13 +12,46 @@ String toCurrencyFormat(num value) {
   return amountFormat.format((value * 1000).floor() / 1000);
 }
 
-double calculateVestToSteem(String vesting_shares, String total_vesting_shares,
-    String total_vesting_fund_steem) {
-  final totalVestingShares = steem.Asset.from(total_vesting_shares);
-  final totalVestingFundSteem = steem.Asset.from(total_vesting_fund_steem);
-  final vestingShares = steem.Asset.from(vesting_shares);
-  final steemPower = vestingShares.amount /
-      totalVestingShares.amount *
-      totalVestingFundSteem.amount;
+double calculateVestToSteem(
+  dynamic vesting_shares,
+  dynamic total_vesting_shares,
+  dynamic total_vesting_fund_steem,
+) {
+  final totalVestingShares =
+      double.parse(toString(total_vesting_shares).split(' ')[0]);
+  final totalVestingFundSteem =
+      double.parse(toString(total_vesting_fund_steem).split(' ')[0]);
+  final vestingShares = double.parse(toString(vesting_shares).split(' ')[0]);
+  final steemPower = vestingShares / totalVestingShares * totalVestingFundSteem;
   return steemPower;
+}
+
+int parseInteger(dynamic value) {
+  if (value is int) {
+    return value;
+  }
+  if (value is double) {
+    return value.toInt();
+  }
+  if (value is String) {
+    return int.parse(value);
+  }
+  return 0;
+}
+
+double parseDouble(dynamic value) {
+  if (value is double) {
+    return value;
+  }
+  if (value is double) {
+    return value.toDouble();
+  }
+  if (value is String) {
+    return double.parse(value);
+  }
+  return 0;
+}
+
+String toString(dynamic value) {
+  return '$value';
 }

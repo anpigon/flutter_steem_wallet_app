@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
 import 'package:get/get.dart';
 
 import '../controllers/power_down_controller.dart';
@@ -16,6 +17,8 @@ class PowerDownView extends GetView<PowerDownController> {
 
   @override
   Widget build(BuildContext context) {
+    final wallet = AppController.to.wallet();
+
     return Scaffold(
       appBar: AppBar(title: Text('Power Down')),
       body: Obx(
@@ -69,6 +72,13 @@ class PowerDownView extends GetView<PowerDownController> {
                         ),
                         buildSetRatioAmountButtons(),
                         const SizedBox(height: 20),
+                        Text(
+                          'powerdown_already_power_down'.trParams({
+                            'AMOUNT': toCurrencyFormat(wallet.to_withdraw),
+                            'WITHDRAWN': toCurrencyFormat(wallet.withdrawn),
+                          })!,
+                          style: Get.theme.textTheme.caption,
+                        ),
                       ],
                     ),
                   ),

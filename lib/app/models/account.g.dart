@@ -17,12 +17,12 @@ class AccountAdapter extends TypeAdapter<Account> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Account(
-      id: fields[0] as int,
       name: fields[1] as String,
-      ownerPublicKey: fields[2] as String,
-      activePublicKey: fields[3] as String,
-      postingPublicKey: fields[4] as String,
-      memoPublicKey: fields[5] as String,
+      id: fields[0] as int?,
+      ownerPublicKey: fields[2] as String?,
+      activePublicKey: fields[3] as String?,
+      postingPublicKey: fields[4] as String?,
+      memoPublicKey: fields[5] as String?,
     );
   }
 

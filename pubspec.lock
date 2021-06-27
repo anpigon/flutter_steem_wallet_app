@@ -91,7 +91,7 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   build_runner_core:
     dependency: transitive
     description:
@@ -282,6 +282,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.0.7"
+  freezed:
+    dependency: "direct main"
+    description:
+      name: freezed
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.2"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.2"
   frontend_server_client:
     dependency: transitive
     description:

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
@@ -61,13 +62,11 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
       final data = await steemService.getAccount(username);
       if (data != null) {
         // steem power 계산
-        final totalVestingShares =
-            double.parse(globalProperties.total_vesting_shares.split(' ')[0]);
-        final totalVestingFundSteem = double.parse(
-            globalProperties.total_vesting_fund_steem.split(' ')[0]);
-        final vestingShares = double.parse(data.vesting_shares.split(' ')[0]);
-        final steemPower =
-            vestingShares / totalVestingShares * totalVestingFundSteem;
+        final steemPower = calculateVestToSteem(
+          data.vesting_shares,
+          globalProperties.total_vesting_shares,
+          globalProperties.total_vesting_fund_steem,
+        );
 
         // 보팅 파워 계산
         final currentVotingPower =
@@ -84,10 +83,20 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
           val.steemPower = steemPower;
           val.votingPower = currentVotingPower / 100;
           val.resourceCredits = currentResourceCredits / 100;
+          val.to_withdraw = calculateVestToSteem(
+            data.to_withdraw,
+            globalProperties.total_vesting_shares,
+            globalProperties.total_vesting_fund_steem,
+          );
+          val.withdrawn = calculateVestToSteem(
+            data.withdrawn,
+            globalProperties.total_vesting_shares,
+            globalProperties.total_vesting_fund_steem,
+          );
         });
       }
-    } catch (e) {
-      e.printError();
+    } on Exception catch (e, stackTrace) {
+      stackTrace.printError();
       Get.snackbar(
         'ERROR',
         e.toString(),
