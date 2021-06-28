@@ -68,9 +68,9 @@ class WalletsView extends GetView<WalletsController> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    NotificationListener<SizeChangedLayoutNotification>(
-                      child: SizeChangedLayoutNotifier(
-                        child: Row(
+                    LayoutBuilder(
+                      builder: (ctx, constraints) {
+                        return Row(
                           children: [
                             if (Get.width >= 400) ...[
                               IconButton(
@@ -101,8 +101,8 @@ class WalletsView extends GetView<WalletsController> {
                               onPressed: appController.goAddAccount,
                             ),
                           ],
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 20),
                     Text(
