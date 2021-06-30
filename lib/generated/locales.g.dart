@@ -27,6 +27,18 @@ class LocaleKeys {
   static const powerup_non_transferable = 'powerup_non_transferable';
   static const powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again =
       'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again';
+  static const delegate = 'delegate';
+  static const delegate_power = 'delegate_power';
+  static const delegate_available = 'delegate_available';
+  static const delegate_current = 'delegate_current';
+  static const delegate_message = 'delegate_message';
+  static const delegate_incoming = 'delegate_incoming';
+  static const delegate_outgoing = 'delegate_outgoing';
+  static const delegate_to_user = 'delegate_to_user';
+  static const delegate_total_outgoing = 'delegate_total_outgoing';
+  static const delegate_total_incoming = 'delegate_total_incoming';
+  static const delegate_hint_username = 'delegate_hint_username';
+  static const delegate_hint_amount = 'delegate_hint_amount';
 }
 
 class Locales {
@@ -51,6 +63,19 @@ class Locales {
         'STEEM POWER는 전송이 불가능하며, 다시 STEEM으로 전환하기 위해서는 1달이 소요됩니다. (4회로 나누어 전환 됩니다)',
     'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again':
         'STEEM POWER는 본인 또는 다른 사람에게 보낼 수 있지만 다시 STEEM으로 전환하지 않고는 전송할 수 없습니다.',
+    'delegate': '임대',
+    'delegate_power': '임대하기',
+    'delegate_available': '임대 가능',
+    'delegate_current': '현재 파워',
+    'delegate_message':
+        '스팀 파워(SP)를 다른 사용자에게 임대할 수 있습니다. 임대한 수량을 변경하거나 리뷰하고 싶다면 임대한 수량을 클릭하세요.',
+    'delegate_incoming': '임대 받은 수량: %s',
+    'delegate_outgoing': '임대 받은 수량: %s',
+    'delegate_to_user': '사용자에게 임대하기',
+    'delegate_total_outgoing': '임대한 수량 합계',
+    'delegate_total_incoming': '임대 받은 수량 합계',
+    'delegate_hint_username': '임대할 Steem 계정을 입력하세요.',
+    'delegate_hint_amount': '임대할 SP 수량을 입력하세요.',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -75,5 +100,18 @@ class Locales {
         'STEEM POWER is non-transferable and requires 1 month (4 payments) to convert back to STEEM.',
     'powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again':
         'Converted STEEM POWER can be sent to yourself or someone else but can not transfer again without converting back to STEEM.',
+    'delegate': 'Delegate',
+    'delegate_power': 'Delegate Power',
+    'delegate_available': 'Available',
+    'delegate_current': 'Current',
+    'delegate_message':
+        'You may delegate your Steem Power (SP) to another user. Click on the Outgoing amount to review or make changes.',
+    'delegate_incoming': 'Incoming %s',
+    'delegate_outgoing': 'Outgoing %s',
+    'delegate_to_user': 'Delegate to user',
+    'delegate_total_outgoing': 'Total Outgoing',
+    'delegate_total_incoming': 'Total Incoming',
+    'delegate_hint_username': 'Enter the Steem account to delegate.',
+    'delegate_hint_amount': 'Enter the amount of SP to delegate.',
   };
 }

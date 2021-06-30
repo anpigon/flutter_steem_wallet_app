@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_steem_wallet_app/app/models/signature/delegate_vesting_shares.dart';
 import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
@@ -87,6 +88,18 @@ class SteemService extends GetxService {
     final operation = steem.Operation(
       'withdraw_vesting',
       withdrawVesting.toJson(),
+    );
+    return await client.broadcast
+        .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
+  }
+
+  Future<Map<String, dynamic>> delegate(
+    DelegateVestingShares delegateVestingShares,
+    String key,
+  ) async {
+    final operation = steem.Operation(
+      'delegate_vesting_shares',
+      delegateVestingShares.toJson(),
     );
     return await client.broadcast
         .sendOperations([operation], steem.SteemPrivateKey.fromString(key));

@@ -3,9 +3,10 @@ import 'package:flutter_steem_wallet_app/app/models/signature/signature_model.da
 import 'package:get/get.dart';
 
 enum SignatureType {
-  transfer,
-  transferToVesting,
-  withdrawVesting,
+  transfer, // 송금
+  transferToVesting, // 파워업
+  withdrawVesting, // 파워다운
+  delegateVestingShares, // 임대
 }
 
 class SignatureConfirmDialog extends GetView {

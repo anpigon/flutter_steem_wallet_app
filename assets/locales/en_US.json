@@ -12,5 +12,17 @@
   "powerup": "Power Up",
   "powerup_influence_token": "Influence tokens which give you more control over post payouts and allow you to earn on curation rewards.",
   "powerup_non_transferable": "STEEM POWER is non-transferable and requires 1 month (4 payments) to convert back to STEEM.",
-  "powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted STEEM POWER can be sent to yourself or someone else but can not transfer again without converting back to STEEM."
+  "powerup_converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted STEEM POWER can be sent to yourself or someone else but can not transfer again without converting back to STEEM.",
+  "delegate": "Delegate",
+  "delegate_power": "Delegate Power",
+  "delegate_available": "Available",
+  "delegate_current": "Current",
+  "delegate_message": "You may delegate your Steem Power (SP) to another user. Click on the Outgoing amount to review or make changes.",
+  "delegate_incoming": "Incoming %s",
+  "delegate_outgoing": "Outgoing %s",
+  "delegate_to_user": "Delegate to user",
+  "delegate_total_outgoing": "Total Outgoing",
+  "delegate_total_incoming": "Total Incoming",
+  "delegate_hint_username": "Enter the Steem account to delegate.",
+  "delegate_hint_amount": "Enter the amount of SP to delegate."
 }

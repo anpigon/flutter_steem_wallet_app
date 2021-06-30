@@ -10,73 +10,85 @@ class DelegatePowerView extends GetView<DelegatePowerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Delegate Power')),
+      appBar: AppBar(title: Text('delegate_power'.tr)),
       body: Obx(
-        () => Padding(
-          padding: const EdgeInsets.all(23),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: controller.formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BalanceSmallBox(
-                          label: 'Balance',
-                          amount: AppController.to.wallet().steemPower,
-                          symbol: 'STEEM',
-                          loading: false,
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          '스팀 파워(SP)를 다른 사용자에게 임대할 수 있습니다.',
-                          style: Get.theme.textTheme.caption,
-                        ),
-                        const SizedBox(height: 15),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Username',
-                            hintText: 'Steem 계정을 입력하세요.',
-                            prefixIcon: const Icon(Icons.alternate_email),
+        () {
+          final wallet = AppController.to.wallet();
+          final availableAmount = wallet.steemPower -
+              wallet.delegatedSteemPower;
+          return Padding(
+            padding: const EdgeInsets.all(23),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: controller.formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BalanceSmallBox(
+                            label: 'delegate_current'.tr,
+                            amount: wallet.steemPower,
+                            symbol: 'SP',
+                            loading: false,
                           ),
-                          controller: controller.usernameController,
-                          validator: controller.usernameValidator,
-                          focusNode: controller.usernameFocusNode,
-                          keyboardType: TextInputType.name,
-                        ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Amount',
-                            hintText: '임대할 SP 수량을 입력하세요.',
-                            suffixIcon: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 15.0),
-                                  child: Text(Symbols.SP),
-                                ),
-                              ],
+                          const SizedBox(height: 5),
+                          BalanceSmallBox(
+                            label: 'delegate_available'.tr,
+                            amount: availableAmount,
+                            symbol: 'SP',
+                            loading: false,
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            'delegate_message'.tr,
+                            style: Get.theme.textTheme.caption,
+                          ),
+                          const SizedBox(height: 15),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              labelText: 'Username',
+                              hintText: 'delegate_hint_username'.tr,
+                              prefixIcon: const Icon(Icons.alternate_email),
                             ),
+                            controller: controller.usernameController,
+                            validator: controller.usernameValidator,
+                            focusNode: controller.usernameFocusNode,
+                            keyboardType: TextInputType.name,
                           ),
-                          controller: controller.amountController,
-                          validator: controller.amountValidator,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              labelText: 'Amount',
+                              hintText: 'delegate_hint_amount'.tr,
+                              suffixIcon: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 15.0),
+                                    child: Text(Symbols.SP),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            controller: controller.amountController,
+                            validator: controller.amountValidator,
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              buildPowerUpButton(),
-            ],
-          ),
-        ),
+                buildPowerUpButton(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -96,8 +108,8 @@ class DelegatePowerView extends GetView<DelegatePowerController> {
                   color: Colors.white,
                 ),
               )
-            : const Text(
-                'Delegate',
+            :  Text(
+                'delegate_to_user'.tr,
                 style: TextStyle(color: Colors.white),
               ),
       ),

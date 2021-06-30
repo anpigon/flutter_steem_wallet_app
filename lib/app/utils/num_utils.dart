@@ -22,8 +22,22 @@ double calculateVestToSteem(
   final totalVestingFundSteem =
       double.parse(toString(total_vesting_fund_steem).split(' ')[0]);
   final vestingShares = double.parse(toString(vesting_shares).split(' ')[0]);
-  final steemPower = vestingShares / totalVestingShares * totalVestingFundSteem;
-  return steemPower;
+  final steem = vestingShares / totalVestingShares * totalVestingFundSteem;
+  return steem;
+}
+
+double calculateSteemToVest(
+  dynamic amount,
+  dynamic total_vesting_shares,
+  dynamic total_vesting_fund_steem,
+) {
+  final totalVestingShares =
+      double.parse(toString(total_vesting_shares).split(' ')[0]);
+  final totalVestingFundSteem =
+      double.parse(toString(total_vesting_fund_steem).split(' ')[0]);
+  final steem = double.parse(toString(amount).split(' ')[0]);
+  final vestingShares =  steem / totalVestingFundSteem * totalVestingShares ;
+  return vestingShares;
 }
 
 int parseInteger(dynamic value) {
