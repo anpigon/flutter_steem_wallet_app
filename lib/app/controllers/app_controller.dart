@@ -34,6 +34,9 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
 
   static AppController get to => Get.find();
 
+  late final StreamController<String> loadAccountCtrl;
+  late final StreamSubscription<String> loadAccountSub;
+
   MarketPrice marketPrice(String symbol) {
     if (symbol == Symbols.STEEM) {
       return steemMarketPrice();
@@ -46,10 +49,12 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
   /// account 선택
   void onChangeAccount(String? username) {
     selectedAccount(username);
+    update(['selectedAccount']);
   }
 
   /// account 잔액 정보를 가져온다.
   Future<void> loadAccountDetails(String username) async {
+    print(username);
     loading(true);
 
     if (!accounts.contains(username)) {
@@ -169,7 +174,28 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
     localDataService = Get.find<LocalDataService>();
     steemService = Get.find<SteemService>();
 
-    interval<String>(selectedAccount, loadAccountDetails);
+    loadAccountCtrl = StreamController<String>();
+    loadAccountSub = loadAccountCtrl.stream.listen(
+      (String account) {
+        print('listen: $account');
+        loadAccountDetails(account);
+      },
+      // cancelOnError: false,
+      onError: ((error) {
+        print('onError: ${error.toString()}');
+      }),
+      onDone: (() {
+        print('onDone');
+      }),
+    );
+
+    ever<String>(selectedAccount, (account) {
+      print('$account: ${loading.value}');
+      if (loading.value) {
+        loadAccountSub.cancel();
+      }
+      loadAccountCtrl.add(account);
+    });
 
     final accountList = (await localDataService.getAccounts())
         .map((account) => account.name)

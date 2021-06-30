@@ -18,7 +18,7 @@ class WalletsView extends GetView<WalletsController> {
     // 송금 화면으로 이동
     void goSendCoin({String symbol = 'STEEM'}) {
       Get.toNamed(Routes.SEND_COIN, arguments: {
-        'account': appController.selectedAccount.value,
+        'account': appController.selectedAccount,
         'symbol': symbol,
       });
     }
@@ -26,20 +26,20 @@ class WalletsView extends GetView<WalletsController> {
     // 파워업 화면으로 이동
     void goPowerUp() {
       Get.toNamed(Routes.POWER_UP, arguments: {
-        'account': appController.selectedAccount.value,
+        'account': appController.selectedAccount,
       });
     }
 
     // 파워다운 화면으로 이동
     void goPowerDown() {
       Get.toNamed(Routes.POWER_DOWN, arguments: {
-        'account': appController.selectedAccount.value,
+        'account': appController.selectedAccount,
       });
     }
 
     void goDelegateDown() {
       Get.toNamed(Routes.DELEGATE_POWER, arguments: {
-        'account': appController.selectedAccount.value,
+        'account': appController.selectedAccount,
       });
     }
 
@@ -54,87 +54,97 @@ class WalletsView extends GetView<WalletsController> {
         child: Column(
           children: [
             // Start top area
-            Obx(() {
-              final wallet = appController.wallet();
-              final total = ((wallet.steemBalance + wallet.steemPower) *
-                      appController.steemMarketPrice().price) +
-                  (wallet.sbdBalance * appController.sbdMarketPrice().price);
-              final estimatedAccountValue =
-                  NumberFormat('###,###,###,###.##').format(total);
-
-              return Container(
-                decoration: buildLinearGradientDecoration(),
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    LayoutBuilder(
-                      builder: (ctx, constraints) {
-                        return Row(
-                          children: [
-                            if (Get.width >= 400) ...[
-                              IconButton(
-                                icon: const Icon(Icons.send_rounded),
-                                tooltip: 'Send Coin',
-                                color: Colors.white,
-                                onPressed: goSendCoin,
-                              ),
-                              const SizedBox(width: 48),
-                            ],
-                            const Spacer(),
-                            buildAccountDropdownBox(
-                              onChanged: appController.onChangeAccount,
-                              value: appController.selectedAccount.value,
-                              items: appController.accounts,
-                            ),
-                            const Spacer(),
+            Container(
+              decoration: buildLinearGradientDecoration(),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              width: double.infinity,
+              child: Column(
+                children: [
+                  LayoutBuilder(
+                    builder: (ctx, constraints) {
+                      return Row(
+                        children: [
+                          if (Get.width >= 400) ...[
                             IconButton(
-                              icon: const Icon(Icons.history_rounded),
-                              tooltip: 'History',
+                              icon: const Icon(Icons.send_rounded),
+                              tooltip: 'Send Coin',
                               color: Colors.white,
-                              onPressed: goAccountHistory,
+                              onPressed: goSendCoin,
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.add_box),
-                              tooltip: 'Add Account',
-                              color: Colors.white,
-                              onPressed: appController.goAddAccount,
-                            ),
+                            const SizedBox(width: 48),
                           ],
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
+                          const Spacer(),
+                          GetBuilder<AppController>(
+                            id: 'selectedAccount',
+                            builder: (controller) {
+                              return buildAccountDropdownBox(
+                                onChanged: appController.onChangeAccount,
+                                value: appController.selectedAccount.value,
+                                items: appController.accounts,
+                              );
+                            },
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.history_rounded),
+                            tooltip: 'History',
+                            color: Colors.white,
+                            onPressed: goAccountHistory,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add_box),
+                            tooltip: 'Add Account',
+                            color: Colors.white,
+                            onPressed: appController.goAddAccount,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Obx(() {
+                    if (appController.loading.value) {
+                      return Text('Loading...');
+                    }
+                    final wallet = appController.wallet();
+                    final total = ((wallet.steemBalance + wallet.steemPower) *
+                            appController.steemMarketPrice().price) +
+                        (wallet.sbdBalance *
+                            appController.sbdMarketPrice().price);
+                    final estimatedAccountValue =
+                        NumberFormat('###,###,###,###.##').format(total);
+                    return Text(
                       '\$ $estimatedAccountValue USD',
                       style: const TextStyle(color: Colors.white, fontSize: 20),
+                    );
+                  }),
+                  Text(
+                    'Estimated Account Value',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 12,
                     ),
-                    Text(
-                      'Estimated Account Value',
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.8), fontSize: 12),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        buildProgressBox(
-                          label: 'Resource Credits',
-                          value: appController.wallet().resourceCredits,
-                          color: Colors.green.shade800,
-                        ),
-                        buildProgressBox(
-                          label: 'Voting Power',
-                          value: wallet.votingPower,
-                          color: Colors.lightBlue.shade800,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              );
-            }),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      buildProgressBox(
+                        label: 'Resource Credits',
+                        value: appController.wallet().resourceCredits,
+                        color: Colors.green.shade800,
+                      ),
+                      buildProgressBox(
+                        label: 'Voting Power',
+                        value: appController.wallet().votingPower,
+                        color: Colors.lightBlue.shade800,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
             // End top area
             TabBar(
               controller: controller.tabController,
