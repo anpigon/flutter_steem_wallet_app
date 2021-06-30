@@ -39,6 +39,12 @@ class LocaleKeys {
   static const delegate_total_incoming = 'delegate_total_incoming';
   static const delegate_hint_username = 'delegate_hint_username';
   static const delegate_hint_amount = 'delegate_hint_amount';
+  static const add_account = 'add_account';
+  static const add_account_info = 'add_account_info';
+  static const add_account_hint_username = 'add_account_hint_username';
+  static const add_account_hint_key = 'add_account_hint_key';
+  static const add_account_message = 'add_account_message';
+  static const add_account_import_key = 'add_account_import_key';
 }
 
 class Locales {
@@ -66,7 +72,7 @@ class Locales {
     'delegate': '임대',
     'delegate_power': '임대하기',
     'delegate_available': '임대 가능',
-    'delegate_current': '현재 파워',
+    'delegate_current': '전체 파워',
     'delegate_message':
         '스팀 파워(SP)를 다른 사용자에게 임대할 수 있습니다. 임대한 수량을 변경하거나 리뷰하고 싶다면 임대한 수량을 클릭하세요.',
     'delegate_incoming': '임대 받은 수량: %s',
@@ -76,6 +82,14 @@ class Locales {
     'delegate_total_incoming': '임대 받은 수량 합계',
     'delegate_hint_username': '임대할 Steem 계정을 입력하세요.',
     'delegate_hint_amount': '임대할 SP 수량을 입력하세요.',
+    'add_account': '계정 추가',
+    'add_account_info':
+        'Steem 계정을 입력하고 Private Posting key 또는 Private Active key 중 하나를 Private Key에 입력하세요.',
+    'add_account_hint_username': 'Steem 계정을 입력하세요.',
+    'add_account_hint_key': 'Private Key를 입력하세요.',
+    'add_account_message':
+        '사용자의 Private key 정보를 수집하지 않습니다. Private key는 암호화되어 디바이스에 안전하게 저장됩니다.',
+    'add_account_import_key': '키 가져오기',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -113,5 +127,13 @@ class Locales {
     'delegate_total_incoming': 'Total Incoming',
     'delegate_hint_username': 'Enter the Steem account to delegate.',
     'delegate_hint_amount': 'Enter the amount of SP to delegate.',
+    'add_account': 'Add Account',
+    'add_account_info':
+        'Enter your Steem account name and either the private posting or active key for that account below.',
+    'add_account_hint_username': 'Enter your Steem account.',
+    'add_account_hint_key': 'Enter your Private Key.',
+    'add_account_message':
+        'We do not collect user\'s private key information. Your private key is encrypted and stored securely on your device.',
+    'add_account_import_key': 'Import Key',
   };
 }

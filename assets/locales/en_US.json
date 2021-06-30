@@ -24,5 +24,11 @@
   "delegate_total_outgoing": "Total Outgoing",
   "delegate_total_incoming": "Total Incoming",
   "delegate_hint_username": "Enter the Steem account to delegate.",
-  "delegate_hint_amount": "Enter the amount of SP to delegate."
+  "delegate_hint_amount": "Enter the amount of SP to delegate.",
+  "add_account": "Add Account",
+  "add_account_info": "Enter your Steem account name and either the private posting or active key for that account below.",
+  "add_account_hint_username": "Enter your Steem account.",
+  "add_account_hint_key": "Enter your Private Key.",
+  "add_account_message": "We do not collect user's private key information. Your private key is encrypted and stored securely on your device.",
+  "add_account_import_key": "Import Key"
 }
