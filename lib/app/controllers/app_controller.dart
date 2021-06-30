@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,8 @@ class MarketPrice {
   MarketPrice(this.price, this.change);
 }
 
-class AppController extends GetxController with SingleGetTickerProviderMixin {
+class AppController extends GetxController
+    with StateMixin<Wallet>, SingleGetTickerProviderMixin {
   late final LocalDataService localDataService;
   late final SteemService steemService;
 
@@ -34,8 +36,7 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
 
   static AppController get to => Get.find();
 
-  late final StreamController<String> loadAccountCtrl;
-  late final StreamSubscription<String> loadAccountSub;
+  CancelableOperation<Wallet?>? loadAccountOperation;
 
   MarketPrice marketPrice(String symbol) {
     if (symbol == Symbols.STEEM) {
@@ -53,10 +54,7 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   /// account 잔액 정보를 가져온다.
-  Future<void> loadAccountDetails(String username) async {
-    print(username);
-    loading(true);
-
+  Future<Wallet?> loadAccountDetails(String username) async {
     if (!accounts.contains(username)) {
       accounts.add(username);
       selectedAccount(username);
@@ -81,43 +79,43 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
         final currentResourceCredits =
             (await steemService.getRCMana(username)).percentage;
 
-        wallet.update((val) {
-          val!.name = data.name;
-          val.steemBalance = double.parse(data.balance.split(' ')[0]);
-          val.sbdBalance = double.parse(data.sbd_balance.split(' ')[0]);
-          val.steemPower = steemPower;
-          val.votingPower = currentVotingPower / 100;
-          val.resourceCredits = currentResourceCredits / 100;
-          val.toWithdraw = calculateVestToSteem(
+        return Wallet(
+          name: data.name,
+          steemBalance: double.parse(data.balance.split(' ')[0]),
+          sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
+          steemPower: steemPower,
+          votingPower: currentVotingPower / 100,
+          resourceCredits: currentResourceCredits / 100,
+          toWithdraw: calculateVestToSteem(
                 data.to_withdraw,
                 globalProperties.total_vesting_shares,
                 globalProperties.total_vesting_fund_steem,
               ) /
-              1e6;
-          val.withdrawn = calculateVestToSteem(
+              1e6,
+          withdrawn: calculateVestToSteem(
                 data.withdrawn,
                 globalProperties.total_vesting_shares,
                 globalProperties.total_vesting_fund_steem,
               ) /
-              1e6;
-          val.delegatedSteemPower = calculateVestToSteem(
+              1e6,
+          delegatedSteemPower: calculateVestToSteem(
             data.delegated_vesting_shares,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
-          );
-          val.receivedSteemPower = calculateVestToSteem(
+          ),
+          receivedSteemPower: calculateVestToSteem(
             data.received_vesting_shares,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
-          );
-          val.nextSteemPowerWithdrawRate = calculateVestToSteem(
+          ),
+          nextSteemPowerWithdrawRate: calculateVestToSteem(
             data.vesting_withdraw_rate,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
-          );
-          val.nextSteemPowerWithdrawal =
-              DateTime.parse('${data.next_vesting_withdrawal}Z');
-        });
+          ),
+          nextSteemPowerWithdrawal:
+              DateTime.parse('${data.next_vesting_withdrawal}Z'),
+        );
       }
     } on Exception catch (e, stackTrace) {
       stackTrace.printError();
@@ -130,6 +128,7 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
     } finally {
       loading(false);
     }
+    return null;
   }
 
   /// account 정보 갱신
@@ -174,27 +173,24 @@ class AppController extends GetxController with SingleGetTickerProviderMixin {
     localDataService = Get.find<LocalDataService>();
     steemService = Get.find<SteemService>();
 
-    loadAccountCtrl = StreamController<String>();
-    loadAccountSub = loadAccountCtrl.stream.listen(
-      (String account) {
-        print('listen: $account');
-        loadAccountDetails(account);
-      },
-      // cancelOnError: false,
-      onError: ((error) {
-        print('onError: ${error.toString()}');
-      }),
-      onDone: (() {
-        print('onDone');
-      }),
-    );
-
     ever<String>(selectedAccount, (account) {
-      print('$account: ${loading.value}');
-      if (loading.value) {
-        loadAccountSub.cancel();
-      }
-      loadAccountCtrl.add(account);
+      loadAccountOperation?.cancel();
+      loadAccountOperation = CancelableOperation.fromFuture(
+        Future.sync(() {
+          change(null, status: RxStatus.loading());
+          return loadAccountDetails(selectedAccount.value);
+        }),
+        onCancel: () {
+          debugPrint('onCancel');
+        },
+      );
+      loadAccountOperation!.then((value) {
+        debugPrint('then: ${value?.name}');
+        change(value, status: RxStatus.success());
+      });
+      loadAccountOperation!.value.whenComplete(() {
+        debugPrint('onDone');
+      });
     });
 
     final accountList = (await localDataService.getAccounts())

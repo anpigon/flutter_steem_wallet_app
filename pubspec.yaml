@@ -25,6 +25,7 @@ dependencies:
   equatable: ^2.0.3
   skeleton_text: ^3.0.0
   freezed: ^0.14.2
+  async: ^2.6.1
   steemdart_ecc:
     git:
       url: git://github.com/anpigon/steemdart_ecc.git

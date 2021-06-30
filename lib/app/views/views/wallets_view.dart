@@ -7,6 +7,7 @@ import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 
 import '../../constants.dart';
 
@@ -102,22 +103,26 @@ class WalletsView extends GetView<WalletsController> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  Obx(() {
-                    if (appController.loading.value) {
-                      return Text('Loading...');
-                    }
-                    final wallet = appController.wallet();
-                    final total = ((wallet.steemBalance + wallet.steemPower) *
-                            appController.steemMarketPrice().price) +
-                        (wallet.sbdBalance *
-                            appController.sbdMarketPrice().price);
-                    final estimatedAccountValue =
-                        NumberFormat('###,###,###,###.##').format(total);
-                    return Text(
-                      '\$ $estimatedAccountValue USD',
+                  appController.obx(
+                    (state) {
+                      final total = ((state!.steemBalance + state.steemPower) *
+                              appController.steemMarketPrice().price) +
+                          (state.sbdBalance *
+                              appController.sbdMarketPrice().price);
+                      final estimatedAccountValue =
+                          NumberFormat('###,###,###,###.##').format(total);
+                      return Text(
+                        '\$ $estimatedAccountValue USD',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 20),
+                      );
+                    },
+                    onLoading: Text(
+                      'Loading...',
                       style: const TextStyle(color: Colors.white, fontSize: 20),
-                    );
-                  }),
+                    ),
+                    onError: (error) => Text(error.toString()),
+                  ),
                   Text(
                     'Estimated Account Value',
                     style: TextStyle(
@@ -126,20 +131,42 @@ class WalletsView extends GetView<WalletsController> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      buildProgressBox(
-                        label: 'Resource Credits',
-                        value: appController.wallet().resourceCredits,
-                        color: Colors.green.shade800,
-                      ),
-                      buildProgressBox(
-                        label: 'Voting Power',
-                        value: appController.wallet().votingPower,
-                        color: Colors.lightBlue.shade800,
-                      ),
-                    ],
+                  appController.obx(
+                    (state) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          buildProgressBox(
+                            label: 'Resource Credits',
+                            value: state!.resourceCredits,
+                            color: Colors.green.shade800,
+                          ),
+                          buildProgressBox(
+                            label: 'Voting Power',
+                            value: state.votingPower,
+                            color: Colors.lightBlue.shade800,
+                          ),
+                        ],
+                      );
+                    },
+                    onLoading: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buildProgressBox(
+                          label: 'Resource Credits',
+                          value: 100,
+                          color: Colors.green.shade800,
+                          loading: true,
+                        ),
+                        buildProgressBox(
+                          label: 'Voting Power',
+                          value: 100,
+                          color: Colors.lightBlue.shade800,
+                          loading: true,
+                        ),
+                      ],
+                    ),
+                    onError: (error) => Text(error.toString()),
                   ),
                   const SizedBox(height: 20),
                 ],
@@ -371,9 +398,11 @@ class WalletsView extends GetView<WalletsController> {
     required final String label,
     required final double value,
     required final Color color,
+    bool? loading = false,
   }) {
+    final width = math.min(Get.width / 2 - 20, 170).toDouble();
     return SizedBox(
-      width: math.min(Get.width / 2 - 20, 170),
+      width: width,
       child: Column(
         children: [
           Row(
@@ -391,7 +420,9 @@ class WalletsView extends GetView<WalletsController> {
               Flexible(
                 child: FittedBox(
                   child: Text(
-                    '${value.toStringAsFixed(2)}%',
+                    loading == true
+                        ? 'Loading...'
+                        : '${value.toStringAsFixed(2)}%',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -400,11 +431,20 @@ class WalletsView extends GetView<WalletsController> {
           ),
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            child: LinearProgressIndicator(
-              value: value,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation<Color?>(color),
-            ),
+            child: loading == true
+                ? SkeletonAnimation(
+                    shimmerColor: color,
+                    child: Container(
+                      height: 4,
+                      width: width,
+                      decoration: BoxDecoration(color: Colors.grey),
+                    ),
+                  )
+                : LinearProgressIndicator(
+                    value: value,
+                    backgroundColor: Colors.grey,
+                    valueColor: AlwaysStoppedAnimation<Color?>(color),
+                  ),
           ),
         ],
       ),
