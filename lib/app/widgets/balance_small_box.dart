@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
-import 'package:intl/intl.dart';
 
 class BalanceSmallBox extends StatelessWidget {
   final double amount;
