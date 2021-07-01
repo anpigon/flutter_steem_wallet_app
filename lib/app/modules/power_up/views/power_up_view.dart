@@ -8,8 +8,6 @@ import '../../../widgets/tight_button.dart';
 import '../controllers/power_up_controller.dart';
 
 class PowerUpView extends GetView<PowerUpController> {
-  final appController = Get.find<AppController>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +26,7 @@ class PowerUpView extends GetView<PowerUpController> {
                       children: [
                         BalanceSmallBox(
                           label: 'Balance',
-                          amount: appController.wallet().steemBalance,
+                          amount: AppController.to.wallet().steemBalance,
                           symbol: 'STEEM',
                           loading: false,
                         ),

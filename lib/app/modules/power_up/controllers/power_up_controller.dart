@@ -144,7 +144,7 @@ class PowerUpController extends GetxController {
   void onInit() {
     final arguments = Get.arguments;
 
-    appController = Get.find<AppController>();
+    appController = AppController.to;
 
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
@@ -152,7 +152,7 @@ class PowerUpController extends GetxController {
     usernameFocusNode = FocusNode();
 
     _ownerUsername = arguments['account'];
-    usernameController.text = _ownerUsername;
+    // usernameController.text = _ownerUsername;
 
     super.onInit();
   }
