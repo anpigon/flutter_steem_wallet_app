@@ -60,7 +60,7 @@ class _NumberSlideAnimationState extends State<NumberSlideAnimation> {
   }
 }
 
-/class NumberCol extends StatefulWidget {
+class NumberCol extends StatefulWidget {
   final int animateTo;
   final TextStyle textStyle;
   final Duration duration;
