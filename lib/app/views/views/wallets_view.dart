@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/wallets_controller.dart';
 import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
+import 'package:flutter_steem_wallet_app/app/utils/show_simple_menu_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -201,37 +202,28 @@ class WalletsView extends GetView<WalletsController> {
                               price: appController.steemMarketPrice().price,
                               ratio: appController.steemMarketPrice().change,
                               onTap: () async {
-                                final result = await Get.dialog(
-                                  SimpleDialog(
-                                    children: [
-                                      buildSimpleDialogOption(
-                                        id: 0,
-                                        text: 'STEEM 보내기',
-                                        icon: Icon(
-                                          Icons.send_rounded,
-                                          color: Colors.green.shade600,
-                                          size: 24,
-                                        ),
+                                await showSimpleMenuDialog(
+                                  [
+                                    SimpleMenuDialogOption(
+                                      Icon(
+                                        Icons.send_rounded,
+                                        color: Colors.green.shade600,
+                                        size: 24,
                                       ),
-                                      Divider(),
-                                      buildSimpleDialogOption(
-                                        id: 1,
-                                        text: '파워 업',
-                                        icon: Icon(
-                                          Icons.bolt_rounded,
-                                          color: Colors.yellow.shade700,
-                                          size: 36,
-                                        ),
+                                      'STEEM 보내기',
+                                      () => goSendCoin(symbol: Symbols.STEEM),
+                                    ),
+                                    SimpleMenuDialogOption(
+                                      Icon(
+                                        Icons.bolt_rounded,
+                                        color: Colors.yellow.shade700,
+                                        size: 36,
                                       ),
-                                    ],
-                                  ),
+                                      '파워 업',
+                                      goPowerUp,
+                                    ),
+                                  ],
                                 );
-                                switch (result) {
-                                  case 0:
-                                    return goSendCoin(symbol: Symbols.STEEM);
-                                  case 1:
-                                    return goPowerUp();
-                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -243,37 +235,28 @@ class WalletsView extends GetView<WalletsController> {
                               price: appController.steemMarketPrice().price,
                               ratio: appController.steemMarketPrice().change,
                               onTap: () async {
-                                final result = await Get.dialog(
-                                  SimpleDialog(
-                                    children: [
-                                      buildSimpleDialogOption(
-                                        id: 0,
-                                        text: '임대',
-                                        icon: Icon(
-                                          Icons.swap_horiz_rounded,
-                                          color: Colors.green.shade600,
-                                          size: 36,
-                                        ),
+                                await showSimpleMenuDialog(
+                                  [
+                                    SimpleMenuDialogOption(
+                                      Icon(
+                                        Icons.swap_horiz_rounded,
+                                        color: Colors.green.shade600,
+                                        size: 36,
                                       ),
-                                      Divider(),
-                                      buildSimpleDialogOption(
-                                        id: 1,
-                                        text: '파워 다운',
-                                        icon: Icon(
-                                          Icons.bolt_rounded,
-                                          color: Colors.orange.shade700,
-                                          size: 36,
-                                        ),
+                                      '임대',
+                                      goDelegateDown,
+                                    ),
+                                    SimpleMenuDialogOption(
+                                      Icon(
+                                        Icons.bolt_rounded,
+                                        color: Colors.orange.shade700,
+                                        size: 36,
                                       ),
-                                    ],
-                                  ),
+                                      '파워 다운',
+                                      goPowerDown,
+                                    ),
+                                  ],
                                 );
-                                switch (result) {
-                                  case 0:
-                                    return goDelegateDown();
-                                  case 1:
-                                    return goPowerDown();
-                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -285,24 +268,19 @@ class WalletsView extends GetView<WalletsController> {
                               price: appController.sbdMarketPrice().price,
                               ratio: appController.sbdMarketPrice().change,
                               onTap: () async {
-                                final result = await Get.dialog(
-                                  SimpleDialog(
-                                    children: [
-                                      buildSimpleDialogOption(
-                                        id: 0,
-                                        text: 'SBD 보내기',
-                                        icon: Icon(
-                                          Icons.send_rounded,
-                                          color: Colors.green.shade600,
-                                          size: 24,
-                                        ),
+                                await showSimpleMenuDialog(
+                                  [
+                                    SimpleMenuDialogOption(
+                                      Icon(
+                                        Icons.send_rounded,
+                                        color: Colors.green.shade600,
+                                        size: 24,
                                       ),
-                                    ],
-                                  ),
+                                      'SBD 보내기',
+                                      () => goSendCoin(symbol: Symbols.SBD),
+                                    ),
+                                  ],
                                 );
-                                if (result == 0) {
-                                  goSendCoin(symbol: Symbols.SBD);
-                                }
                               },
                             ),
                           ],
