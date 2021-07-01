@@ -5,6 +5,7 @@ import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/wallets_controller.dart';
 import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_steem_wallet_app/app/utils/show_simple_menu_dialog.dart';
+import 'package:flutter_steem_wallet_app/app/widgets/skeleton_wallet_list_item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -189,103 +190,113 @@ class WalletsView extends GetView<WalletsController> {
                   SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Obx(() {
-                        final wallet = appController.wallet();
-                        return Column(
+                      child: appController.obx(
+                        (wallet) {
+                          return Column(
+                            children: [
+                              // Wallet List
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-steem.svg'),
+                                amount: wallet!.steemBalance,
+                                symbol: 'STEEM',
+                                price: appController.steemMarketPrice().price,
+                                ratio: appController.steemMarketPrice().change,
+                                onTap: () async {
+                                  await showSimpleMenuDialog(
+                                    [
+                                      SimpleMenuDialogOption(
+                                        Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 24,
+                                        ),
+                                        'STEEM 보내기',
+                                        () => goSendCoin(symbol: Symbols.STEEM),
+                                      ),
+                                      SimpleMenuDialogOption(
+                                        Icon(
+                                          Icons.bolt_rounded,
+                                          color: Colors.yellow.shade700,
+                                          size: 36,
+                                        ),
+                                        '파워 업',
+                                        goPowerUp,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-steem-power.svg'),
+                                amount: wallet.steemPower,
+                                symbol: 'SP',
+                                price: appController.steemMarketPrice().price,
+                                ratio: appController.steemMarketPrice().change,
+                                onTap: () async {
+                                  await showSimpleMenuDialog(
+                                    [
+                                      SimpleMenuDialogOption(
+                                        Icon(
+                                          Icons.swap_horiz_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 36,
+                                        ),
+                                        '임대',
+                                        goDelegateDown,
+                                      ),
+                                      SimpleMenuDialogOption(
+                                        Icon(
+                                          Icons.bolt_rounded,
+                                          color: Colors.orange.shade700,
+                                          size: 36,
+                                        ),
+                                        '파워 다운',
+                                        goPowerDown,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              buildWalletCard(
+                                icon: SvgPicture.asset(
+                                    'assets/images/icon/token-sbd.svg'),
+                                amount: wallet.sbdBalance,
+                                symbol: 'SBD',
+                                price: appController.sbdMarketPrice().price,
+                                ratio: appController.sbdMarketPrice().change,
+                                onTap: () async {
+                                  await showSimpleMenuDialog(
+                                    [
+                                      SimpleMenuDialogOption(
+                                        Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.green.shade600,
+                                          size: 24,
+                                        ),
+                                        'SBD 보내기',
+                                        () => goSendCoin(symbol: Symbols.SBD),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                        onLoading: Column(
                           children: [
-                            // Wallet List
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-steem.svg'),
-                              amount: wallet.steemBalance,
-                              symbol: 'STEEM',
-                              price: appController.steemMarketPrice().price,
-                              ratio: appController.steemMarketPrice().change,
-                              onTap: () async {
-                                await showSimpleMenuDialog(
-                                  [
-                                    SimpleMenuDialogOption(
-                                      Icon(
-                                        Icons.send_rounded,
-                                        color: Colors.green.shade600,
-                                        size: 24,
-                                      ),
-                                      'STEEM 보내기',
-                                      () => goSendCoin(symbol: Symbols.STEEM),
-                                    ),
-                                    SimpleMenuDialogOption(
-                                      Icon(
-                                        Icons.bolt_rounded,
-                                        color: Colors.yellow.shade700,
-                                        size: 36,
-                                      ),
-                                      '파워 업',
-                                      goPowerUp,
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                            SkeletonWalletListItem(),
                             const SizedBox(height: 10),
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-steem-power.svg'),
-                              amount: wallet.steemPower,
-                              symbol: 'SP',
-                              price: appController.steemMarketPrice().price,
-                              ratio: appController.steemMarketPrice().change,
-                              onTap: () async {
-                                await showSimpleMenuDialog(
-                                  [
-                                    SimpleMenuDialogOption(
-                                      Icon(
-                                        Icons.swap_horiz_rounded,
-                                        color: Colors.green.shade600,
-                                        size: 36,
-                                      ),
-                                      '임대',
-                                      goDelegateDown,
-                                    ),
-                                    SimpleMenuDialogOption(
-                                      Icon(
-                                        Icons.bolt_rounded,
-                                        color: Colors.orange.shade700,
-                                        size: 36,
-                                      ),
-                                      '파워 다운',
-                                      goPowerDown,
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                            SkeletonWalletListItem(),
                             const SizedBox(height: 10),
-                            buildWalletCard(
-                              icon: SvgPicture.asset(
-                                  'assets/images/icon/token-sbd.svg'),
-                              amount: wallet.sbdBalance,
-                              symbol: 'SBD',
-                              price: appController.sbdMarketPrice().price,
-                              ratio: appController.sbdMarketPrice().change,
-                              onTap: () async {
-                                await showSimpleMenuDialog(
-                                  [
-                                    SimpleMenuDialogOption(
-                                      Icon(
-                                        Icons.send_rounded,
-                                        color: Colors.green.shade600,
-                                        size: 24,
-                                      ),
-                                      'SBD 보내기',
-                                      () => goSendCoin(symbol: Symbols.SBD),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                            SkeletonWalletListItem(),
                           ],
-                        );
-                      }),
+                        ),
+                      ),
                     ),
                   ),
                   Center(child: Text('Tokens')),
@@ -353,7 +364,7 @@ class WalletsView extends GetView<WalletsController> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('\$ $totalString'),
-                  SizedBox(height: 6.8),
+                  SizedBox(height: 5),
                   Text(
                     '${ratio > 0 ? '+' : ''} ${ratio.toStringAsFixed(2)}%',
                     style: TextStyle(
