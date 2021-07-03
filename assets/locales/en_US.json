@@ -40,5 +40,7 @@
   "transfer_hint_amount": "Enter the amount to be sent",
   "transfer_hint_memo": "Enter memo",
   "transfer_balance": "Balance",
-  "transfer_send": "Send"
+  "transfer_send": "Send",
+  "settings": "Settings",
+  "settings_manage_accounts": "Manage Accounts"
 }

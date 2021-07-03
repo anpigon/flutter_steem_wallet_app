@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/views/views/settings_view.dart';
 import 'package:get/get.dart';
 
 import '../../../views/views/wallets_view.dart';
@@ -10,7 +11,7 @@ class HomeController extends GetxController {
     WalletsView(),
     Center(child: Text('Community')),
     Center(child: Text('DApp')),
-    Center(child: Text('Settings')),
+    SettingsView(),
   ];
 
   void changePage(int _index) {

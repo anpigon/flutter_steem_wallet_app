@@ -40,5 +40,7 @@
   "transfer_hint_amount": "보낼 Amount를 입력하세요.",
   "transfer_hint_memo": "Memo를 입력하세요.",
   "transfer_balance": "현재 잔액",
-  "transfer_send": "보내기"
+  "transfer_send": "보내기",
+  "settings": "설정",
+  "settings_manage_accounts": "계정 관리"
 }

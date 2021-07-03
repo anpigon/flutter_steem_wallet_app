@@ -55,6 +55,8 @@ class LocaleKeys {
   static const transfer_hint_memo = 'transfer_hint_memo';
   static const transfer_balance = 'transfer_balance';
   static const transfer_send = 'transfer_send';
+  static const settings = 'settings';
+  static const settings_manage_accounts = 'settings_manage_accounts';
 }
 
 class Locales {
@@ -110,6 +112,8 @@ class Locales {
     'transfer_hint_memo': 'Memo를 입력하세요.',
     'transfer_balance': '현재 잔액',
     'transfer_send': '보내기',
+    'settings': '설정',
+    'settings_manage_accounts': '계정 관리',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -165,5 +169,7 @@ class Locales {
     'transfer_hint_memo': 'Enter memo',
     'transfer_balance': 'Balance',
     'transfer_send': 'Send',
+    'settings': 'Settings',
+    'settings_manage_accounts': 'Manage Accounts',
   };
 }
