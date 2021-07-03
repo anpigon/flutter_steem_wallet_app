@@ -30,5 +30,6 @@
   "add_account_hint_username": "Steem 계정을 입력하세요.",
   "add_account_hint_key": "Private Key를 입력하세요.",
   "add_account_message": "사용자의 Private key 정보를 수집하지 않습니다. Private key는 암호화되어 디바이스에 안전하게 저장됩니다.",
-  "add_account_import_key": "키 가져오기"
+  "add_account_import_key": "키 가져오기",
+  "main_send_something": "%s 보내기"
 }

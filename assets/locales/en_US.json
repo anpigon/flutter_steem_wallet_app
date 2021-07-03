@@ -30,5 +30,6 @@
   "add_account_hint_username": "Enter your Steem account.",
   "add_account_hint_key": "Enter your Private Key.",
   "add_account_message": "We do not collect user's private key information. Your private key is encrypted and stored securely on your device.",
-  "add_account_import_key": "Import Key"
+  "add_account_import_key": "Import Key",
+  "main_send_something": "Send %s"
 }

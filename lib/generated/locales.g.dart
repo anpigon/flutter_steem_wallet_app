@@ -45,6 +45,7 @@ class LocaleKeys {
   static const add_account_hint_key = 'add_account_hint_key';
   static const add_account_message = 'add_account_message';
   static const add_account_import_key = 'add_account_import_key';
+  static const main_send_something = 'main_send_something';
 }
 
 class Locales {
@@ -90,6 +91,7 @@ class Locales {
     'add_account_message':
         '사용자의 Private key 정보를 수집하지 않습니다. Private key는 암호화되어 디바이스에 안전하게 저장됩니다.',
     'add_account_import_key': '키 가져오기',
+    'main_send_something': '%s 보내기',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -135,5 +137,6 @@ class Locales {
     'add_account_message':
         'We do not collect user\'s private key information. Your private key is encrypted and stored securely on your device.',
     'add_account_import_key': 'Import Key',
+    'main_send_something': 'Send %s',
   };
 }
