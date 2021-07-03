@@ -10,7 +10,7 @@ class SendCoinView extends GetView<SendCoinController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Transfer')),
+      appBar: AppBar(title: Text('transfer'.tr)),
       body: Padding(
         padding: const EdgeInsets.all(23),
         child: Obx(
@@ -24,7 +24,7 @@ class SendCoinView extends GetView<SendCoinController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         BalanceSmallBox(
-                          label: 'Balance',
+                          label: 'transfer_balance'.tr,
                           amount: controller.balance,
                           symbol: controller.symbol.value,
                         ),
@@ -33,7 +33,7 @@ class SendCoinView extends GetView<SendCoinController> {
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Username',
-                            hintText: '받을 Steem 계정을 입력하세요.',
+                            hintText: 'transfer_hint_username'.tr,
                             prefixIcon: const Icon(Icons.alternate_email),
                           ),
                           keyboardType: TextInputType.name,
@@ -45,7 +45,7 @@ class SendCoinView extends GetView<SendCoinController> {
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Amount',
-                            hintText: '보낼 Amount를 입력하세요.',
+                            hintText: 'transfer_hint_amount'.tr,
                             suffixIcon: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 isDense: true,
@@ -73,8 +73,8 @@ class SendCoinView extends GetView<SendCoinController> {
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Memo',
-                            hintText: 'Memo를 입력하세요.',
-                            helperText: '모두에게 공개되는 메모입니다.',
+                            hintText: 'transfer_hint_memo'.tr,
+                            helperText: 'transfer_this_memo_is_public'.tr,
                           ),
                           controller: controller.memoController,
                         ),
@@ -106,8 +106,8 @@ class SendCoinView extends GetView<SendCoinController> {
                   color: Colors.white,
                 ),
               )
-            : const Text(
-                'Send',
+            : Text(
+                'transfer_send'.tr,
                 style: TextStyle(color: Colors.white),
               ),
       ),

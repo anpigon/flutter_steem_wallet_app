@@ -31,5 +31,14 @@
   "add_account_hint_key": "Enter your Private Key.",
   "add_account_message": "We do not collect user's private key information. Your private key is encrypted and stored securely on your device.",
   "add_account_import_key": "Import Key",
-  "main_send_something": "Send %s"
+  "main_send_something": "Send %s",
+  "transfer": "Transfer",
+  "transfer_insufficient_funds": "Insufficient funds",
+  "transfer_this_memo_is_private": "This memo is private",
+  "transfer_this_memo_is_public": "This memo is public",
+  "transfer_hint_username": "Enter Steem account to receive",
+  "transfer_hint_amount": "Enter the amount to be sent",
+  "transfer_hint_memo": "Enter memo",
+  "transfer_balance": "Balance",
+  "transfer_send": "Send"
 }

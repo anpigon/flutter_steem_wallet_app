@@ -46,6 +46,15 @@ class LocaleKeys {
   static const add_account_message = 'add_account_message';
   static const add_account_import_key = 'add_account_import_key';
   static const main_send_something = 'main_send_something';
+  static const transfer = 'transfer';
+  static const transfer_insufficient_funds = 'transfer_insufficient_funds';
+  static const transfer_this_memo_is_private = 'transfer_this_memo_is_private';
+  static const transfer_this_memo_is_public = 'transfer_this_memo_is_public';
+  static const transfer_hint_username = 'transfer_hint_username';
+  static const transfer_hint_amount = 'transfer_hint_amount';
+  static const transfer_hint_memo = 'transfer_hint_memo';
+  static const transfer_balance = 'transfer_balance';
+  static const transfer_send = 'transfer_send';
 }
 
 class Locales {
@@ -92,6 +101,15 @@ class Locales {
         '사용자의 Private key 정보를 수집하지 않습니다. Private key는 암호화되어 디바이스에 안전하게 저장됩니다.',
     'add_account_import_key': '키 가져오기',
     'main_send_something': '%s 보내기',
+    'transfer': '송금하기',
+    'transfer_insufficient_funds': '잔고 부족',
+    'transfer_this_memo_is_private': '공개되지 않는 메모입니다.',
+    'transfer_this_memo_is_public': '모두에게 공개되는 메모입니다.',
+    'transfer_hint_username': '받을 Steem 계정을 입력하세요.',
+    'transfer_hint_amount': '보낼 Amount를 입력하세요.',
+    'transfer_hint_memo': 'Memo를 입력하세요.',
+    'transfer_balance': '현재 잔액',
+    'transfer_send': '보내기',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -138,5 +156,14 @@ class Locales {
         'We do not collect user\'s private key information. Your private key is encrypted and stored securely on your device.',
     'add_account_import_key': 'Import Key',
     'main_send_something': 'Send %s',
+    'transfer': 'Transfer',
+    'transfer_insufficient_funds': 'Insufficient funds',
+    'transfer_this_memo_is_private': 'This memo is private',
+    'transfer_this_memo_is_public': 'This memo is public',
+    'transfer_hint_username': 'Enter Steem account to receive',
+    'transfer_hint_amount': 'Enter the amount to be sent',
+    'transfer_hint_memo': 'Enter memo',
+    'transfer_balance': 'Balance',
+    'transfer_send': 'Send',
   };
 }

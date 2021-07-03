@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       translationsKeys: AppTranslation.translations,
-      // locale: Get.deviceLocale,
-      locale: Locale('en', 'US'),
+      locale: Get.deviceLocale,
+      // locale: Locale('en', 'US'),
       fallbackLocale: Locale('en', 'US'), // 잘못된 지역이 선택된 경우 복구될 지역을 지정
     );
   }
