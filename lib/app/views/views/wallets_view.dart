@@ -327,8 +327,6 @@ class WalletsView extends GetView<WalletsController> {
     );
   }
 
-
-
   SizedBox buildProgressBox({
     required final String label,
     required final double value,

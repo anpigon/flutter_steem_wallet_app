@@ -1,5 +1,5 @@
 import 'package:flutter_steem_wallet_app/app/models/signature/signature_model.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 
 /// ref: https://developers.steem.io/apidefinitions/broadcast-ops#broadcast_ops_transfer_to_vesting
 class DelegateVestingShares extends SignatureModel {
@@ -18,6 +18,6 @@ class DelegateVestingShares extends SignatureModel {
         'delegator': delegator,
         'delegatee': delegatee,
         'vesting_shares':
-            '${toFixedTrunc(vesting_shares, 6)} VESTS',
+            '${NumUtil.toFixedTrunc(vesting_shares, 6)} VESTS',
       };
 }

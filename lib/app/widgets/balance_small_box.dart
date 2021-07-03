@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 
 class BalanceSmallBox extends StatelessWidget {
   final double amount;
@@ -43,7 +43,7 @@ class BalanceSmallBox extends StatelessWidget {
             ),
           if (!loading)
             Text(
-              toCurrencyFormat(amount),
+              NumUtil.toCurrencyFormat(amount),
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade700,

@@ -5,7 +5,7 @@ import 'package:flutter_steem_wallet_app/app/models/signature/delegate_vesting_s
 import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/steem_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 
@@ -71,7 +71,7 @@ class DelegatePowerController extends GetxController {
 
       final globalProperties = await SteemService.to.getDynamicGlobalProperties();
       final amount = double.parse(amountController.text.trim());
-      final vestingShares = calculateSteemToVest(
+      final vestingShares = NumUtil.calculateSteemToVest(
         amount, 
         globalProperties.total_vesting_shares, 
         globalProperties.total_vesting_fund_steem,

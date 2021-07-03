@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:get/get.dart';
 
 import '../controllers/power_down_controller.dart';
@@ -72,7 +72,7 @@ class PowerDownView extends GetView<PowerDownController> {
                           Text(
                             'powerdown_delegating'.trParams({
                               'AMOUNT':
-                                  toCurrencyFormat(wallet.delegatedSteemPower),
+                              NumUtil.toCurrencyFormat(wallet.delegatedSteemPower),
                             })!,
                             style: Get.theme.textTheme.caption,
                           ),
@@ -81,8 +81,8 @@ class PowerDownView extends GetView<PowerDownController> {
                         if (wallet.toWithdraw - wallet.withdrawn > 0) ...[
                           Text(
                             'powerdown_already_power_down'.trParams({
-                              'AMOUNT': toCurrencyFormat(wallet.toWithdraw),
-                              'WITHDRAWN': toCurrencyFormat(wallet.withdrawn),
+                              'AMOUNT': NumUtil.toCurrencyFormat(wallet.toWithdraw),
+                              'WITHDRAWN': NumUtil.toCurrencyFormat(wallet.withdrawn),
                             })!,
                             style: Get.theme.textTheme.caption,
                           ),
@@ -94,7 +94,7 @@ class PowerDownView extends GetView<PowerDownController> {
                                 .trArgs(
                               [
                                 '${wallet.nextSteemPowerWithdrawal.toString().split(' ')[0]}',
-                                '(~${toCurrencyFormat(wallet.nextSteemPowerWithdrawRate)} STEEM)'
+                                '(~${NumUtil.toCurrencyFormat(wallet.nextSteemPowerWithdrawRate)} STEEM)'
                               ],
                             ),
                             style: Get.theme.textTheme.caption,

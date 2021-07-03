@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
@@ -65,7 +65,7 @@ class AppController extends GetxController
       final data = await steemService.getAccount(username);
       if (data != null) {
         // steem power 계산
-        final steemPower = calculateVestToSteem(
+        final steemPower = NumUtil.calculateVestToSteem(
           data.vesting_shares,
           globalProperties.total_vesting_shares,
           globalProperties.total_vesting_fund_steem,
@@ -86,29 +86,29 @@ class AppController extends GetxController
           steemPower: steemPower,
           votingPower: currentVotingPower / 100,
           resourceCredits: currentResourceCredits / 100,
-          toWithdraw: calculateVestToSteem(
+          toWithdraw: NumUtil.calculateVestToSteem(
                 data.to_withdraw,
                 globalProperties.total_vesting_shares,
                 globalProperties.total_vesting_fund_steem,
               ) /
               1e6,
-          withdrawn: calculateVestToSteem(
+          withdrawn: NumUtil.calculateVestToSteem(
                 data.withdrawn,
                 globalProperties.total_vesting_shares,
                 globalProperties.total_vesting_fund_steem,
               ) /
               1e6,
-          delegatedSteemPower: calculateVestToSteem(
+          delegatedSteemPower: NumUtil.calculateVestToSteem(
             data.delegated_vesting_shares,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
           ),
-          receivedSteemPower: calculateVestToSteem(
+          receivedSteemPower: NumUtil.calculateVestToSteem(
             data.received_vesting_shares,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,
           ),
-          nextSteemPowerWithdrawRate: calculateVestToSteem(
+          nextSteemPowerWithdrawRate: NumUtil.calculateVestToSteem(
             data.vesting_withdraw_rate,
             globalProperties.total_vesting_shares,
             globalProperties.total_vesting_fund_steem,

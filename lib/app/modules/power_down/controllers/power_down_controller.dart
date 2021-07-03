@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +52,7 @@ class PowerDownController extends GetxController {
     final steemPower = appController.wallet().steemPower;
     final delegatedSteemPower = appController.wallet().delegatedSteemPower;
     amountController.text =
-        toFixedTrunc((steemPower - delegatedSteemPower) * ratio, 3);
+        NumUtil.toFixedTrunc((steemPower - delegatedSteemPower) * ratio, 3);
   }
 
   Future<void> submit() async {

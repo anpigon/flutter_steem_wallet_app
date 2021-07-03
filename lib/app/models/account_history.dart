@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/constants/operation_type.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 
 class AccountHistory extends Equatable {
   late final String opType;
@@ -62,7 +62,7 @@ class AccountHistory extends Equatable {
         final reward = opData['reward'] as String;
         final commentAuthor = opData['comment_author'] as String;
         final commentPermlink = opData['comment_permlink'] as String;
-        final spPayout = calculateVestToSteem(
+        final spPayout = NumUtil.calculateVestToSteem(
             reward, totalVestingShares, totalVestingFundSteem);
         return AccountHistory(
           icon: Icons.favorite,
@@ -76,7 +76,7 @@ class AccountHistory extends Equatable {
           timestamp: timestamp,
           author: commentAuthor,
           permlink: commentPermlink,
-          message: 'Curation rewards: ${toFixedTrunc(spPayout, 3)} SP',
+          message: 'Curation rewards: ${NumUtil.toFixedTrunc(spPayout, 3)} SP',
         );
       case OperationType.AUTHOR_REWARD:
       case OperationType.COMMENT_BENEFACTOR_REWARD:
@@ -85,7 +85,7 @@ class AccountHistory extends Equatable {
         final sbdPayout = opData['sbd_payout'] as String;
         final steemPayout = opData['steem_payout'] as String;
         final vestingPayout = opData['vesting_payout'] as String;
-        final spPayout = calculateVestToSteem(
+        final spPayout = NumUtil.calculateVestToSteem(
             vestingPayout, totalVestingShares, totalVestingFundSteem);
         return AccountHistory(
           icon: Icons.face,
@@ -103,7 +103,7 @@ class AccountHistory extends Equatable {
             'Author reward:',
             if (sbdPayout != '0.000 SBD') '$sbdPayout and',
             if (sbdPayout != '0.000 STEEM') '$steemPayout and',
-            if (spPayout > 0) '${toFixedTrunc(spPayout, 3)} SP',
+            if (spPayout > 0) '${NumUtil.toFixedTrunc(spPayout, 3)} SP',
           ].join(' '),
         );
       case OperationType.CLAIM_REWARD_BALANCE:
@@ -111,7 +111,7 @@ class AccountHistory extends Equatable {
         final rewardSteem = opData['reward_steem'] as String;
         final rewardSbd = opData['reward_sbd'] as String;
         final rewardVests = opData['reward_vests'] as String;
-        final rewardSP = calculateVestToSteem(
+        final rewardSP = NumUtil.calculateVestToSteem(
             rewardVests, totalVestingShares, totalVestingFundSteem);
         return AccountHistory(
           icon: Icons.payment,
@@ -127,7 +127,7 @@ class AccountHistory extends Equatable {
             'Claim rewards:',
             if (rewardSbd != '0.000 SBD') '$rewardSbd and',
             if (rewardSteem != '0.000 STEEM') '$rewardSteem and',
-            if (rewardSP > 0) '${toFixedTrunc(rewardSP, 3)} SP',
+            if (rewardSP > 0) '${NumUtil.toFixedTrunc(rewardSP, 3)} SP',
           ].join(' '),
         );
       case OperationType.TRANSFER:
@@ -172,8 +172,8 @@ class AccountHistory extends Equatable {
       case OperationType.WITHDRAW_VESTING:
         // STEEM POWER DOWN
         final vestingShares = opData['vesting_shares'] as String;
-        final amount = toFixedTrunc(
-            calculateVestToSteem(
+        final amount = NumUtil.toFixedTrunc(
+            NumUtil.calculateVestToSteem(
                 vestingShares, totalVestingShares, totalVestingFundSteem),
             3);
         return AccountHistory(
@@ -193,14 +193,14 @@ class AccountHistory extends Equatable {
         final delegator = opData['delegator'] as String;
         final delegatee = opData['delegatee'] as String;
         final vesting_shares = opData['vesting_shares'] as String;
-        final delegateSP = calculateVestToSteem(
+        final delegateSP = NumUtil.calculateVestToSteem(
             vesting_shares, totalVestingShares, totalVestingFundSteem);
         String message;
         if (ownerAccount == delegator) {
-          message = 'Delegate ${toFixedTrunc(delegateSP, 3)} SP to $delegatee';
+          message = 'Delegate ${NumUtil.toFixedTrunc(delegateSP, 3)} SP to $delegatee';
         } else {
           message =
-              'Delegate ${toFixedTrunc(delegateSP, 3)} SP from $delegator';
+              'Delegate ${NumUtil.toFixedTrunc(delegateSP, 3)} SP from $delegator';
         }
         return AccountHistory(
           icon: Icons.swap_horiz,
