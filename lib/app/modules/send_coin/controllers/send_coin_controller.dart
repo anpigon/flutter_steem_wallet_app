@@ -163,7 +163,7 @@ class SendCoinController extends GetxController {
     amountController = TextEditingController();
     memoController = TextEditingController();
 
-    appController = Get.find<AppController>();
+    appController = AppController.to;
 
     _ownerUsername = arguments['account'];
     symbol(arguments['symbol']);
