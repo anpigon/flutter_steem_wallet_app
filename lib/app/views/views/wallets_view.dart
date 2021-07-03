@@ -6,6 +6,7 @@ import 'package:flutter_steem_wallet_app/app/controllers/wallets_controller.dart
 import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_steem_wallet_app/app/utils/show_simple_menu_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/widgets/skeleton_wallet_list_item.dart';
+import 'package:flutter_steem_wallet_app/app/widgets/wallet_list_item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -195,7 +196,7 @@ class WalletsView extends GetView<WalletsController> {
                           return Column(
                             children: [
                               // Wallet List
-                              buildWalletCard(
+                              WalletListItem(
                                 icon: SvgPicture.asset(
                                     'assets/images/icon/token-steem.svg'),
                                 amount: wallet!.steemBalance,
@@ -228,7 +229,7 @@ class WalletsView extends GetView<WalletsController> {
                                 },
                               ),
                               const SizedBox(height: 10),
-                              buildWalletCard(
+                              WalletListItem(
                                 icon: SvgPicture.asset(
                                     'assets/images/icon/token-steem-power.svg'),
                                 amount: wallet.steemPower,
@@ -261,7 +262,7 @@ class WalletsView extends GetView<WalletsController> {
                                 },
                               ),
                               const SizedBox(height: 10),
-                              buildWalletCard(
+                              WalletListItem(
                                 icon: SvgPicture.asset(
                                     'assets/images/icon/token-sbd.svg'),
                                 amount: wallet.sbdBalance,
@@ -326,62 +327,7 @@ class WalletsView extends GetView<WalletsController> {
     );
   }
 
-  Widget buildWalletCard({
-    required Widget icon,
-    required double amount,
-    required double price,
-    required String symbol,
-    required double ratio,
-    required VoidCallback onTap,
-  }) {
-    final amountString = NumberFormat('###,###,###,###.###').format(amount);
-    final priceString = NumberFormat('###,###,###,###.##').format(price);
-    final totalString =
-        NumberFormat('###,###,###,###.##').format(amount * price).trim();
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(23),
-          child: Row(
-            children: [
-              icon,
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('$amountString $symbol'),
-                  SizedBox(height: 5),
-                  Text(
-                    '\$ $priceString',
-                    style: TextStyle(color: Get.theme.hintColor),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('\$ $totalString'),
-                  SizedBox(height: 5),
-                  Text(
-                    '${ratio > 0 ? '+' : ''} ${ratio.toStringAsFixed(2)}%',
-                    style: TextStyle(
-                        color: ratio > 0
-                            ? Colors.green
-                            : ratio < 0
-                                ? Colors.red
-                                : Get.theme.hintColor),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
 
   SizedBox buildProgressBox({
     required final String label,

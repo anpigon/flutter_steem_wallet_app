@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 import 'generated/locales.g.dart';
-import 'initial_binding.dart';
 import 'init_services.dart';
+import 'initial_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       translationsKeys: AppTranslation.translations,
-      locale: Get.deviceLocale,
+      // locale: Get.deviceLocale,
+      locale: Locale('en', 'US'),
       fallbackLocale: Locale('en', 'US'), // 잘못된 지역이 선택된 경우 복구될 지역을 지정
     );
   }
