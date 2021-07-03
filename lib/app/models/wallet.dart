@@ -37,4 +37,19 @@ class Wallet {
         'toWithdraw': toWithdraw,
         'withdrawn': withdrawn,
       };
+
+  void update(Wallet val) {
+    name = val.name;
+    steemBalance = val.steemBalance;
+    sbdBalance = val.sbdBalance;
+    steemPower = val.steemPower;
+    votingPower = val.votingPower;
+    resourceCredits = val.resourceCredits;
+    toWithdraw = val.toWithdraw;
+    withdrawn = val.withdrawn;
+    delegatedSteemPower = val.delegatedSteemPower;
+    receivedSteemPower = val.receivedSteemPower;
+    nextSteemPowerWithdrawRate = val.nextSteemPowerWithdrawRate;
+    nextSteemPowerWithdrawal = val.nextSteemPowerWithdrawal;
+  }
 }

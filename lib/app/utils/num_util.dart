@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 class NumUtil {
   static const int maxDecimalDigits = 3;
+  static final priceFormat = NumberFormat('###,###,###,###.##', 'en_US');
   static final amountFormat = NumberFormat('###,###,###,##0.0##', 'en_US');
 
   static String toFixedTrunc(num value, [int digits = 0]) {
@@ -15,6 +16,11 @@ class NumUtil {
   static String toCurrencyFormat(num value) {
     final fixed = math.pow(10, maxDecimalDigits);
     return amountFormat.format((value * fixed).floor() / fixed);
+  }
+
+  static String toPriceFormat(num value) {
+    final fixed = math.pow(10, 2);
+    return priceFormat.format((value * fixed).floor() / fixed);
   }
 
   static double calculateVestToSteem(

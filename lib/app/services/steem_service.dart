@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_steem_wallet_app/app/models/signature/delegate_vesting_shares.dart';
 import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
+import 'package:flutter_steem_wallet_app/app/models/wallet.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -103,5 +105,64 @@ class SteemService extends GetxService {
     );
     return await client.broadcast
         .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
+  }
+
+  Future<Wallet?> loadAccountDetails(String username) async {
+    final globalProperties = await getDynamicGlobalProperties();
+    final data = await getAccount(username);
+    if (data != null) {
+      // steem power 계산
+      final steemPower = NumUtil.calculateVestToSteem(
+        data.vesting_shares,
+        globalProperties.total_vesting_shares,
+        globalProperties.total_vesting_fund_steem,
+      );
+
+      // 보팅 파워 계산
+      final currentVotingPower = calculateVPMana(data).percentage;
+
+      // RC 계산
+      final currentResourceCredits = (await getRCMana(username)).percentage;
+
+      return Wallet(
+        name: data.name,
+        steemBalance: double.parse(data.balance.split(' ')[0]),
+        sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
+        steemPower: steemPower,
+        votingPower: currentVotingPower / 100,
+        resourceCredits: currentResourceCredits / 100,
+        toWithdraw: NumUtil.calculateVestToSteem(
+              data.to_withdraw,
+              globalProperties.total_vesting_shares,
+              globalProperties.total_vesting_fund_steem,
+            ) /
+            1e6,
+        withdrawn: NumUtil.calculateVestToSteem(
+              data.withdrawn,
+              globalProperties.total_vesting_shares,
+              globalProperties.total_vesting_fund_steem,
+            ) /
+            1e6,
+        delegatedSteemPower: NumUtil.calculateVestToSteem(
+          data.delegated_vesting_shares,
+          globalProperties.total_vesting_shares,
+          globalProperties.total_vesting_fund_steem,
+        ),
+        receivedSteemPower: NumUtil.calculateVestToSteem(
+          data.received_vesting_shares,
+          globalProperties.total_vesting_shares,
+          globalProperties.total_vesting_fund_steem,
+        ),
+        nextSteemPowerWithdrawRate: NumUtil.calculateVestToSteem(
+          data.vesting_withdraw_rate,
+          globalProperties.total_vesting_shares,
+          globalProperties.total_vesting_fund_steem,
+        ),
+        nextSteemPowerWithdrawal:
+            DateTime.parse('${data.next_vesting_withdrawal}Z'),
+      );
+    }
+
+    return null;
   }
 }

@@ -6,11 +6,11 @@ import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/wallets_controller.dart';
 import 'package:flutter_steem_wallet_app/app/models/wallet.dart';
 import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:flutter_steem_wallet_app/app/utils/show_simple_menu_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/widgets/skeleton_wallet_list_item.dart';
 import 'package:flutter_steem_wallet_app/app/widgets/wallet_list_item.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 import '../../constants.dart';
@@ -114,7 +114,7 @@ class WalletsView extends GetView<WalletsController> {
                           (state.sbdBalance *
                               appController.sbdMarketPrice().price);
                       final estimatedAccountValue =
-                          NumberFormat('###,###,###,###.##').format(total);
+                          NumUtil.toPriceFormat(total);
                       return Text(
                         '\$ $estimatedAccountValue USD',
                         style:
@@ -202,11 +202,6 @@ class WalletsView extends GetView<WalletsController> {
                             goPowerDown: goPowerDown,
                           );
                         },
-                        // onLoading: Container(
-                        //   height: 400,
-                        //   alignment: Alignment.center,
-                        //   child: Text('Loading...'),
-                        // ),
                         onLoading: Column(
                           children: List.filled(
                             3,

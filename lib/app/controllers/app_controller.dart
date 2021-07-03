@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
+import 'package:flutter_steem_wallet_app/app/exceptions/message_exception.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
@@ -36,8 +35,6 @@ class AppController extends GetxController
 
   static AppController get to => Get.find();
 
-  CancelableOperation<Wallet?>? loadAccountOperation;
-
   MarketPrice marketPrice(String symbol) {
     if (symbol == Symbols.STEEM) {
       return steemMarketPrice();
@@ -54,69 +51,20 @@ class AppController extends GetxController
   }
 
   /// account 잔액 정보를 가져온다.
-  Future<Wallet?> loadAccountDetails(String username) async {
+  Future<void> loadAccountDetails(String username) async {
     if (!accounts.contains(username)) {
       accounts.add(username);
       selectedAccount(username);
     }
-
     try {
-      final globalProperties = await steemService.getDynamicGlobalProperties();
-      final data = await steemService.getAccount(username);
-      if (data != null) {
-        // steem power 계산
-        final steemPower = NumUtil.calculateVestToSteem(
-          data.vesting_shares,
-          globalProperties.total_vesting_shares,
-          globalProperties.total_vesting_fund_steem,
-        );
-
-        // 보팅 파워 계산
-        final currentVotingPower =
-            steemService.calculateVPMana(data).percentage;
-
-        // RC 계산
-        final currentResourceCredits =
-            (await steemService.getRCMana(username)).percentage;
-
-        return Wallet(
-          name: data.name,
-          steemBalance: double.parse(data.balance.split(' ')[0]),
-          sbdBalance: double.parse(data.sbd_balance.split(' ')[0]),
-          steemPower: steemPower,
-          votingPower: currentVotingPower / 100,
-          resourceCredits: currentResourceCredits / 100,
-          toWithdraw: NumUtil.calculateVestToSteem(
-                data.to_withdraw,
-                globalProperties.total_vesting_shares,
-                globalProperties.total_vesting_fund_steem,
-              ) /
-              1e6,
-          withdrawn: NumUtil.calculateVestToSteem(
-                data.withdrawn,
-                globalProperties.total_vesting_shares,
-                globalProperties.total_vesting_fund_steem,
-              ) /
-              1e6,
-          delegatedSteemPower: NumUtil.calculateVestToSteem(
-            data.delegated_vesting_shares,
-            globalProperties.total_vesting_shares,
-            globalProperties.total_vesting_fund_steem,
-          ),
-          receivedSteemPower: NumUtil.calculateVestToSteem(
-            data.received_vesting_shares,
-            globalProperties.total_vesting_shares,
-            globalProperties.total_vesting_fund_steem,
-          ),
-          nextSteemPowerWithdrawRate: NumUtil.calculateVestToSteem(
-            data.vesting_withdraw_rate,
-            globalProperties.total_vesting_shares,
-            globalProperties.total_vesting_fund_steem,
-          ),
-          nextSteemPowerWithdrawal:
-              DateTime.parse('${data.next_vesting_withdrawal}Z'),
-        );
-      }
+      loading(true);
+      change(null, status: RxStatus.loading());
+      final data = await steemService.loadAccountDetails(username);
+      if (data == null) throw MessageException('wallet is empty');
+      wallet.update((val) {
+        val!.update(data);
+      });
+      change(data, status: RxStatus.success());
     } on Exception catch (e, stackTrace) {
       stackTrace.printError();
       Get.snackbar(
@@ -128,7 +76,6 @@ class AppController extends GetxController
     } finally {
       loading(false);
     }
-    return null;
   }
 
   /// account 정보 갱신
@@ -173,29 +120,12 @@ class AppController extends GetxController
     localDataService = Get.find<LocalDataService>();
     steemService = Get.find<SteemService>();
 
-    ever<String>(selectedAccount, (account) {
-      loadAccountOperation?.cancel();
-      loadAccountOperation = CancelableOperation.fromFuture(
-        Future.sync(() {
-          change(null, status: RxStatus.loading());
-          return loadAccountDetails(selectedAccount.value);
-        }),
-        onCancel: () {
-          debugPrint('onCancel');
-        },
-      );
-      loadAccountOperation!.then((value) {
-        debugPrint('then: ${value?.name}');
-        change(value, status: RxStatus.success());
-      });
-      loadAccountOperation!.value.whenComplete(() {
-        debugPrint('onDone');
-      });
-    });
+    ever<String>(selectedAccount, loadAccountDetails);
 
     final accountList = (await localDataService.getAccounts())
         .map((account) => account.name)
         .toList();
+
     if (accountList.isNotEmpty) {
       accounts.assignAll(accountList);
       selectedAccount(accountList.first);
