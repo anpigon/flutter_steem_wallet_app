@@ -15,6 +15,7 @@ abstract class Routes {
   static const POWER_DOWN = _Paths.POWER_DOWN;
   static const DELEGATE_POWER = _Paths.DELEGATE_POWER;
   static const ACCOUNT_HISTORY = _Paths.ACCOUNT_HISTORY;
+  static const MANAGE_ACCOUNTS = _Paths.MANAGE_ACCOUNTS;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const POWER_DOWN = '/power-down';
   static const DELEGATE_POWER = '/delegate-power';
   static const ACCOUNT_HISTORY = '/account-history';
+  static const MANAGE_ACCOUNTS = '/manage-accounts';
 }

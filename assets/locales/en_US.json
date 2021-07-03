@@ -42,5 +42,9 @@
   "transfer_balance": "Balance",
   "transfer_send": "Send",
   "settings": "Settings",
-  "settings_manage_accounts": "Manage Accounts"
+  "settings_manage_accounts": "Manage Accounts",
+  "settings_about": "About",
+  "manage_accounts_info_message": "The application will require a PRIVATE KEY to prove ownership or to conduct transactions on your behalf.",
+  "manage_accounts_warning_message": "Only share private keys with parties that you trust.",
+  "manage_delete_account": "DELETE THIS ACCOUNT"
 }

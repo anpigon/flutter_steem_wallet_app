@@ -57,6 +57,11 @@ class LocaleKeys {
   static const transfer_send = 'transfer_send';
   static const settings = 'settings';
   static const settings_manage_accounts = 'settings_manage_accounts';
+  static const settings_about = 'settings_about';
+  static const manage_accounts_info_message = 'manage_accounts_info_message';
+  static const manage_accounts_warning_message =
+      'manage_accounts_warning_message';
+  static const manage_delete_account = 'manage_delete_account';
 }
 
 class Locales {
@@ -114,6 +119,10 @@ class Locales {
     'transfer_send': '보내기',
     'settings': '설정',
     'settings_manage_accounts': '계정 관리',
+    'settings_about': 'About',
+    'manage_accounts_info_message': '소유권을 증명하거나 거래를 하려면 PRIVATE KEY 가 필요합니다.',
+    'manage_accounts_warning_message': '신뢰할 수 있는 사람에게만 개인 키를 공유하십시오.',
+    'manage_delete_account': '이 계정 삭제하기',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -171,5 +180,11 @@ class Locales {
     'transfer_send': 'Send',
     'settings': 'Settings',
     'settings_manage_accounts': 'Manage Accounts',
+    'settings_about': 'About',
+    'manage_accounts_info_message':
+        'The application will require a PRIVATE KEY to prove ownership or to conduct transactions on your behalf.',
+    'manage_accounts_warning_message':
+        'Only share private keys with parties that you trust.',
+    'manage_delete_account': 'DELETE THIS ACCOUNT',
   };
 }

@@ -42,5 +42,9 @@
   "transfer_balance": "현재 잔액",
   "transfer_send": "보내기",
   "settings": "설정",
-  "settings_manage_accounts": "계정 관리"
+  "settings_manage_accounts": "계정 관리",
+  "settings_about": "About",
+  "manage_accounts_info_message": "소유권을 증명하거나 거래를 하려면 PRIVATE KEY 가 필요합니다.",
+  "manage_accounts_warning_message": "신뢰할 수 있는 사람에게만 개인 키를 공유하십시오.",
+  "manage_delete_account": "이 계정 삭제하기"
 }

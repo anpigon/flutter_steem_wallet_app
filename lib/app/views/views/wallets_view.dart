@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 import '../../constants.dart';
+import 'account_dropdown_buttons.dart';
 
 class WalletsView extends GetView<WalletsController> {
   final appController = AppController.to;
@@ -82,10 +83,15 @@ class WalletsView extends GetView<WalletsController> {
                           GetBuilder<AppController>(
                             id: 'selectedAccount',
                             builder: (controller) {
-                              return buildAccountDropdownBox(
-                                onChanged: appController.onChangeAccount,
-                                value: appController.selectedAccount.value,
+                              return AccountDropdownButtons(
                                 items: appController.accounts,
+                                value: appController.selectedAccount.value,
+                                onChanged: appController.onChangeAccount,
+                                color: Get.theme.buttonColor.withOpacity(0.1),
+                                minWidth: 100,
+                                maxWidth:
+                                    (math.max(Get.mediaQuery.size.width, 400) -
+                                        (106 + (48 * 4))),
                               );
                             },
                           ),
@@ -404,73 +410,6 @@ class WalletsView extends GetView<WalletsController> {
           Get.theme.primaryColorDark,
           Get.theme.primaryColor,
         ],
-      ),
-    );
-  }
-
-  Widget buildAccountDropdownBox({
-    void Function(String?)? onChanged,
-    String? value,
-    required List<String> items,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Get.theme.buttonColor.withOpacity(0.1),
-        borderRadius: const BorderRadius.all(Radius.circular(50)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 7),
-      // constraints: const BoxConstraints(minWidth: 100, maxWidth: 180),
-      child: DropdownButton(
-        onChanged: onChanged,
-        value: value,
-        items: items
-            .map<DropdownMenuItem<String>>(
-              (username) => DropdownMenuItem(
-                value: username,
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(18),
-                      ),
-                      child: ColoredBox(
-                        color: Colors.white,
-                        child: Image.network(
-                          'https://steemitimages.com/u/$username/avatar',
-                          fit: BoxFit.cover,
-                          width: 36,
-                          height: 36,
-                          errorBuilder: (_, __, ___) => const Icon(
-                              Icons.account_circle,
-                              size: 36,
-                              color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 100,
-                        // username이 매우 긴 계정 때문에...
-                        maxWidth: (math.max(Get.mediaQuery.size.width, 400) -
-                            (106 + (48 * 4))),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(username),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-        underline: Container(),
-        icon: const Icon(Icons.expand_more),
-        style: Get.theme.textTheme.subtitle1!.copyWith(color: Colors.white),
-        iconEnabledColor: Colors.white,
-        dropdownColor: Get.theme.primaryColor,
       ),
     );
   }

@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 
 class VaultService extends GetxService {
   late final FlutterSecureStorage _secureStorage;
@@ -16,7 +16,8 @@ class VaultService extends GetxService {
     return value;
   }
 
-  Future<String?> read(String key, {String? defaultValue}) async {
+  Future<String?> read(String? key, {String? defaultValue}) async {
+    if (key == null) return null;
     return await _secureStorage.read(key: key) ?? defaultValue;
   }
 }
