@@ -14,21 +14,27 @@ class SettingsView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Column(
-            children: [
-              ListTile(
-                leading: Icon(Icons.person),
-                title: Text('settings_manage_accounts'.tr),
-                onTap: () {
-                  Get.toNamed(Routes.MANAGE_ACCOUNTS);
-                },
-              ),
-              const Divider(),
-              ListTile(
-                leading: Icon(Icons.info),
-                title: Text('settings_about'.tr),
-                onTap: () {},
-              ),
-            ],
+          children: [
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('settings_manage_accounts'.tr),
+              onTap: () {
+                Get.toNamed(Routes.MANAGE_ACCOUNTS);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('settings_about'.tr),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationVersion: 'v1.0.0',
+                  applicationLegalese: '"Flutter Steem Wallet App" is a cross-platform mobile wallet for the Steem cryptocurrency. It is written in Dart using Flutter.',
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

@@ -47,5 +47,8 @@
   "manage_accounts_info_message": "소유권을 증명하거나 거래를 하려면 PRIVATE KEY 가 필요합니다.",
   "manage_accounts_warning_message": "신뢰할 수 있는 사람에게만 개인 키를 공유하십시오.",
   "manage_delete_account": "이 계정 삭제하기",
-  "manage_copied_clipboard": "클립보드에 키가 복사되었습니다!"
+  "manage_copied_clipboard": "클립보드에 키가 복사되었습니다!",
+  "manage_deleted": "삭제되었습니다!",
+  "manage_saved": "저장되었습니다!",
+  "manage_at_least_one_account_must_exist": "최소 1개 계정은 있어야 합니다."
 }

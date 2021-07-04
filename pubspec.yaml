@@ -27,8 +27,8 @@ dependencies:
   freezed: ^0.14.2
   async: ^2.7.0
   decimal: ^1.2.0
-  oktoast: ^3.0.0
   encrypt: ^5.0.0
+  loading_overlay: ^0.3.0
   steemdart_ecc:
     git:
       url: git://github.com/anpigon/steemdart_ecc.git
