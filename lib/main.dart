@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app/routes/app_pages.dart';
 import 'generated/locales.g.dart';
@@ -13,7 +14,12 @@ void main() async {
   await dotenv.load(fileName: '.env');
   await initServices();
 
-  runApp(MyApp());
+  await SentryFlutter.init(
+        (options) {
+      options.dsn = 'https://860fa99d629646339a8f0f5e87544f87@o894390.ingest.sentry.io/5840350';
+    },
+    appRunner: () => runApp(MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

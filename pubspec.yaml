@@ -29,6 +29,7 @@ dependencies:
   decimal: ^1.2.0
   encrypt: ^5.0.0
   loading_overlay: ^0.3.0
+  sentry_flutter: ^5.1.0
   steemdart_ecc:
     git:
       url: git://github.com/anpigon/steemdart_ecc.git
