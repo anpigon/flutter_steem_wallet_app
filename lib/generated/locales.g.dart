@@ -62,6 +62,7 @@ class LocaleKeys {
   static const manage_accounts_warning_message =
       'manage_accounts_warning_message';
   static const manage_delete_account = 'manage_delete_account';
+  static const manage_copied_clipboard = 'manage_copied_clipboard';
 }
 
 class Locales {
@@ -123,6 +124,7 @@ class Locales {
     'manage_accounts_info_message': '소유권을 증명하거나 거래를 하려면 PRIVATE KEY 가 필요합니다.',
     'manage_accounts_warning_message': '신뢰할 수 있는 사람에게만 개인 키를 공유하십시오.',
     'manage_delete_account': '이 계정 삭제하기',
+    'manage_copied_clipboard': '클립보드에 키가 복사되었습니다!',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -186,5 +188,6 @@ class Locales {
     'manage_accounts_warning_message':
         'Only share private keys with parties that you trust.',
     'manage_delete_account': 'DELETE THIS ACCOUNT',
+    'manage_copied_clipboard': 'Key copied to clipboard!',
   };
 }
