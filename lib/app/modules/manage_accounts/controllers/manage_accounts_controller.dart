@@ -3,6 +3,7 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/models/account.dart';
+import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -87,6 +88,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
 
   late final ScrollController scrollController;
   late final GlobalKey<FormState> formKey;
+  late final FocusNode privateKeyFocusNode;
   late final TextEditingController privateKeyController;
   String? publicKeyForValidate;
 
@@ -191,6 +193,18 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
     isLoading(false);
   }
 
+  Future<void> scanQRCode() async {
+    privateKeyFocusNode.unfocus();
+    privateKeyFocusNode.canRequestFocus = false;
+    Future.delayed(Duration(milliseconds: 100), () async {
+      final result = await Get.toNamed(Routes.QRSCAN);
+      if (result != null) {
+        privateKeyController.text = result;
+      }
+      privateKeyFocusNode.canRequestFocus = true;
+    });
+  }
+
   @override
   void onInit() {
     localDataService = LocalDataService.to;
@@ -199,6 +213,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
     formKey = GlobalKey<FormState>();
     privateKeyController = TextEditingController();
     scrollController = ScrollController();
+    privateKeyFocusNode = FocusNode();
 
     ever<String>(selectedAccount, loadAccount);
 
@@ -215,6 +230,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
   @override
   void onClose() {
     privateKeyController.dispose();
+    privateKeyFocusNode.dispose();
     scrollController.dispose();
 
     super.onClose();

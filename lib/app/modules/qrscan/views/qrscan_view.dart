@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../controllers/qrscan_controller.dart';
 
-class QrscanView extends GetView<QrscanController> {
+class QRScanView extends GetView<QrscanController> {
   @override
   Widget build(BuildContext context) {
     final scanArea = (Get.width < 400 || Get.height < 400) ? 150.0 : 300.0;

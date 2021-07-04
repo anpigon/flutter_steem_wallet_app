@@ -257,6 +257,7 @@ Future<bool> showAddKeyDialog(String title, String public) async {
                     children: [
                       TextFormField(
                         controller: controller.privateKeyController,
+                        focusNode: controller.privateKeyFocusNode,
                         validator: controller.privateKeyValidator,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -264,7 +265,7 @@ Future<bool> showAddKeyDialog(String title, String public) async {
                           prefixIcon: const Icon(Icons.vpn_key),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.qr_code_scanner),
-                            onPressed: null,
+                            onPressed: controller.scanQRCode,
                           ),
                         ),
                         obscureText: true,

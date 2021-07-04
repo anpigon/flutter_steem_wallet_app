@@ -58,7 +58,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.QRSCAN,
-      page: () => QrscanView(),
+      page: () => QRScanView(),
       binding: QrscanBinding(),
     ),
     GetPage(
