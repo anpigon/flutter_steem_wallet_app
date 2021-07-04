@@ -74,6 +74,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
   late final LocalDataService localDataService;
   late final VaultService vaultService;
 
+  final isLoading = false.obs;
   final selectedAccount = ''.obs;
 
   void onChangeAccount(String? username) {
@@ -84,6 +85,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
 
   PrivateKey privateKey = PrivateKey();
 
+  late final ScrollController scrollController;
   late final GlobalKey<FormState> formKey;
   late final TextEditingController privateKeyController;
   String? publicKeyForValidate;
@@ -153,6 +155,42 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
     await loadAccount();
   }
 
+  Future<void> deleteAccount(String username) async {
+    isLoading(true);
+
+    final accounts = await localDataService.getAccounts();
+    if (accounts.length == 1) {
+      await Fluttertoast.showToast(
+        msg: 'manage_at_least_one_account_must_exist'.tr,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } else {
+      final account = await localDataService.getAccount(username);
+      if (account != null) {
+        await vaultService.delete(account.postingPublicKey!);
+        await vaultService.delete(account.activePublicKey!);
+        await vaultService.delete(account.memoPublicKey!);
+        await localDataService.deleteAccount(username);
+
+        await Fluttertoast.showToast(
+          msg: 'manage_deleted'.tr,
+          gravity: ToastGravity.BOTTOM,
+        );
+
+        await scrollController.animateTo(
+          scrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.fastOutSlowIn,
+        );
+
+        selectedAccount(
+            accounts.firstWhere((val) => val.name != username).name);
+      }
+    }
+
+    isLoading(false);
+  }
+
   @override
   void onInit() {
     localDataService = LocalDataService.to;
@@ -160,6 +198,7 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
 
     formKey = GlobalKey<FormState>();
     privateKeyController = TextEditingController();
+    scrollController = ScrollController();
 
     ever<String>(selectedAccount, loadAccount);
 
@@ -176,6 +215,8 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
   @override
   void onClose() {
     privateKeyController.dispose();
+    scrollController.dispose();
+
     super.onClose();
   }
 }

@@ -49,5 +49,6 @@
   "manage_delete_account": "이 계정 삭제하기",
   "manage_copied_clipboard": "클립보드에 키가 복사되었습니다!",
   "manage_deleted": "삭제되었습니다!",
-  "manage_saved": "저장되었습니다!"
+  "manage_saved": "저장되었습니다!",
+  "manage_at_least_one_account_must_exist": "최소 1개 계정은 있어야 합니다."
 }

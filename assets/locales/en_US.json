@@ -49,5 +49,6 @@
   "manage_delete_account": "DELETE THIS ACCOUNT",
   "manage_copied_clipboard": "Key copied to clipboard!",
   "manage_deleted": "Deleted!",
-  "manage_saved": "Saved!"
+  "manage_saved": "Saved!",
+  "manage_at_least_one_account_must_exist": "At least one account must exist."
 }

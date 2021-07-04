@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Loader extends StatefulWidget {
-  final Color color;
+  final Color? color;
 
-  const Loader({Key? key, required this.color}) : super(key: key);
+  const Loader({Key? key, this.color}) : super(key: key);
 
   @override
   _LoaderState createState() => _LoaderState();
@@ -71,7 +72,7 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final dot = Dot(
       size: 15.0,
-      color: widget.color,
+      color: widget.color ?? Get.theme.accentColor,
     );
 
     return Container(

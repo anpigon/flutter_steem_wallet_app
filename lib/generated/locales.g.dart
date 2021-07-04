@@ -65,6 +65,8 @@ class LocaleKeys {
   static const manage_copied_clipboard = 'manage_copied_clipboard';
   static const manage_deleted = 'manage_deleted';
   static const manage_saved = 'manage_saved';
+  static const manage_at_least_one_account_must_exist =
+      'manage_at_least_one_account_must_exist';
 }
 
 class Locales {
@@ -129,6 +131,7 @@ class Locales {
     'manage_copied_clipboard': '클립보드에 키가 복사되었습니다!',
     'manage_deleted': '삭제되었습니다!',
     'manage_saved': '저장되었습니다!',
+    'manage_at_least_one_account_must_exist': '최소 1개 계정은 있어야 합니다.',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -195,5 +198,7 @@ class Locales {
     'manage_copied_clipboard': 'Key copied to clipboard!',
     'manage_deleted': 'Deleted!',
     'manage_saved': 'Saved!',
+    'manage_at_least_one_account_must_exist':
+        'At least one account must exist.',
   };
 }

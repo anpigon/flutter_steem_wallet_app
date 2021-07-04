@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/confirm_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/account_dropdown_buttons.dart';
+import 'package:flutter_steem_wallet_app/app/widgets/loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 import '../controllers/manage_accounts_controller.dart';
 
@@ -18,98 +20,108 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
         centerTitle: true,
       ),
       body: Obx(
-        () => SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 23.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: AccountDropdownButtons(
-                    items: AppController.to.accounts,
-                    value: controller.selectedAccount.value,
-                    onChanged: controller.onChangeAccount,
-                    color: Get.theme.accentColor,
-                    minWidth: 250,
+        () => LoadingOverlay(
+          isLoading: controller.isLoading.value,
+          progressIndicator: Loader(),
+          child: SingleChildScrollView(
+            controller: controller.scrollController,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 23.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: AccountDropdownButtons(
+                      items: AppController.to.accounts,
+                      value: controller.selectedAccount.value,
+                      onChanged: controller.onChangeAccount,
+                      color: Get.theme.accentColor,
+                      minWidth: 250,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 30,
-                    bottom: 20,
-                    left: 23,
-                    right: 23,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('manage_accounts_info_message'.tr),
-                      SizedBox(height: 23),
-                      Text(
-                        'manage_accounts_warning_message'.tr,
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                ),
-                controller.obx(
-                  (state) {
-                    return Column(
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 30,
+                      bottom: 20,
+                      left: 23,
+                      right: 23,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildKeyListItem(
-                          backgroundColor: Colors.grey.shade200,
-                          title: 'POSTING KEY',
-                          public: state!.postingPublicKey!,
-                          private: controller.privateKey.posting,
-                          onAddKey: () => showAddKeyDialog(
-                              'ADD POSTING KEY', state.postingPublicKey!),
-                          showKey: controller.showKey.posting.value,
-                          onShowKey: () => controller.showKey
-                              .toggle(controller.showKey.posting),
-                        ),
-                        buildKeyListItem(
-                          title: 'ACTIVE KEY',
-                          public: state.activePublicKey!,
-                          private: controller.privateKey.active,
-                          onAddKey: () => showAddKeyDialog(
-                              'ADD ACTIVE KEY', state.activePublicKey!),
-                          showKey: controller.showKey.active.value,
-                          onShowKey: () => controller.showKey
-                              .toggle(controller.showKey.active),
-                        ),
-                        buildKeyListItem(
-                          backgroundColor: Colors.grey.shade200,
-                          title: 'MEMO KEY',
-                          public: state.memoPublicKey!,
-                          private: controller.privateKey.memo,
-                          onAddKey: () => showAddKeyDialog(
-                              'ADD MEMO KEY', state.memoPublicKey!),
-                          showKey: controller.showKey.memo.value,
-                          onShowKey: () => controller.showKey
-                              .toggle(controller.showKey.memo),
+                        Text('manage_accounts_info_message'.tr),
+                        SizedBox(height: 23),
+                        Text(
+                          'manage_accounts_warning_message'.tr,
+                          style: TextStyle(color: Colors.red),
                         ),
                       ],
-                    );
-                  },
-                  onLoading: Container(
-                    height: Get.height,
-                  ),
-                ),
-                SizedBox(height: 23),
-                Center(
-                  // child: ElevatedButton.styleFrom(),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red.shade800,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 50),
                     ),
-                    child: Text('manage_delete_account'.tr),
                   ),
-                ),
-              ],
+                  controller.obx(
+                    (state) {
+                      return Column(
+                        children: [
+                          buildKeyListItem(
+                            backgroundColor: Colors.grey.shade200,
+                            title: 'POSTING KEY',
+                            public: state!.postingPublicKey!,
+                            private: controller.privateKey.posting,
+                            onAddKey: () => showAddKeyDialog(
+                                'ADD POSTING KEY', state.postingPublicKey!),
+                            showKey: controller.showKey.posting.value,
+                            onShowKey: () => controller.showKey
+                                .toggle(controller.showKey.posting),
+                          ),
+                          buildKeyListItem(
+                            title: 'ACTIVE KEY',
+                            public: state.activePublicKey!,
+                            private: controller.privateKey.active,
+                            onAddKey: () => showAddKeyDialog(
+                                'ADD ACTIVE KEY', state.activePublicKey!),
+                            showKey: controller.showKey.active.value,
+                            onShowKey: () => controller.showKey
+                                .toggle(controller.showKey.active),
+                          ),
+                          buildKeyListItem(
+                            backgroundColor: Colors.grey.shade200,
+                            title: 'MEMO KEY',
+                            public: state.memoPublicKey!,
+                            private: controller.privateKey.memo,
+                            onAddKey: () => showAddKeyDialog(
+                                'ADD MEMO KEY', state.memoPublicKey!),
+                            showKey: controller.showKey.memo.value,
+                            onShowKey: () => controller.showKey
+                                .toggle(controller.showKey.memo),
+                          ),
+                        ],
+                      );
+                    },
+                    onLoading: Container(
+                      height: Get.height,
+                    ),
+                  ),
+                  SizedBox(height: 23),
+                  Center(
+                    // child: ElevatedButton.styleFrom(),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (await showConfirmDialog('Are you really sure?')) {
+                          await controller.deleteAccount(
+                              controller.selectedAccount.value); // 계정 삭제하기
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red.shade800,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 50),
+                      ),
+                      child: Text('manage_delete_account'.tr),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
