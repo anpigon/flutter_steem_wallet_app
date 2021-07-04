@@ -1,9 +1,12 @@
 import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/models/account.dart';
 import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
 import 'package:get/get.dart';
+import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 class ShowKey {
   final posting = false.obs;
@@ -33,7 +36,7 @@ class PrivateKey {
     String? active,
     String? memo,
   }) {
-    _encryptKey = Key.fromSecureRandom(32);
+    _encryptKey = enc.Key.fromSecureRandom(32);
 
     _posting = encrypt(posting);
     _active = encrypt(active);
@@ -77,28 +80,70 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
 
   PrivateKey privateKey = PrivateKey();
 
+  late final GlobalKey<FormState> formKey;
+  late final TextEditingController privateKeyController;
+  String? publicKeyForValidate;
+
+  Future<void> loadAccount([String? username]) async {
+    change(null, status: RxStatus.loading());
+
+    showKey.init();
+
+    final account =
+        await localDataService.getAccount(username ?? selectedAccount.value);
+
+    if (account != null) {
+      privateKey = PrivateKey(
+        posting: await vaultService.read(account.postingPublicKey),
+        active: await vaultService.read(account.activePublicKey),
+        memo: await vaultService.read(account.memoPublicKey),
+      );
+    }
+
+    change(account, status: RxStatus.success());
+  }
+
+  String? privateKeyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Invalid privateKey!';
+    }
+    if (value.startsWith('STM')) {
+      return 'Invalid privateKey!';
+    }
+    if (value.length < 51 || !value.startsWith('5')) {
+      return 'Invalid privateKey!';
+    }
+
+    final key = privateKeyController.text.trim();
+    if (publicKeyForValidate !=
+        steem.SteemPrivateKey.fromString(key).toPublicKey().toString()) {
+      return 'Invalid privateKey!';
+    }
+
+    return null;
+  }
+
+  Future<bool> addKey() async {
+    if (!formKey.currentState!.validate()) {
+      return false;
+    }
+
+    final value = privateKeyController.text.trim();
+    final key = steem.SteemPrivateKey.fromString(value).toPublicKey().toString();
+    await vaultService.write(key, value);
+
+    return true;
+  }
+
   @override
   void onInit() {
     localDataService = LocalDataService.to;
     vaultService = VaultService.to;
 
-    ever<String>(selectedAccount, (val) async {
-      change(null, status: RxStatus.loading());
+    formKey = GlobalKey<FormState>();
+    privateKeyController = TextEditingController();
 
-      showKey.init();
-
-      final account = await localDataService.getAccount(val);
-
-      if (account != null) {
-        privateKey = PrivateKey(
-          posting: await vaultService.read(account.postingPublicKey),
-          active: await vaultService.read(account.activePublicKey),
-          memo: await vaultService.read(account.memoPublicKey),
-        );
-      }
-
-      change(account, status: RxStatus.success());
-    });
+    ever<String>(selectedAccount, loadAccount);
 
     selectedAccount(AppController.to.selectedAccount.value);
 
@@ -111,5 +156,8 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    privateKeyController.dispose();
+    super.onClose();
+  }
 }
