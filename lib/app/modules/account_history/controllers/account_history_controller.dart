@@ -1,6 +1,7 @@
 import 'package:flutter_steem_wallet_app/app/data/steem_provider.dart';
 import 'package:flutter_steem_wallet_app/app/models/account_history.dart';
 import 'package:get/get.dart';
+import 'package:sentry/sentry.dart';
 
 class AccountHistoryController extends GetxController
     with StateMixin<List<AccountHistory>> {
@@ -18,8 +19,9 @@ class AccountHistoryController extends GetxController
       } else {
         change(results, status: RxStatus.success());
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
       print(error);
+      await Sentry.captureException(error, stackTrace: stackTrace);
       change(null, status: RxStatus.error(error.toString()));
     }
 

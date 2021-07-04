@@ -15,8 +15,9 @@ void main() async {
   await initServices();
 
   await SentryFlutter.init(
-        (options) {
-      options.dsn = 'https://860fa99d629646339a8f0f5e87544f87@o894390.ingest.sentry.io/5840350';
+    (options) {
+      options.dsn =
+          'https://860fa99d629646339a8f0f5e87544f87@o894390.ingest.sentry.io/5840350';
     },
     appRunner: () => runApp(MyApp()),
   );
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.light,
     ));
+
     return GetMaterialApp(
       title: 'Flutter Steem Wallet',
       theme: ThemeData(

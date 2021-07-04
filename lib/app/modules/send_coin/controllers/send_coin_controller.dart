@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../logger.dart';
 import '../../../constants.dart';
@@ -126,8 +127,9 @@ class SendCoinController extends GetxController {
       }
     } on MessageException catch (error) {
       showErrorMessage(error.message);
-    } catch (error) {
+    } catch (error, stackTrace) {
       print(error.toString());
+      await Sentry.captureException(error, stackTrace: stackTrace);
       showErrorMessage(error.toString());
     } finally {
       loading(false);

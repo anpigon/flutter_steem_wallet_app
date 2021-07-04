@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 import '../../../exceptions/message_exception.dart';
@@ -168,7 +169,8 @@ class AddAccountController extends GetxController
       }
     } on MessageException catch (error) {
       showErrorMessage(error.message);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(error, stackTrace: stackTrace);
       showErrorMessage(error.toString());
     } finally {
       loading(false);

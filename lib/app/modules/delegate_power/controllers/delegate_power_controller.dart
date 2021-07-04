@@ -8,6 +8,7 @@ import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../logger.dart';
 
@@ -41,8 +42,9 @@ class DelegatePowerController extends GetxController {
       if (amount.isGreaterThan(steemBalance)) {
         return '잔액이 부족합니다.';
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
       logger.e(error);
+      Sentry.captureException(error, stackTrace: stackTrace);
       return 'Invalid amount!';
     }
     return null;
@@ -112,8 +114,9 @@ class DelegatePowerController extends GetxController {
       }
     } on MessageException catch (error) {
       showErrorMessage(error.message);
-    } catch (error) {
+    } catch (error, stackTrace) {
       print(error.toString());
+      await Sentry.captureException(error, stackTrace: stackTrace);
       showErrorMessage(error.toString());
     } finally {
       loading(false);
