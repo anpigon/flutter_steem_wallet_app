@@ -20,4 +20,8 @@ class VaultService extends GetxService {
     if (key == null) return null;
     return await _secureStorage.read(key: key) ?? defaultValue;
   }
+
+  Future<void> delete(String key) async {
+    await _secureStorage.delete(key: key);
+  }
 }

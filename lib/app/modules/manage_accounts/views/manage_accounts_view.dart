@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/views/dialog/confirm_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/account_dropdown_buttons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -58,7 +59,7 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
                       children: [
                         buildKeyListItem(
                           backgroundColor: Colors.grey.shade200,
-                          title: 'Posting Key',
+                          title: 'POSTING KEY',
                           public: state!.postingPublicKey!,
                           private: controller.privateKey.posting,
                           onAddKey: () => showAddKeyDialog(
@@ -68,7 +69,7 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
                               .toggle(controller.showKey.posting),
                         ),
                         buildKeyListItem(
-                          title: 'Active Key',
+                          title: 'ACTIVE KEY',
                           public: state.activePublicKey!,
                           private: controller.privateKey.active,
                           onAddKey: () => showAddKeyDialog(
@@ -79,7 +80,7 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
                         ),
                         buildKeyListItem(
                           backgroundColor: Colors.grey.shade200,
-                          title: 'Memo Key',
+                          title: 'MEMO KEY',
                           public: state.memoPublicKey!,
                           private: controller.privateKey.memo,
                           onAddKey: () => showAddKeyDialog(
@@ -117,13 +118,13 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
   }
 }
 
+/// 개인키 위젯 빌드
 Widget buildKeyListItem({
   required String title,
   required String public,
   String? private,
   bool? showKey = false,
   Color? backgroundColor,
-  VoidCallback? onDelete,
   VoidCallback? onAddKey,
   VoidCallback? onShowKey,
 }) {
@@ -156,30 +157,33 @@ Widget buildKeyListItem({
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title.toUpperCase(), style: titleStyle),
+            Text(title, style: titleStyle),
             if (private != null && private.isNotEmpty)
               IconButton(
                 icon: Icon(Icons.delete_forever, color: Colors.red),
-                onPressed: onDelete,
+                onPressed: () async {
+                  if (await showConfirmDialog('Are you sure?')) {
+                    await ManageAccountsController.to
+                        .deleteKey(public); // 개인 키 삭제하기
+                  }
+                },
               ),
           ],
         ),
-        Text('Public'.toUpperCase(), style: subtitleStyle),
+        const SizedBox(height: 5),
+        Text('PUBLIC', style: subtitleStyle),
         const SizedBox(height: 5),
         GestureDetector(
-          onTap: () => clipboardData(public),
+          onTap: () => clipboardData(public), // 클립보드에 복사
           child: Text(public, style: textStyle),
         ),
         const SizedBox(height: 20),
-        Text('Private'.toUpperCase(), style: subtitleStyle),
+        Text('PRIVATE', style: subtitleStyle),
         const SizedBox(height: 5),
         if (private == null || private.isEmpty)
           Container(
             width: double.infinity,
-            child: TextButton(
-              onPressed: onAddKey,
-              child: Text('Add Key'),
-            ),
+            child: TextButton(onPressed: onAddKey, child: Text('Add Key')),
           ),
         if (private != null && private.isNotEmpty)
           Row(
@@ -210,8 +214,10 @@ Widget buildKeyListItem({
   );
 }
 
+/// 키 등록 다이아로그 창
 Future<bool> showAddKeyDialog(String title, String public) async {
   final controller = Get.find<ManageAccountsController>();
+  controller.publicKeyForValidate = public;
 
   final result = await showDialog(
     context: Get.overlayContext!,

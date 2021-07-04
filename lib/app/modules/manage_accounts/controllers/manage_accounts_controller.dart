@@ -5,6 +5,7 @@ import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/models/account.dart';
 import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
@@ -67,6 +68,9 @@ class PrivateKey {
 }
 
 class ManageAccountsController extends GetxController with StateMixin<Account> {
+  static ManageAccountsController get to =>
+      Get.find<ManageAccountsController>();
+
   late final LocalDataService localDataService;
   late final VaultService vaultService;
 
@@ -115,6 +119,8 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
     }
 
     final key = privateKeyController.text.trim();
+    print(publicKeyForValidate);
+    print(steem.SteemPrivateKey.fromString(key).toPublicKey().toString());
     if (publicKeyForValidate !=
         steem.SteemPrivateKey.fromString(key).toPublicKey().toString()) {
       return 'Invalid privateKey!';
@@ -129,10 +135,22 @@ class ManageAccountsController extends GetxController with StateMixin<Account> {
     }
 
     final value = privateKeyController.text.trim();
-    final key = steem.SteemPrivateKey.fromString(value).toPublicKey().toString();
+    final key =
+        steem.SteemPrivateKey.fromString(value).toPublicKey().toString();
     await vaultService.write(key, value);
 
     return true;
+  }
+
+  Future<void> deleteKey(String public) async {
+    await vaultService.delete(public);
+
+    await Fluttertoast.showToast(
+      msg: 'manage_deleted'.tr,
+      gravity: ToastGravity.BOTTOM,
+    );
+
+    await loadAccount();
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:oktoast/oktoast.dart';
 
 class UIUtil {
   static bool smallScreen() {
@@ -13,38 +12,38 @@ class UIUtil {
   }
 
   static void showSnackbar(String content, BuildContext context) {
-    showToastWidget(
-      Align(
-        alignment: Alignment.topCenter,
-        child: Container(
-          margin: EdgeInsets.symmetric(
-              vertical: Get.size.height * 0.05,
-              horizontal: 14),
-          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          width: Get.size.width - 30,
-          decoration: BoxDecoration(
-            color: Get.theme.snackBarTheme.backgroundColor,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(0, 20),
-                blurRadius: 40,
-                spreadRadius: -5,
-              ),
-            ],
-          ),
-          child: Text(
-            content,
-            style: Get.theme.snackBarTheme.contentTextStyle,
-            textAlign: TextAlign.start,
-          ),
-        ),
-      ),
-      dismissOtherToast: true,
-      duration: Duration(milliseconds: 2000),
-      context: context,
-    );
+    // showToastWidget(
+    //   Align(
+    //     alignment: Alignment.topCenter,
+    //     child: Container(
+    //       margin: EdgeInsets.symmetric(
+    //           vertical: Get.size.height * 0.05,
+    //           horizontal: 14),
+    //       padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+    //       width: Get.size.width - 30,
+    //       decoration: BoxDecoration(
+    //         color: Get.theme.snackBarTheme.backgroundColor,
+    //         borderRadius: BorderRadius.circular(10),
+    //         boxShadow: [
+    //           BoxShadow(
+    //             color: Colors.black.withOpacity(0.2),
+    //             offset: Offset(0, 20),
+    //             blurRadius: 40,
+    //             spreadRadius: -5,
+    //           ),
+    //         ],
+    //       ),
+    //       child: Text(
+    //         content,
+    //         style: Get.theme.snackBarTheme.contentTextStyle,
+    //         textAlign: TextAlign.start,
+    //       ),
+    //     ),
+    //   ),
+    //   dismissOtherToast: true,
+    //   duration: Duration(milliseconds: 2000),
+    //   context: context,
+    // );
   }
 
   static String formatDateStr(DateTime dt) {
