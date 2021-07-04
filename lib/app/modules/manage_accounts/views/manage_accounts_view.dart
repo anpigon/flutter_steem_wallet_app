@@ -263,7 +263,7 @@ Future<bool> showAddKeyDialog(String title, String public) async {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (true == await controller.addKey()) {
+                            if (await controller.addKey()) {
                               Get.back(result: true);
                             }
                           },
@@ -285,6 +285,10 @@ Future<bool> showAddKeyDialog(String title, String public) async {
   controller.publicKeyForValidate = null;
 
   if (result) {
+    await Fluttertoast.showToast(
+      msg: 'manage_saved'.tr,
+      gravity: ToastGravity.BOTTOM,
+    );
     await controller.loadAccount();
   }
 

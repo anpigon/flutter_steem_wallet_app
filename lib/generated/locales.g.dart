@@ -64,6 +64,7 @@ class LocaleKeys {
   static const manage_delete_account = 'manage_delete_account';
   static const manage_copied_clipboard = 'manage_copied_clipboard';
   static const manage_deleted = 'manage_deleted';
+  static const manage_saved = 'manage_saved';
 }
 
 class Locales {
@@ -127,6 +128,7 @@ class Locales {
     'manage_delete_account': '이 계정 삭제하기',
     'manage_copied_clipboard': '클립보드에 키가 복사되었습니다!',
     'manage_deleted': '삭제되었습니다!',
+    'manage_saved': '저장되었습니다!',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -192,5 +194,6 @@ class Locales {
     'manage_delete_account': 'DELETE THIS ACCOUNT',
     'manage_copied_clipboard': 'Key copied to clipboard!',
     'manage_deleted': 'Deleted!',
+    'manage_saved': 'Saved!',
   };
 }
