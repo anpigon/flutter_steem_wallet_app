@@ -58,8 +58,9 @@ class SendCoinController extends GetxController {
       if (amount.isGreaterThan(balance)) {
         return '잔액이 부족합니다.';
       }
-    } catch (error) {
-      logger.e(error);
+    } catch (error, stackTrace) {
+      Log.e(error, stackTrace);
+      Sentry.captureException(error, stackTrace: stackTrace);
       return 'Invalid amount!';
     }
     return null;
@@ -127,7 +128,7 @@ class SendCoinController extends GetxController {
     } on MessageException catch (error) {
       UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
-      logger.e(stackTrace);
+      Log.e(error, stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
       UIUtil.showErrorMessage(error.toString());
     } finally {

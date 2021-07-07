@@ -36,7 +36,7 @@ class DelegatePowerController extends GetxController {
     }
     try {
       final amount = double.parse(value);
-      if (amount.isLowerThan(0.001)) {
+      if (amount.isInfinite) {
         return 'Invalid amount!';
       }
       final steemBalance = AppController.to.wallet().steemBalance;
@@ -44,7 +44,7 @@ class DelegatePowerController extends GetxController {
         return '잔액이 부족합니다.';
       }
     } catch (error, stackTrace) {
-      logger.e(error);
+      Log.e(error, stackTrace);
       Sentry.captureException(error, stackTrace: stackTrace);
       return 'Invalid amount!';
     }
@@ -72,16 +72,10 @@ class DelegatePowerController extends GetxController {
         throw MessageException('Account not found');
       }
 
-      final globalProperties =
-          await SteemService.to.getDynamicGlobalProperties();
       final amount = double.parse(amountController.text.trim());
-      final vestingShares = NumUtil.calculateSteemToVest(
-        amount,
-        globalProperties.total_vesting_shares,
-        globalProperties.total_vesting_fund_steem,
-      );
+      final vestingShares = await SteemService.to.calculateSteemToVest(amount);
 
-      final _delegateVestingShares = DelegateVestingShares(
+      final delegateVestingShares = DelegateVestingShares(
         delegatee: _ownerUsername,
         delegator: receivingUsername,
         vesting_shares: vestingShares,
@@ -90,7 +84,7 @@ class DelegatePowerController extends GetxController {
       // 서명 데이터 확인 다이얼로그
       final result = await SignatureConfirmDialog.show(
         SignatureType.delegateVestingShares,
-        _delegateVestingShares,
+        delegateVestingShares,
       );
 
       // 서명 및 전송
@@ -98,23 +92,23 @@ class DelegatePowerController extends GetxController {
         final ownerAccount =
             await LocalDataService.to.getAccount(_ownerUsername);
         
-        final _activeKey =
+        final privateKey =
             await VaultService.to.read(ownerAccount.activePublicKey!);
-        if (_activeKey == null) {
-          throw MessageException('서명에는 액티브 키가 필요합니다.');
+        if (privateKey == null) {
+          throw MessageException('임대에는 액티브 키가 필요합니다.');
         }
 
         // 서명 및 송금
-        await SteemService.to.delegate(_delegateVestingShares, _activeKey);
+        await SteemService.to.delegate(delegateVestingShares, privateKey);
         await AppController.to.reload();
 
-        UIUtil.showSuccessMessage('파워업에 성공하였습니다.');
+        UIUtil.showSuccessMessage('임대에 성공하였습니다.');
         Get.back(result: true);
       }
     } on MessageException catch (error) {
       UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
-      logger.e(error, stackTrace);
+      Log.e(error, stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
       UIUtil.showErrorMessage(error.toString());
     } finally {
