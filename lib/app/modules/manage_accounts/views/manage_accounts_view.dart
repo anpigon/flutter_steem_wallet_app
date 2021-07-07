@@ -231,10 +231,7 @@ Future<bool> showAddKeyDialog(String title, String public) async {
   final controller = Get.find<ManageAccountsController>();
   controller.publicKeyForValidate = public;
 
-  final result = await showDialog(
-    context: Get.overlayContext!,
-    builder: (ctx) {
-      return Dialog(
+  final result = await Get.dialog(Dialog(
         insetPadding: EdgeInsets.all(23.0),
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
@@ -290,8 +287,7 @@ Future<bool> showAddKeyDialog(String title, String public) async {
             ),
           ),
         ),
-      );
-    },
+      ),
   );
 
   controller.privateKeyController.clear();
