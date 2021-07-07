@@ -4,10 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/confirm_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/account_dropdown_buttons.dart';
-import 'package:flutter_steem_wallet_app/app/widgets/loader.dart';
+import 'package:flutter_steem_wallet_app/app/views/views/loading_container.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 
 import '../controllers/manage_accounts_controller.dart';
 
@@ -20,9 +19,8 @@ class ManageAccountsView extends GetView<ManageAccountsController> {
         centerTitle: true,
       ),
       body: Obx(
-        () => LoadingOverlay(
+        () => LoadingContainer(
           isLoading: controller.isLoading.value,
-          progressIndicator: Loader(),
           child: SingleChildScrollView(
             controller: controller.scrollController,
             child: Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/views/views/loading_container.dart';
 import 'package:flutter_steem_wallet_app/app/widgets/loader.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +13,9 @@ class HomeView extends GetView<HomeController> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(statusBarColor: Get.theme.primaryColorDark),
       child: Obx(
-        () => Stack(
-          children: [
+        () => LoadingContainer(
+          isLoading: AppController.to.loading.value,
+          child: 
             Scaffold(
               body: controller.currentPage,
               bottomNavigationBar: BottomNavigationBar(
@@ -40,16 +42,6 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
             ),
-            if(AppController.to.loading.value) Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-              ),
-              child: Center(
-                // child: CircularProgressIndicator(),
-                child: Loader(color: Get.theme.accentColor),
-              ),
-            ),
-          ],
         ),
       ),
     );
