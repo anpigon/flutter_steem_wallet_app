@@ -20,11 +20,12 @@ class LocalDataService extends GetxService {
     return <Account>[];
   }
 
-  Future<Account?> getAccount(String username) async {
-    if (accountsBox.isNotEmpty) {
-      return accountsBox.get(username);
+  Future<Account> getAccount(String username) async {
+    final account = accountsBox.get(username);
+    if (account == null) {
+      throw MessageException('Account not found in local db.');
     }
-    return null;
+    return account;
   }
 
   Future<void> deleteAccount(String username) async {

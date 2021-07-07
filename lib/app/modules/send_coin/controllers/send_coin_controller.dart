@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -18,25 +19,23 @@ class SendCoinController extends GetxController {
   late final TextEditingController amountController;
   late final TextEditingController memoController;
 
-  late final _ownerUsername;
+  late final String _ownerUsername;
   final symbol = Symbols.STEEM.obs;
   final loading = false.obs;
 
-  late final AppController appController;
-
   /// 잔액 조회
   double get balance {
-    switch (symbol()) {
+    switch (symbol.value) {
       case Symbols.STEEM:
-        return appController.wallet().steemBalance;
+        return AppController.to.wallet().steemBalance;
       case Symbols.SBD:
-        return appController.wallet().sbdBalance;
+        return AppController.to.wallet().sbdBalance;
       default:
         return 0;
     }
   }
 
-  /// 유효성 체크
+  /// username 유효성 체크
   String? usernameValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 3) {
       return 'Invalid username!';
@@ -44,6 +43,7 @@ class SendCoinController extends GetxController {
     return null;
   }
 
+  /// amount 유효성 체크
   String? amountValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Invalid amount!';
@@ -71,104 +71,80 @@ class SendCoinController extends GetxController {
     }
 
     // 소프트 키보드 숨김
-    final currentFocus = FocusScope.of(Get.overlayContext!);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-      currentFocus.requestFocus(FocusNode());
+    if (Get.focusScope?.hasPrimaryFocus == true) {
+      Get.focusScope?.unfocus();
     }
 
     loading(true);
     try {
       // account 존재하는지 여부 체크
-      final receivingUsername = usernameController.text.trim();
-      final data = await SteemService.to.getAccount(receivingUsername);
+      final recipientUsername = usernameController.text.trim();
+      final data = await SteemService.to.getAccount(recipientUsername);
       if (data == null) {
         throw MessageException('Account not found');
       }
 
-      // 서명 데이터 확인 다이얼로그
+      // 서명 데이터 생성
       final amount = double.parse(amountController.text.trim());
       final memo = memoController.text.trim();
-      final _transferData = Transfer(
+      final transferData = Transfer(
         from: _ownerUsername,
-        to: receivingUsername,
+        to: recipientUsername,
         amount: amount,
         symbol: symbol.value,
         memo: memo,
       );
+
+      // 서명 동의 확인 다이얼로그
       final result = await SignatureConfirmDialog.show(
         SignatureType.transfer,
-        _transferData,
+        transferData,
       );
 
       // 서명 및 전송
       if (result == true) {
         final ownerAccount =
             await LocalDataService.to.getAccount(_ownerUsername);
-        if (ownerAccount == null) {
-          throw MessageException('Account not found in local db.');
-        }
 
         // TODO: PIN 번호 입력
 
-        final _activeKey =
+        final privateKey =
             await VaultService.to.read(ownerAccount.activePublicKey!);
-        if (_activeKey == null) {
-          throw MessageException('액티브 키가 필요합니다.');
+        if (privateKey == null) {
+          throw MessageException('송금에는 액티브 키가 필요합니다.');
         }
 
         // 서명 및 송금
-        await SteemService.to.transfer(_transferData, _activeKey);
-        await appController.reload();
+        await SteemService.to.transfer(transferData, privateKey);
+        await AppController.to.reload(); // 잔액 정보 업데이트
 
         logger.d('success');
-        showSuccessMessage('송금에 성공하였습니다.');
+        UIUtil.showSuccessMessage('송금에 성공하였습니다.');
         Get.back(result: true);
       }
     } on MessageException catch (error) {
-      showErrorMessage(error.message);
+      UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
-      print(error.toString());
+      logger.e(stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
-      showErrorMessage(error.toString());
+      UIUtil.showErrorMessage(error.toString());
     } finally {
       loading(false);
     }
   }
 
-  void showErrorMessage(String message) {
-    Get.snackbar(
-      'ERROR',
-      message,
-      backgroundColor: Get.theme.errorColor,
-      colorText: Colors.white,
-    );
-  }
-
-  void showSuccessMessage(String message) {
-    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green.shade700,
-        duration: Duration(milliseconds: 2000),
-      ),
-    );
-  }
-
   @override
   void onInit() {
-    final arguments = Get.arguments;
-    print('arguments: $arguments');
-
+    // init
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
     amountController = TextEditingController();
     memoController = TextEditingController();
 
-    appController = AppController.to;
-
-    _ownerUsername = arguments['account'];
-    symbol(arguments['symbol']);
+    // set arguments
+    final arguments = Get.arguments;
+    _ownerUsername = arguments['account'].toString();
+    symbol(arguments['symbol'].toString());
 
     super.onInit();
   }

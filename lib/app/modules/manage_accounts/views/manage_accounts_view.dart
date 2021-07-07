@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/confirm_dialog.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/account_dropdown_buttons.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/loading_container.dart';
@@ -149,10 +150,8 @@ Widget buildKeyListItem({
 
   void clipboardData(String text) {
     Clipboard.setData(ClipboardData(text: text)).then((value) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-        msg: 'manage_copied_clipboard'.tr,
-        toastLength: Toast.LENGTH_SHORT,
+      UIUtil.showToast(
+        'manage_copied_clipboard'.tr,
         gravity: ToastGravity.CENTER,
       );
     });

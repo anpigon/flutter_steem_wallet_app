@@ -35,7 +35,7 @@ class SignatureConfirmDialog extends GetView {
         children: [
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               color: Colors.grey.shade50,
@@ -51,7 +51,7 @@ class SignatureConfirmDialog extends GetView {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             '서명 내용을 확인해주세요.\n실행 후에는 취소할 수 없습니다.',
             style: Get.theme.textTheme.caption,

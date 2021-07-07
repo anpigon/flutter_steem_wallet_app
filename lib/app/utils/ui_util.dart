@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -11,40 +12,46 @@ class UIUtil {
     }
   }
 
-  static void showSnackbar(String content, BuildContext context) {
-    // showToastWidget(
-    //   Align(
-    //     alignment: Alignment.topCenter,
-    //     child: Container(
-    //       margin: EdgeInsets.symmetric(
-    //           vertical: Get.size.height * 0.05,
-    //           horizontal: 14),
-    //       padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-    //       width: Get.size.width - 30,
-    //       decoration: BoxDecoration(
-    //         color: Get.theme.snackBarTheme.backgroundColor,
-    //         borderRadius: BorderRadius.circular(10),
-    //         boxShadow: [
-    //           BoxShadow(
-    //             color: Colors.black.withOpacity(0.2),
-    //             offset: Offset(0, 20),
-    //             blurRadius: 40,
-    //             spreadRadius: -5,
-    //           ),
-    //         ],
-    //       ),
-    //       child: Text(
-    //         content,
-    //         style: Get.theme.snackBarTheme.contentTextStyle,
-    //         textAlign: TextAlign.start,
-    //       ),
-    //     ),
-    //   ),
-    //   dismissOtherToast: true,
-    //   duration: Duration(milliseconds: 2000),
-    //   context: context,
-    // );
+  static void showErrorMessage(String message) {
+    Get.snackbar(
+      'ERROR',
+      message,
+      backgroundColor: Get.theme.errorColor,
+      colorText: Colors.white,
+    );
   }
+
+  static void showSuccessMessage(String message) {
+    Get.snackbar(
+      'SUCCESS',
+      message,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+  }
+
+  static void showSnackBar(String message, {Color? backgroundColor, Duration? duration,}) {
+    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+        duration: duration ?? Duration(milliseconds: 2000),
+      ),
+    );
+  }
+
+  static void showToast(String message, {ToastGravity? gravity, Toast? toastLength,}) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: toastLength ?? Toast.LENGTH_SHORT,
+      gravity: gravity ?? ToastGravity.BOTTOM,
+    );
+  }
+
+  
+
+  
 
   static String formatDateStr(DateTime dt) {
     final currentYear = DateTime.now().toLocal().year;
@@ -66,6 +73,4 @@ class UIUtil {
     df = DateFormat('MMM dd, yyyy • HH:mm:ss');
     return df.format(localTime) + '\n($secondsSinceEpoch)';
   }
-
-
 }
