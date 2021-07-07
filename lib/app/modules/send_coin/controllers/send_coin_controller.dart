@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/routes/app_pages.dart';
 import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -18,6 +19,7 @@ class SendCoinController extends GetxController {
   late final TextEditingController usernameController;
   late final TextEditingController amountController;
   late final TextEditingController memoController;
+  late final FocusNode memoFocusNode;
 
   late final String _ownerUsername;
   final symbol = Symbols.STEEM.obs;
@@ -133,6 +135,18 @@ class SendCoinController extends GetxController {
     }
   }
 
+  Future<void> scanQRCode() async {
+    memoFocusNode.canRequestFocus = false;
+    Get.focusScope?.unfocus();
+    Future.delayed(Duration(milliseconds: 100), () async {
+      final result = await Get.toNamed(Routes.QRSCAN);
+      if (result != null) {
+        memoController.text = result;
+      }
+      memoFocusNode.canRequestFocus = true;
+    });
+  }
+
   @override
   void onInit() {
     // init
@@ -140,6 +154,7 @@ class SendCoinController extends GetxController {
     usernameController = TextEditingController();
     amountController = TextEditingController();
     memoController = TextEditingController();
+    memoFocusNode = FocusNode();
 
     // set arguments
     final arguments = Get.arguments;
@@ -159,6 +174,7 @@ class SendCoinController extends GetxController {
     usernameController.dispose();
     amountController.dispose();
     memoController.dispose();
+    memoFocusNode.dispose();
     super.onClose();
   }
 }

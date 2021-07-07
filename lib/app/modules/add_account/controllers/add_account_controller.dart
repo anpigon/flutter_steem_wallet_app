@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
+import '../../../../logger.dart';
 import '../../../exceptions/message_exception.dart';
 import '../../../routes/app_pages.dart';
 import '../../../models/account.dart';
@@ -168,21 +170,13 @@ class AddAccountController extends GetxController
         Get.back(result: username);
       }
     } on MessageException catch (error) {
-      showErrorMessage(error.message);
+      UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
+      logger.e(stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
-      showErrorMessage(error.toString());
+      UIUtil.showErrorMessage(error.toString());
     } finally {
       loading(false);
     }
-  }
-
-  void showErrorMessage(String message) {
-    Get.snackbar(
-      'ERROR',
-      message,
-      backgroundColor: Get.theme.errorColor,
-      colorText: Colors.white,
-    );
   }
 }

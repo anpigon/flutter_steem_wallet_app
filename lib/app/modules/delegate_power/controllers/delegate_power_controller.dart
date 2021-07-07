@@ -6,6 +6,7 @@ import 'package:flutter_steem_wallet_app/app/services/local_data_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/steem_service.dart';
 import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -71,11 +72,12 @@ class DelegatePowerController extends GetxController {
         throw MessageException('Account not found');
       }
 
-      final globalProperties = await SteemService.to.getDynamicGlobalProperties();
+      final globalProperties =
+          await SteemService.to.getDynamicGlobalProperties();
       final amount = double.parse(amountController.text.trim());
       final vestingShares = NumUtil.calculateSteemToVest(
-        amount, 
-        globalProperties.total_vesting_shares, 
+        amount,
+        globalProperties.total_vesting_shares,
         globalProperties.total_vesting_fund_steem,
       );
 
@@ -95,10 +97,7 @@ class DelegatePowerController extends GetxController {
       if (result == true) {
         final ownerAccount =
             await LocalDataService.to.getAccount(_ownerUsername);
-        if (ownerAccount == null) {
-          throw MessageException('Account not found in local db.');
-        }
-
+        
         final _activeKey =
             await VaultService.to.read(ownerAccount.activePublicKey!);
         if (_activeKey == null) {
@@ -109,49 +108,30 @@ class DelegatePowerController extends GetxController {
         await SteemService.to.delegate(_delegateVestingShares, _activeKey);
         await AppController.to.reload();
 
-        showSuccessMessage('파워업에 성공하였습니다.');
+        UIUtil.showSuccessMessage('파워업에 성공하였습니다.');
         Get.back(result: true);
       }
     } on MessageException catch (error) {
-      showErrorMessage(error.message);
+      UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
-      print(error.toString());
+      logger.e(error, stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
-      showErrorMessage(error.toString());
+      UIUtil.showErrorMessage(error.toString());
     } finally {
       loading(false);
     }
   }
 
-  void showErrorMessage(String message) {
-    Get.snackbar(
-      'ERROR',
-      message,
-      backgroundColor: Get.theme.errorColor,
-      colorText: Colors.white,
-    );
-  }
-
-  void showSuccessMessage(String message) {
-    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green.shade700,
-        duration: Duration(milliseconds: 2000),
-      ),
-    );
-  }
-
   @override
   void onInit() {
-    final arguments = Get.arguments;
 
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
     amountController = TextEditingController();
     usernameFocusNode = FocusNode();
 
-    _ownerUsername = arguments['account'];
+    final arguments = Get.arguments;
+    _ownerUsername = arguments['account'].toString();
 
     super.onInit();
   }

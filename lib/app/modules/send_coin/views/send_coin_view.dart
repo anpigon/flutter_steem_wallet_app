@@ -75,8 +75,13 @@ class SendCoinView extends GetView<SendCoinController> {
                             labelText: 'Memo',
                             hintText: 'transfer_hint_memo'.tr,
                             helperText: 'transfer_this_memo_is_public'.tr,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.qr_code_scanner),
+                              onPressed: controller.scanQRCode,
+                            ),
                           ),
                           controller: controller.memoController,
+                          focusNode: controller.memoFocusNode,
                         ),
                       ],
                     ),

@@ -6,8 +6,6 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   cupertino_icons: ^1.0.3
   get: ^4.1.4
   hive: ^2.0.4
@@ -29,6 +27,8 @@ dependencies:
   encrypt: ^5.0.0
   loading_overlay: ^0.3.0
   sentry_flutter: ^5.1.0
+  flutter:
+    sdk: flutter
   steemdart_ecc:
     git:
       url: git://github.com/anpigon/steemdart_ecc.git
