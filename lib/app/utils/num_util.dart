@@ -6,16 +6,22 @@ import 'package:intl/intl.dart';
 class NumUtil {
   static const int maxDecimalDigits = 3;
   static final priceFormat = NumberFormat('###,###,###,###.##', 'en_US');
-  static final amountFormat = NumberFormat('###,###,###,##0.0##', 'en_US');
+  static final currencyFormat = NumberFormat('###,###,###,##0.0##', 'en_US');
+  static final amountFormat = NumberFormat('##0.0##', 'en_US');
 
   static String toFixedTrunc(num value, [int digits = 0]) {
     final fixed = math.pow(10, digits);
     return ((value * fixed).floor() / fixed).toStringAsFixed(digits);
   }
 
-  static String toCurrencyFormat(num value) {
-    final fixed = math.pow(10, maxDecimalDigits);
+  static String toAmountFormat(num value, [int digits = maxDecimalDigits]) {
+    final fixed = math.pow(10, digits);
     return amountFormat.format((value * fixed).floor() / fixed);
+  }
+
+  static String toCurrencyFormat(num value, [int digits = maxDecimalDigits]) {
+    final fixed = math.pow(10, digits);
+    return currencyFormat.format((value * fixed).floor() / fixed);
   }
 
   static String toPriceFormat(num value) {

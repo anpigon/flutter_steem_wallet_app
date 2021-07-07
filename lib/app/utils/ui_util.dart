@@ -22,15 +22,23 @@ class UIUtil {
   }
 
   static void showSuccessMessage(String message) {
-    Get.snackbar(
-      'SUCCESS',
+    // Get.snackbar(
+    //   'SUCCESS',
+    //   message,
+    //   backgroundColor: Colors.green,
+    //   colorText: Colors.white,
+    // );
+    showSnackBar(
       message,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
+      backgroundColor: Colors.green.shade700,
     );
   }
 
-  static void showSnackBar(String message, {Color? backgroundColor, Duration? duration,}) {
+  static void showSnackBar(
+    String message, {
+    Color? backgroundColor,
+    Duration? duration,
+  }) {
     ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -40,7 +48,11 @@ class UIUtil {
     );
   }
 
-  static void showToast(String message, {ToastGravity? gravity, Toast? toastLength,}) {
+  static void showToast(
+    String message, {
+    ToastGravity? gravity,
+    Toast? toastLength,
+  }) {
     Fluttertoast.cancel();
     Fluttertoast.showToast(
       msg: message,
@@ -48,10 +60,6 @@ class UIUtil {
       gravity: gravity ?? ToastGravity.BOTTOM,
     );
   }
-
-  
-
-  
 
   static String formatDateStr(DateTime dt) {
     final currentYear = DateTime.now().toLocal().year;

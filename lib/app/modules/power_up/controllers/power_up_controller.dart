@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/controllers/app_controller.dart';
+import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:flutter_steem_wallet_app/app/views/dialog/signature_confirm_dialog.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../logger.dart';
@@ -18,15 +20,13 @@ class PowerUpController extends GetxController {
   late final TextEditingController amountController;
   late final FocusNode usernameFocusNode;
 
-  final amountFormat = NumberFormat('##0.0##', 'en_US');
+  
 
-  late final _ownerUsername;
-  late final loading = false.obs;
-  late final enabledEditUsername = false.obs;
+  late final String _ownerUsername;
+  final loading = false.obs;
+  final enabledEditUsername = false.obs;
 
-  late final AppController appController;
-
-  /// 유효성 체크
+  /// username 유효성 체크
   String? usernameValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 3) {
       return 'Invalid username!';
@@ -34,6 +34,7 @@ class PowerUpController extends GetxController {
     return null;
   }
 
+  /// amount 유효성 체크
   String? amountValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Invalid amount!';
@@ -43,20 +44,21 @@ class PowerUpController extends GetxController {
       if (amount.isLowerThan(0.001)) {
         return 'Invalid amount!';
       }
-      final steemBalance = appController.wallet().steemBalance;
+      final steemBalance = AppController.to.wallet().steemBalance;
       if (amount.isGreaterThan(steemBalance)) {
         return '잔액이 부족합니다.';
       }
-    } catch (error) {
-      logger.e(error);
+    } catch (error, stackTrace) {
+      logger.e(stackTrace);
+      Sentry.captureException(error, stackTrace: stackTrace);
       return 'Invalid amount!';
     }
     return null;
   }
 
   void setRatioAmount(double ratio) {
-    final steemBalance = appController.wallet().steemBalance;
-    amountController.text = amountFormat.format(steemBalance * ratio);
+    final steemBalance = AppController.to.wallet().steemBalance;
+    amountController.text = NumUtil.toAmountFormat(max(steemBalance * ratio, 0.001));
   }
 
   Future<void> submit() async {
@@ -74,87 +76,69 @@ class PowerUpController extends GetxController {
     loading(true);
     try {
       // account 존재하는지 여부 체크
-      final receivingUsername = usernameController.text.trim();
-      final data = await SteemService.to.getAccount(receivingUsername);
+      final recipientUsername = usernameController.text.trim();
+      final data = await SteemService.to.getAccount(recipientUsername);
       if (data == null) {
         throw MessageException('Account not found');
       }
 
-      // 서명 데이터 확인 다이얼로그
+      // 서명 데이터 생성
       final amount = double.parse(amountController.text.trim());
-      final _transferToVesting = TransferToVesting(
+      final transferToVesting = TransferToVesting(
         from: _ownerUsername,
-        to: receivingUsername,
+        to: recipientUsername,
         amount: amount,
       );
+
+      // 서명 동의 확인 다이얼로그
       final result = await SignatureConfirmDialog.show(
         SignatureType.transferToVesting,
-        _transferToVesting,
+        transferToVesting,
       );
 
       // 서명 및 전송
       if (result == true) {
-        final ownerAccount = await LocalDataService.to.getAccount(_ownerUsername);
-        if (ownerAccount == null) {
-          throw MessageException('Account not found in local db.');
-        }
+        final ownerAccount =
+            await LocalDataService.to.getAccount(_ownerUsername);
 
-        final _activeKey =
+        // TODO: PIN 번호 입력
+
+        final privateKey =
             await VaultService.to.read(ownerAccount.activePublicKey!);
-        if (_activeKey == null) {
-          throw MessageException('액티브 키가 필요합니다.');
+        if (privateKey == null) {
+          throw MessageException('파워업에는 액티브 키가 필요합니다.');
         }
 
         // 서명 및 송금
-        await SteemService.to.powerUp(_transferToVesting, _activeKey);
-        await appController.reload();
+        await SteemService.to.powerUp(transferToVesting, privateKey);
+        await AppController.to.reload();
 
-        showSuccessMessage('파워업에 성공하였습니다.');
+        UIUtil.showSuccessMessage('파워업에 성공하였습니다.');
         Get.back(result: true);
       }
     } on MessageException catch (error) {
-      showErrorMessage(error.message);
+      UIUtil.showErrorMessage(error.message);
     } catch (error, stackTrace) {
-      print(error.toString());
+      logger.e(stackTrace);
       await Sentry.captureException(error, stackTrace: stackTrace);
-      showErrorMessage(error.toString());
+      UIUtil.showErrorMessage(error.toString());
     } finally {
       loading(false);
     }
   }
 
-  void showErrorMessage(String message) {
-    Get.snackbar(
-      'ERROR',
-      message,
-      backgroundColor: Get.theme.errorColor,
-      colorText: Colors.white,
-    );
-  }
-
-  void showSuccessMessage(String message) {
-    ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green.shade700,
-        duration: Duration(milliseconds: 2000),
-      ),
-    );
-  }
-
   @override
   void onInit() {
-    final arguments = Get.arguments;
-
-    appController = AppController.to;
-
+    // init
     formKey = GlobalKey<FormState>();
     usernameController = TextEditingController();
     amountController = TextEditingController();
     usernameFocusNode = FocusNode();
 
-    _ownerUsername = arguments['account'];
-    // usernameController.text = _ownerUsername;
+    // set arguments
+    final arguments = Get.arguments;
+    _ownerUsername = arguments['account'].toString();
+    usernameController.text = _ownerUsername;
 
     super.onInit();
   }
@@ -169,6 +153,7 @@ class PowerUpController extends GetxController {
     usernameController.dispose();
     amountController.dispose();
     usernameFocusNode.dispose();
+
     super.onClose();
   }
 }

@@ -66,6 +66,11 @@ class SteemService extends GetxService {
     return await client.database.getDynamicGlobalProperties();
   }
 
+  Future<double> calculateSteemToVest(dynamic amount) async {
+    final props = await SteemService.to.getDynamicGlobalProperties();
+    return NumUtil.calculateSteemToVest(amount, props.total_vesting_shares, props.total_vesting_fund_steem);
+  }
+
   Future<Map<String, dynamic>> transfer(Transfer data, String key) async {
     return await client.broadcast
         .transfer(data.toJson(), steem.SteemPrivateKey.fromString(key));
