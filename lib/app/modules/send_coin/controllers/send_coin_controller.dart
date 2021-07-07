@@ -119,7 +119,7 @@ class SendCoinController extends GetxController {
         await AppController.to.reload(); // 잔액 정보 업데이트
 
         logger.d('success');
-        UIUtil.showSuccessMessage('송금에 성공하였습니다.');
+        UIUtil.showSnackBar('송금에 성공하였습니다.', backgroundColor: Colors.green);
         Get.back(result: true);
       }
     } on MessageException catch (error) {
