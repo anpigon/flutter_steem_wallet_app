@@ -15,7 +15,7 @@ class Wallet {
   late String rewardSbdBalance; // 0.587 SBD
   late String rewardSteemBalance; // 0.000 STEEM
   late String rewardVestingBalance; // 4784.672240 VESTS
-  late String rewardVestingSteem; 
+  late String rewardVestingSteem;
 
   Wallet({
     this.name = '',
@@ -64,9 +64,23 @@ class Wallet {
     receivedSteemPower = val.receivedSteemPower;
     nextSteemPowerWithdrawRate = val.nextSteemPowerWithdrawRate;
     nextSteemPowerWithdrawal = val.nextSteemPowerWithdrawal;
-    rewardSbdBalance=val.rewardSbdBalance;
-    rewardSteemBalance=val.rewardSteemBalance;
-    rewardVestingBalance=val.rewardVestingBalance;
-    rewardVestingSteem=val.rewardVestingSteem;
+    rewardSbdBalance = val.rewardSbdBalance;
+    rewardSteemBalance = val.rewardSteemBalance;
+    rewardVestingBalance = val.rewardVestingBalance;
+    rewardVestingSteem = val.rewardVestingSteem;
+  }
+
+  List<String> getRewards() {
+    final rewards = <String>[];
+    if (rewardSbdBalance != '0.000 SBD') {
+      rewards.add(rewardSbdBalance);
+    }
+    if (rewardSteemBalance != '0.000 STEEM') {
+      rewards.add(rewardSteemBalance);
+    }
+    if (rewardVestingSteem != '0.000 STEEM') {
+      rewards.add(rewardVestingSteem.replaceFirst('STEEM', 'SP'));
+    }
+    return rewards;
   }
 }

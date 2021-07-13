@@ -69,6 +69,10 @@ class LocaleKeys {
       'manage_at_least_one_account_must_exist';
   static const wallet_current_rewards = 'wallet_current_rewards';
   static const wallet_redeem_rewards = 'wallet_redeem_rewards';
+  static const error_required_active_key = 'error_required_active_key';
+  static const error_required_posting_key = 'error_required_posting_key';
+  static const error_required_memo_key = 'error_required_memo_key';
+  static const error_unknown = 'error_unknown';
 }
 
 class Locales {
@@ -136,6 +140,10 @@ class Locales {
     'manage_at_least_one_account_must_exist': '최소 1개 계정은 있어야 합니다.',
     'wallet_current_rewards': '미청구 보상: %s',
     'wallet_redeem_rewards': '보상 청구',
+    'error_required_active_key': '액티브키가 필요합니다.',
+    'error_required_posting_key': '포스팅키가 필요합니다.',
+    'error_required_memo_key': '메모키가 필요합니다.',
+    'error_unknown': '알 수 없는 오류가 발생했습니다.',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -206,5 +214,9 @@ class Locales {
         'At least one account must exist.',
     'wallet_current_rewards': 'Your current rewards: %s',
     'wallet_redeem_rewards': 'Redeem Rewards',
+    'error_required_active_key': 'Your private active key is required.',
+    'error_required_posting_key': 'Your private posting key is required.',
+    'error_required_memo_key': 'Your private memo key is required.',
+    'error_unknown': 'An unknown error has occurred.',
   };
 }

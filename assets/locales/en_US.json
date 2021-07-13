@@ -52,5 +52,9 @@
   "manage_saved": "Saved!",
   "manage_at_least_one_account_must_exist": "At least one account must exist.",
   "wallet_current_rewards": "Your current rewards: %s",
-  "wallet_redeem_rewards": "Redeem Rewards"
+  "wallet_redeem_rewards": "Redeem Rewards",
+  "error_required_active_key": "Your private active key is required.",
+  "error_required_posting_key": "Your private posting key is required.",
+  "error_required_memo_key": "Your private memo key is required.",
+  "error_unknown": "An unknown error has occurred."
 }

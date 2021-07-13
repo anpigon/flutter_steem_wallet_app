@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:flutter_steem_wallet_app/app/exceptions/message_exception.dart';
 import 'package:flutter_steem_wallet_app/app/models/signature/delegate_vesting_shares.dart';
 import 'package:flutter_steem_wallet_app/app/models/signature/withdraw_vesting.dart';
 import 'package:flutter_steem_wallet_app/app/models/wallet.dart';
+import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
 import 'package:flutter_steem_wallet_app/app/utils/num_util.dart';
 import 'package:get/get.dart';
 import 'package:steemdart_ecc/steemdart_ecc.dart' as steem;
 
 import '../models/signature/transfer.dart';
 import '../models/signature/transfer_to_vesting.dart';
+import 'local_data_service.dart';
 
 const STEEM_API_NODES = [
   'https://api.steemit.com',
@@ -68,7 +71,8 @@ class SteemService extends GetxService {
 
   Future<double> calculateSteemToVest(dynamic amount) async {
     final props = await SteemService.to.getDynamicGlobalProperties();
-    return NumUtil.calculateSteemToVest(amount, props.total_vesting_shares, props.total_vesting_fund_steem);
+    return NumUtil.calculateSteemToVest(
+        amount, props.total_vesting_shares, props.total_vesting_fund_steem);
   }
 
   Future<Map<String, dynamic>> transfer(Transfer data, String key) async {
@@ -129,11 +133,6 @@ class SteemService extends GetxService {
       // RC 계산
       final currentResourceCredits = (await getRCMana(username)).percentage;
 
-      // reward_sbd_balance, // 0.587 SBD
-      // reward_steem_balance, // 0.000 STEEM
-      // reward_vesting_balance, // 4784.672240 VESTS
-      // reward_vesting_steem, // 2.560 STEEM
-
       return Wallet(
         name: data.name,
         steemBalance: double.parse(data.balance.split(' ')[0]),
@@ -178,5 +177,49 @@ class SteemService extends GetxService {
     }
 
     return null;
+  }
+
+  /// 보상 청구하기
+  Future claimRewardBalance(Wallet wallet) async {
+    final key = await getPrivateKey(wallet.name, 'active');
+    final operation = steem.Operation(
+      'transfer_to_vesting',
+      {
+        'account': wallet.name,
+        'reward_steem': wallet.rewardVestingSteem,
+        'reward_sbd': wallet.rewardSbdBalance,
+        'reward_vests': wallet.rewardVestingBalance,
+      },
+    );
+    return await client.broadcast
+        .sendOperations([operation], steem.SteemPrivateKey.fromString(key));
+  }
+
+  /// 개인키 복호화하기
+  Future<String> getPrivateKey(String username, String type) async {
+    final ownerAccount = await LocalDataService.to.getAccount(username);
+    String? key;
+    switch (type) {
+      case 'active':
+        key = await VaultService.to.read(ownerAccount.activePublicKey);
+        if (key == null) {
+          throw MessageException('error_required_active_key'.tr);
+        }
+        return key;
+      case 'posting':
+        key = await VaultService.to.read(ownerAccount.postingPublicKey);
+        if (key == null) {
+          throw MessageException('error_required_posting_key'.tr);
+        }
+        return key;
+      case 'memo':
+        key = await VaultService.to.read(ownerAccount.memoPublicKey);
+        if (key == null) {
+          throw MessageException('error_required_memo_key'.tr);
+        }
+        return key;
+      default:
+        throw MessageException('Something is wrong.');
+    }
   }
 }

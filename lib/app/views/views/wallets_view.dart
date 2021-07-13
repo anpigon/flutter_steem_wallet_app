@@ -200,20 +200,8 @@ class WalletsView extends GetView<WalletsController> {
                       padding: const EdgeInsets.all(10.0),
                       child: appController.obx(
                         (wallet) {
-                          // 미청구 보상
-                          final rewards = <String>[];
-                          if (wallet != null) {
-                            if (wallet.rewardSbdBalance != '0.000 SBD') {
-                              rewards.add(wallet.rewardSbdBalance);
-                            }
-                            if (wallet.rewardSteemBalance != '0.000 STEEM') {
-                              rewards.add(wallet.rewardSteemBalance);
-                            }
-                            if (wallet.rewardVestingSteem != '0.000 STEEM') {
-                              rewards.add(wallet.rewardVestingSteem
-                                  .replaceFirst('STEEM', 'SP'));
-                            }
-                          }
+                          final rewards = wallet?.getRewards() ?? []; // 미청구 보상
+
                           return Column(
                             children: [
                               if (rewards.isNotEmpty)
@@ -228,7 +216,8 @@ class WalletsView extends GetView<WalletsController> {
                                             .trArgs([rewards.join(', ')]),
                                       ),
                                       OutlinedButton.icon(
-                                        onPressed: () {},
+                                        onPressed:
+                                            appController.claimRewardBalance,
                                         icon: Icon(Icons.redeem_outlined),
                                         label: Text('wallet_redeem_rewards'.tr),
                                       ),

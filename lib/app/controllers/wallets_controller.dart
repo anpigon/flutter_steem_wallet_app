@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/services/steem_service.dart';
 import 'package:get/get.dart';
 
 class WalletsController extends GetxController

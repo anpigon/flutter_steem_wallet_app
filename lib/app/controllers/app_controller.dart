@@ -2,8 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_steem_wallet_app/app/exceptions/message_exception.dart';
+import 'package:flutter_steem_wallet_app/app/services/vault_service.dart';
+import 'package:flutter_steem_wallet_app/app/utils/ui_util.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../../logger.dart';
 import '../constants.dart';
 import '../data/price_provider.dart';
 import '../models/wallet.dart';
@@ -51,17 +56,18 @@ class AppController extends GetxController
   }
 
   /// account 잔액 정보를 가져온다.
-  Future<void> loadAccountDetails(String username) async {
+  Future<void> loadAccountDetails(String username,
+      [bool showLoader = true]) async {
     if (!accounts.contains(username)) {
       accounts.add(username);
       selectedAccount(username);
     }
+
     try {
-      loading(true);
+      if (showLoader) loading(true);
       change(null, status: RxStatus.loading());
 
       final data = await steemService.loadAccountDetails(username);
-      print(data);
       if (data == null) throw MessageException('wallet is empty');
       wallet.update((val) {
         val!.update(data);
@@ -77,13 +83,13 @@ class AppController extends GetxController
         colorText: Colors.white,
       );
     } finally {
-      loading(false);
+      if (showLoader) loading(false);
     }
   }
 
   /// account 정보 갱신
-  Future<void> reload() async {
-    await loadAccountDetails(selectedAccount.value);
+  Future<void> reload([bool showLoader = true]) async {
+    await loadAccountDetails(selectedAccount.value, showLoader);
   }
 
   /// 시장 가격을 조회한다.
@@ -115,6 +121,19 @@ class AppController extends GetxController
     final newAccount = await Get.toNamed(Routes.ADD_ACCOUNT);
     if (newAccount != null && !newAccount.isEmpty) {
       accounts.add(newAccount);
+    }
+  }
+
+  Future<void> claimRewardBalance() async {
+    try {
+      await SteemService.to.claimRewardBalance(wallet.value);
+      await reload(false);
+    } on MessageException catch (ex) {
+      UIUtil.showErrorMessage(ex.message);
+    } catch (ex, stackTrace) {
+      Log.e(ex);
+      await Sentry.captureException(ex, stackTrace: stackTrace);
+      UIUtil.showErrorMessage('error_unknown'.tr);
     }
   }
 
