@@ -1,8 +1,13 @@
 import 'package:flutter_steem_wallet_app/app/models/account_history.dart';
+import 'package:flutter_steem_wallet_app/app/models/steem/steem_post.dart';
 import 'package:get/get.dart';
+
+import '../models/steem/steem_subscription.dart';
 
 class SteemProvider extends GetConnect {
   static SteemProvider to = Get.find<SteemProvider>();
+
+  int id = 0;
 
   Future getAccountHistory(String account) async {
     final body = {
@@ -57,6 +62,61 @@ class SteemProvider extends GetConnect {
             (e) => e.message?.isNotEmpty ?? false,
           )
           .toList();
+    }
+    return [];
+  }
+
+  /// 구독중인 커뮤니티 조회하기
+  Future<List<SteemSubscription>> getAllSubscriptions(String account) async {
+    final body = {
+      'jsonrpc': '2.0',
+      'method': 'bridge.list_all_subscriptions',
+      'params': {'account': account}
+    };
+    final response = await post('/', body);
+    if (response.statusCode == 200) {
+      final result = response.body['result'];
+      final steemSubscriptions = result.map<SteemSubscription>((item) {
+        return SteemSubscription.fromJson(item);
+      }).toList();
+      return steemSubscriptions;
+    }
+    return [];
+  }
+
+  Future<List<SteemPost>> getMyFriendsFeeds(String account) async {
+    final body = {
+      'id': id++,
+      'jsonrpc': '2.0',
+      'method': 'bridge.get_account_posts',
+      'params': {'sort': 'feed', 'account': account, 'observer': account}
+    };
+    final response = await post('/', body);
+    if (response.statusCode == 200) {
+      final result = response.body['result'];
+      final List<SteemPost> steemPosts = result.map<SteemPost>((item) {
+        return SteemPost.fromJson(item);
+      }).toList();
+      return steemPosts;
+    }
+    return [];
+  }
+
+  Future<List<SteemPost>> getCommunityFeeds(String tag, String account) async {
+    final body = {
+      'id': id++,
+      'jsonrpc': '2.0',
+      'method': 'bridge.get_ranked_posts',
+      'params': {'sort': 'trending', 'tag': tag, 'observer': account}
+    };
+    final response = await post('/', body);
+    if (response.statusCode == 200) {
+      final result = response.body['result'];
+      print(result);
+      final List<SteemPost> steemPosts = result.map<SteemPost>((item) {
+        return SteemPost.fromJson(item);
+      }).toList();
+      return steemPosts;
     }
     return [];
   }

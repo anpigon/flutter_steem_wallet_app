@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_steem_wallet_app/app/modules/community/views/community_view.dart';
 import 'package:flutter_steem_wallet_app/app/views/views/settings_view.dart';
 import 'package:get/get.dart';
 
@@ -9,7 +10,7 @@ class HomeController extends GetxController {
 
   final _pages = <Widget>[
     WalletsView(),
-    Center(child: Text('Community')),
+    CommunityView(),
     Center(child: Text('DApp')),
     SettingsView(),
   ];
