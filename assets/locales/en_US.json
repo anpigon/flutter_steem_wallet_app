@@ -50,5 +50,7 @@
   "manage_copied_clipboard": "Key copied to clipboard!",
   "manage_deleted": "Deleted!",
   "manage_saved": "Saved!",
-  "manage_at_least_one_account_must_exist": "At least one account must exist."
+  "manage_at_least_one_account_must_exist": "At least one account must exist.",
+  "wallet_current_rewards": "Your current rewards: %s",
+  "wallet_redeem_rewards": "Redeem Rewards"
 }

@@ -67,6 +67,8 @@ class LocaleKeys {
   static const manage_saved = 'manage_saved';
   static const manage_at_least_one_account_must_exist =
       'manage_at_least_one_account_must_exist';
+  static const wallet_current_rewards = 'wallet_current_rewards';
+  static const wallet_redeem_rewards = 'wallet_redeem_rewards';
 }
 
 class Locales {
@@ -132,6 +134,8 @@ class Locales {
     'manage_deleted': '삭제되었습니다!',
     'manage_saved': '저장되었습니다!',
     'manage_at_least_one_account_must_exist': '최소 1개 계정은 있어야 합니다.',
+    'wallet_current_rewards': '미청구 보상: %s',
+    'wallet_redeem_rewards': '보상 청구',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -200,5 +204,7 @@ class Locales {
     'manage_saved': 'Saved!',
     'manage_at_least_one_account_must_exist':
         'At least one account must exist.',
+    'wallet_current_rewards': 'Your current rewards: %s',
+    'wallet_redeem_rewards': 'Redeem Rewards',
   };
 }

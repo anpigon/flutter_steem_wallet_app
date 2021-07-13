@@ -200,12 +200,49 @@ class WalletsView extends GetView<WalletsController> {
                       padding: const EdgeInsets.all(10.0),
                       child: appController.obx(
                         (wallet) {
-                          return buildWalletList(
-                            wallet!,
-                            goSendCoin: goSendCoin,
-                            goPowerUp: goPowerUp,
-                            goDelegateDown: goDelegateDown,
-                            goPowerDown: goPowerDown,
+                          // 미청구 보상
+                          final rewards = <String>[];
+                          if (wallet != null) {
+                            if (wallet.rewardSbdBalance != '0.000 SBD') {
+                              rewards.add(wallet.rewardSbdBalance);
+                            }
+                            if (wallet.rewardSteemBalance != '0.000 STEEM') {
+                              rewards.add(wallet.rewardSteemBalance);
+                            }
+                            if (wallet.rewardVestingSteem != '0.000 STEEM') {
+                              rewards.add(wallet.rewardVestingSteem
+                                  .replaceFirst('STEEM', 'SP'));
+                            }
+                          }
+                          return Column(
+                            children: [
+                              if (rewards.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.all(23.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'wallet_current_rewards'
+                                            .trArgs([rewards.join(', ')]),
+                                      ),
+                                      OutlinedButton.icon(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.redeem_outlined),
+                                        label: Text('wallet_redeem_rewards'.tr),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              buildWalletList(
+                                wallet!,
+                                goSendCoin: goSendCoin,
+                                goPowerUp: goPowerUp,
+                                goDelegateDown: goDelegateDown,
+                                goPowerDown: goPowerDown,
+                              ),
+                            ],
                           );
                         },
                         onLoading: Column(

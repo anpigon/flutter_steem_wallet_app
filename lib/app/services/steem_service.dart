@@ -129,6 +129,11 @@ class SteemService extends GetxService {
       // RC 계산
       final currentResourceCredits = (await getRCMana(username)).percentage;
 
+      // reward_sbd_balance, // 0.587 SBD
+      // reward_steem_balance, // 0.000 STEEM
+      // reward_vesting_balance, // 4784.672240 VESTS
+      // reward_vesting_steem, // 2.560 STEEM
+
       return Wallet(
         name: data.name,
         steemBalance: double.parse(data.balance.split(' ')[0]),
@@ -165,6 +170,10 @@ class SteemService extends GetxService {
         ),
         nextSteemPowerWithdrawal:
             DateTime.parse('${data.next_vesting_withdrawal}Z'),
+        rewardSbdBalance: data.reward_sbd_balance,
+        rewardSteemBalance: data.reward_steem_balance,
+        rewardVestingBalance: data.reward_vesting_balance,
+        rewardVestingSteem: data.reward_vesting_steem,
       );
     }
 

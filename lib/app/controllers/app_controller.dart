@@ -59,11 +59,14 @@ class AppController extends GetxController
     try {
       loading(true);
       change(null, status: RxStatus.loading());
+
       final data = await steemService.loadAccountDetails(username);
+      print(data);
       if (data == null) throw MessageException('wallet is empty');
       wallet.update((val) {
         val!.update(data);
       });
+
       change(data, status: RxStatus.success());
     } on Exception catch (e, stackTrace) {
       stackTrace.printError();

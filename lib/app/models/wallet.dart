@@ -12,6 +12,11 @@ class Wallet {
   late double nextSteemPowerWithdrawRate;
   late DateTime? nextSteemPowerWithdrawal;
 
+  late String rewardSbdBalance; // 0.587 SBD
+  late String rewardSteemBalance; // 0.000 STEEM
+  late String rewardVestingBalance; // 4784.672240 VESTS
+  late String rewardVestingSteem; 
+
   Wallet({
     this.name = '',
     this.steemBalance = 0.0,
@@ -25,6 +30,10 @@ class Wallet {
     this.receivedSteemPower = 0.0,
     this.nextSteemPowerWithdrawRate = 0.0,
     this.nextSteemPowerWithdrawal,
+    this.rewardSbdBalance = '0.000 SBD',
+    this.rewardSteemBalance = '0.000 STEEM',
+    this.rewardVestingBalance = '0.000000 VESTS',
+    this.rewardVestingSteem = '0.000 STEEM',
   });
 
   Map<String, dynamic> toJson() => {
@@ -36,6 +45,10 @@ class Wallet {
         'resourceCredits': resourceCredits,
         'toWithdraw': toWithdraw,
         'withdrawn': withdrawn,
+        'rewardSbdBalance': rewardSbdBalance,
+        'rewardSteemBalance': rewardSteemBalance,
+        'rewardVestingBalance': rewardVestingBalance,
+        'rewardVestingSteem': rewardVestingSteem,
       };
 
   void update(Wallet val) {
@@ -51,5 +64,9 @@ class Wallet {
     receivedSteemPower = val.receivedSteemPower;
     nextSteemPowerWithdrawRate = val.nextSteemPowerWithdrawRate;
     nextSteemPowerWithdrawal = val.nextSteemPowerWithdrawal;
+    rewardSbdBalance=val.rewardSbdBalance;
+    rewardSteemBalance=val.rewardSteemBalance;
+    rewardVestingBalance=val.rewardVestingBalance;
+    rewardVestingSteem=val.rewardVestingSteem;
   }
 }
