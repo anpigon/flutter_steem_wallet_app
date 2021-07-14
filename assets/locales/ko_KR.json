@@ -56,5 +56,17 @@
   "error_required_active_key": "액티브키가 필요합니다.",
   "error_required_posting_key": "포스팅키가 필요합니다.",
   "error_required_memo_key": "메모키가 필요합니다.",
-  "error_unknown": "알 수 없는 오류가 발생했습니다."
+  "error_unknown": "알 수 없는 오류가 발생했습니다.",
+  "community_trending": "대세글",
+  "community_hot": "인기글",
+  "community_new": "최신글",
+  "community_payouts": "글보상",
+  "community_muted": "차단",
+  "community_seconds_ago": "%s초 전",
+  "community_minutes_ago": "%s분 전",
+  "community_hours_ago": "%s시간 전",
+  "community_days_ago": "%s일 전",
+  "community_weeks_ago": "%s주 전",
+  "community_months_ago": "%s개월 전",
+  "community_years_ago": "%s년 전"
 }

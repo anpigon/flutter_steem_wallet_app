@@ -56,5 +56,17 @@
   "error_required_active_key": "Your private active key is required.",
   "error_required_posting_key": "Your private posting key is required.",
   "error_required_memo_key": "Your private memo key is required.",
-  "error_unknown": "An unknown error has occurred."
+  "error_unknown": "An unknown error has occurred.",
+  "community_trending": "Trending",
+  "community_hot": "Hot",
+  "community_new": "New",
+  "community_payouts": "Payouts",
+  "community_muted": "Muted",
+  "community_seconds_ago": "%s seconds ago",
+  "community_minutes_ago": "%s minutes ago",
+  "community_hours_ago": "%s hours ago",
+  "community_days_ago": "%s days ago",
+  "community_weeks_ago": "%s weeks ago",
+  "community_months_ago": "%s months ago",
+  "community_years_ago": "%s years ago"
 }
