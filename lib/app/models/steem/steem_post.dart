@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_steem_wallet_app/app/utils/string_utils.dart';
+import 'package:flutter_steem_wallet_app/app/utils/string_util.dart';
 
 class SteemPost {
   late final int postId;
@@ -77,7 +77,7 @@ class SteemPost {
     category = json['category'];
     title = json['title'];
     body = isCompact
-        ? StringUtils.truncate(StringUtils.stripAll(json['body']), 200)
+        ? StringUtil.truncate(StringUtil.stripAll(json['body']), 200)
         : json['body'];
     jsonMetadata = (json['json_metadata'] != null
         ? JsonMetadata.fromJson(json['json_metadata'])
