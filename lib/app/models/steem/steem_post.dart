@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_steem_wallet_app/app/utils/string_utils.dart';
+
 class SteemPost {
   late final int postId;
   late final String author;
@@ -68,13 +70,15 @@ class SteemPost {
       this.authorRole,
       this.authorTitle});
 
-  SteemPost.fromJson(Map<String, dynamic> json) {
+  SteemPost.fromJson(Map<String, dynamic> json, [bool isCompact = true]) {
     postId = json['post_id'];
     author = json['author'];
     permlink = json['permlink'];
     category = json['category'];
     title = json['title'];
-    body = json['body'];
+    body = isCompact
+        ? StringUtils.truncate(StringUtils.stripAll(json['body']), 200)
+        : json['body'];
     jsonMetadata = (json['json_metadata'] != null
         ? JsonMetadata.fromJson(json['json_metadata'])
         : null);
