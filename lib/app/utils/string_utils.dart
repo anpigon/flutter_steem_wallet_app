@@ -1,13 +1,19 @@
 class StringUtils {
   static String truncate(String str, int maxWidth) {
-    return str
-        .replaceAll(RegExp(r'[\n|\s]+'), ' ')
-        .trim()
-        .substring(0, maxWidth);
+    var result = str.replaceAll(RegExp(r'[\n|\s]+'), ' ').trim();
+    if (result.length < maxWidth) return result;
+    return result.substring(0, maxWidth);
   }
 
   static String stripAll(String text) {
-    return stripMarkdown(stripHtml(text));
+    return stripUrl(stripMarkdown(stripHtml(text)));
+  }
+
+  static String stripUrl(String text) {
+    return text.replaceAll(
+        RegExp(
+            r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'),
+        '');
   }
 
   // ref: https://api.flutter.dev/flutter/intl/Bidi/stripHtmlIfNeeded.html
