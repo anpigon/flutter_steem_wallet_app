@@ -1,4 +1,4 @@
-class StringUtils {
+class StringUtil {
   static String truncate(String str, int maxWidth) {
     var result = str.replaceAll(RegExp(r'[\n|\s]+'), ' ').trim();
     if (result.length < maxWidth) return result;
