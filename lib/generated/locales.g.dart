@@ -73,6 +73,18 @@ class LocaleKeys {
   static const error_required_posting_key = 'error_required_posting_key';
   static const error_required_memo_key = 'error_required_memo_key';
   static const error_unknown = 'error_unknown';
+  static const community_trending = 'community_trending';
+  static const community_hot = 'community_hot';
+  static const community_new = 'community_new';
+  static const community_payouts = 'community_payouts';
+  static const community_muted = 'community_muted';
+  static const community_seconds_ago = 'community_seconds_ago';
+  static const community_minutes_ago = 'community_minutes_ago';
+  static const community_hours_ago = 'community_hours_ago';
+  static const community_days_ago = 'community_days_ago';
+  static const community_weeks_ago = 'community_weeks_ago';
+  static const community_months_ago = 'community_months_ago';
+  static const community_years_ago = 'community_years_ago';
 }
 
 class Locales {
@@ -144,6 +156,18 @@ class Locales {
     'error_required_posting_key': '포스팅키가 필요합니다.',
     'error_required_memo_key': '메모키가 필요합니다.',
     'error_unknown': '알 수 없는 오류가 발생했습니다.',
+    'community_trending': '대세글',
+    'community_hot': '인기글',
+    'community_new': '최신글',
+    'community_payouts': '글보상',
+    'community_muted': '차단',
+    'community_seconds_ago': '%s초 전',
+    'community_minutes_ago': '%s분 전',
+    'community_hours_ago': '%s시간 전',
+    'community_days_ago': '%s일 전',
+    'community_weeks_ago': '%s주 전',
+    'community_months_ago': '%s개월 전',
+    'community_years_ago': '%s년 전',
   };
   static const en_US = {
     'powerdown': 'Power Down',
@@ -218,5 +242,17 @@ class Locales {
     'error_required_posting_key': 'Your private posting key is required.',
     'error_required_memo_key': 'Your private memo key is required.',
     'error_unknown': 'An unknown error has occurred.',
+    'community_trending': 'Trending',
+    'community_hot': 'Hot',
+    'community_new': 'New',
+    'community_payouts': 'Payouts',
+    'community_muted': 'Muted',
+    'community_seconds_ago': '%s seconds ago',
+    'community_minutes_ago': '%s minutes ago',
+    'community_hours_ago': '%s hours ago',
+    'community_days_ago': '%s days ago',
+    'community_weeks_ago': '%s weeks ago',
+    'community_months_ago': '%s months ago',
+    'community_years_ago': '%s years ago',
   };
 }
