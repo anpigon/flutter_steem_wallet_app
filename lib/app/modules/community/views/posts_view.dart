@@ -15,6 +15,7 @@ class PostsView extends GetView<PostsController> {
     return GetX<PostsController>(
       tag: subscription.tag,
       init: PostsController(subscription.tag),
+      autoRemove: false,
       builder: (controller) {
         if (controller.loading.value) {
           return Center(child: CircularProgressIndicator());

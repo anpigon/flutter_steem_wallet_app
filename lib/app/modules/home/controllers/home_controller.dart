@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../../../views/views/wallets_view.dart';
 
 class HomeController extends GetxController {
-  final currentIndex = 0.obs;
+  final currentIndex = 1.obs;
 
   final _pages = <Widget>[
     WalletsView(),
