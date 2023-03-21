@@ -16,7 +16,7 @@ dependencies:
   flutter_svg: ^0.22.0
   shared_preferences: ^2.0.6
   flutter_secure_storage: ^4.2.0
-  dio: ^4.0.0
+  dio: ^5.0.3
   intl: ^0.17.0
   flutter_dotenv: ^5.0.0
   qr_code_scanner: ^0.4.0
